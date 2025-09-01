@@ -31,7 +31,6 @@ document.addEventListener("DOMContentLoaded", () => {
             initializeApp();
         } else {
             alert("এই পরীক্ষা দিতে হলে আপনাকে লগইন করতে হবে!");
-            // আপনার লগইন পেজের সঠিক পাথ দিন
             window.location.href = "../../login.html";
         }
     });
@@ -162,7 +161,7 @@ document.addEventListener("DOMContentLoaded", () => {
     clearResponseBtn.addEventListener("click", () => {
         userAnswers[currentQuestionIndex].selectedOption = null;
         userAnswers[currentQuestionIndex].status = "not-answered";
-        renderQuestion(); // Re-render to clear selection
+        renderQuestion();
     });
 
     submitBtn.addEventListener("click", () => {
@@ -193,7 +192,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     finalSubmitBtn.addEventListener("click", showFinalResult);
 
-    // --- ফলাফল দেখানো এবং সেভ করা ---
+    // --- ফলাফল দেখানো এবং সেভ করা (সুন্দর ডিজাইন সহ) ---
     function showFinalResult() {
         clearInterval(timerInterval);
         finalSubmitBtn.disabled = true;
@@ -226,43 +225,63 @@ document.addEventListener("DOMContentLoaded", () => {
             questions.length,
         );
 
-        // UI-তে ফলাফল দেখানো
+        // UI-তে ফলাফল দেখানো (নতুন এবং উন্নত ডিজাইন)
         const container = document.getElementById("exam-container");
         container.innerHTML = `
-            <div class="text-center space-y-5 p-8">
-                <h2 class="text-3xl font-bold text-green-600">🎉 পরীক্ষা শেষ!</h2>
-                <p class="text-xl">আপনার স্কোর: <strong class="text-blue-600">${correctCount}</strong> / ${questions.length}</p>
-                <p class="text-gray-600">আপনার ফলাফল ড্যাশবোর্ডের জন্য সেভ করা হয়েছে।</p>
-                <div class="flex flex-wrap justify-center gap-3 mt-4">
-                    <button onclick="showReview()" class="action-btn green">রিভিউ দেখুন</button>
-                    <a href="../../dashboard.html" class="action-btn">ড্যাশবোর্ডে যান</a>
-                    <button onclick="location.reload()" class="action-btn gray">🔁 আবার দিন</button>
+            <div class="result-page">
+                <div class="result-card">
+                    <h2 class="result-title">🎉 পরীক্ষা শেষ!</h2>
+                    <p class="result-score-text">আপনার স্কোর:</p>
+                    <p class="result-score">
+                        <span class="final-score">${correctCount}</span> / ${questions.length}
+                    </p>
+                    <p class="result-message">আপনার ফলাফল ড্যাশবোর্ডের জন্য সেভ করা হয়েছে।</p>
+                    <div class="result-actions">
+                        <button onclick="showReview()" class="action-btn review">রিভিউ দেখুন</button>
+                        <a href="../../dashboard.html" class="action-btn dashboard">ড্যাশবোর্ডে যান</a>
+                        <button onclick="location.reload()" class="action-btn retry">🔁 আবার দিন</button>
+                    </div>
                 </div>
             </div>`;
     }
 
     window.showReview = function () {
         const container = document.getElementById("exam-container");
-        let reviewHTML = `<div class="p-8"><h2 class="text-2xl font-bold text-center text-blue-700 mb-4">📚 পরীক্ষার রিভিউ</h2>`;
+        // UI-তে রিভিউ দেখানো (নতুন এবং উন্নত ডিজাইন)
+        let reviewHTML = `
+            <div class="review-page">
+                <h2 class="review-title">📝 পরীক্ষার রিভিউ</h2>`;
+
         questions.forEach((q, i) => {
             const userAnswer = userAnswers[i];
             const isCorrect = userAnswer.selectedOption === q.correctAnswer;
+
             reviewHTML += `
                 <div class="review-card ${isCorrect ? "review-correct" : "review-incorrect"}">
-                    <h3 class="font-semibold mb-2">📝 প্রশ্ন ${i + 1}: ${q.questionText}</h3>
-                    <p><strong>সঠিক উত্তর:</strong> ${q.correctAnswer}</p>
-                    <p><strong>আপনার উত্তর:</strong> 
-                        <span class="font-bold ${isCorrect ? "text-green-700" : "text-red-700"}">
+                    <h3 class="review-question">
+                        <i class="fas fa-question-circle"></i> প্রশ্ন ${i + 1}: ${q.questionText}
+                    </h3>
+                    <p class="review-answer correct-ans">
+                        <strong><i class="fas fa-check-circle"></i> সঠিক উত্তর:</strong> ${q.correctAnswer}
+                    </p>
+                    <p class="review-answer your-ans">
+                        <strong><i class="fas ${isCorrect ? "fa-check-circle" : "fa-times-circle"}"></i> আপনার উত্তর:</strong> 
+                        <span class="font-bold">
                             ${userAnswer.selectedOption || "উত্তর দেননি"}
                         </span>
                     </p>
                 </div>`;
         });
-        reviewHTML += `<div class="text-center mt-6"><button onclick="location.reload()" class="action-btn gray">🔁 আবার দিন</button></div></div>`;
+
+        reviewHTML += `
+            <div class="review-footer">
+                <button onclick="location.reload()" class="action-btn retry">🔁 আবার দিন</button>
+            </div></div>`;
+
         container.innerHTML = reviewHTML;
     };
 
-    // --- আপনার আগের স্কোর সেভ করার ফাংশন (সামান্য পরিবর্তিত) ---
+    // --- আপনার আগের স্কোর সেভ করার ফাংশন (অপরিবর্তিত) ---
     function saveQuizResult(
         chapterName,
         setName,

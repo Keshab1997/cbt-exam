@@ -427,3 +427,183 @@ body {
 .review-card p {
     margin: 5px 0;
 }
+
+/* ======================================= */
+/* --- ফলাফল এবং রিভিউ পেজের স্টাইল --- */
+/* ======================================= */
+
+/* --- সাধারণ বাটন স্টাইল (ফলাফল ও রিভিউ পেজের জন্য) --- */
+.action-btn {
+    padding: 12px 25px;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.action-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.action-btn.review {
+    background-color: #17a2b8;
+    color: white;
+}
+
+.action-btn.dashboard {
+    background-color: #007bff;
+    color: white;
+}
+
+.action-btn.retry {
+    background-color: #6c757d;
+    color: white;
+}
+
+/* --- ফলাফল পেজের স্টাইল --- */
+.result-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 20px;
+    background-color: #f4f7f6;
+    min-height: calc(100vh - 70px);
+    /* Header height বাদ দিয়ে */
+}
+
+.result-card {
+    background-color: white;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    max-width: 500px;
+    width: 100%;
+}
+
+.result-title {
+    font-size: 2.5em;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.result-score-text {
+    font-size: 1.2em;
+    color: #555;
+    margin-bottom: 10px;
+}
+
+.result-score {
+    font-size: 3.5em;
+    font-weight: bold;
+    color: #007bff;
+    margin-bottom: 20px;
+}
+
+.result-score .final-score {
+    color: #28a745;
+}
+
+.result-message {
+    font-size: 1.1em;
+    color: #666;
+    margin-bottom: 30px;
+}
+
+.result-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+}
+
+/* --- রিভিউ পেজের স্টাইল --- */
+.review-page {
+    padding: 30px;
+    background-color: #f8f9fa;
+}
+
+.review-title {
+    font-size: 2em;
+    text-align: center;
+    color: #3b3f5c;
+    margin-bottom: 30px;
+    border-bottom: 2px solid #dee2e6;
+    padding-bottom: 10px;
+}
+
+.review-card {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    border-left-width: 5px;
+    border-left-style: solid;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.review-correct {
+    border-left-color: #28a745;
+    background-color: #f0fff4;
+    /* হালকা সবুজ */
+}
+
+.review-incorrect {
+    border-left-color: #dc3545;
+    background-color: #fff0f1;
+    /* হালকা লাল */
+}
+
+.review-question {
+    font-size: 1.2em;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.review-answer {
+    margin: 8px 0;
+    font-size: 1.1em;
+}
+
+.review-answer strong {
+    color: #555;
+}
+
+.review-answer.correct-ans {
+    color: #28a745;
+}
+
+.review-answer.your-ans span {
+    font-weight: bold;
+}
+
+.review-incorrect .your-ans span {
+    color: #dc3545;
+}
+
+.review-footer {
+    text-align: center;
+    margin-top: 30px;
+}
+
+/* আইকনগুলোর জন্য স্টাইল */
+.fas {
+    margin-right: 5px;
+}
+
+.fa-check-circle {
+    color: #28a745;
+}
+
+.fa-times-circle {
+    color: #dc3545;
+}
