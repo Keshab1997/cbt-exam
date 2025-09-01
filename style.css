@@ -283,25 +283,66 @@ body {
     flex-direction: column;
 }
 
+/* --- ## palette-legend এর নতুন এবং উন্নত ডিজাইন ## --- */
 .palette-legend {
-    margin-bottom: 15px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
 }
 
 .palette-legend div {
     display: flex;
     align-items: center;
-    margin-bottom: 10px;
-    font-size: 14px;
-    color: var(--light-text-color);
+    padding: 10px;
+    border-radius: 8px;
+    background-color: var(--primary-bg);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.palette-legend div:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.07);
 }
 
 .palette-dot {
-    width: 15px;
-    height: 15px;
-    border-radius: 4px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
     flex-shrink: 0;
     margin-right: 10px;
+    border: 2px solid white;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 }
+
+/* ইন্ডিকেটরগুলোর রঙ */
+.palette-dot.answered {
+    background-color: var(--answered-color);
+}
+
+.palette-dot.not-answered {
+    background-color: var(--not-answered-color);
+}
+
+.palette-dot.marked {
+    background-color: var(--marked-color);
+}
+
+.palette-dot.marked-answered {
+    background-color: var(--marked-answered-color);
+}
+
+.palette-dot.not-visited {
+    background-color: #ecf0f1;
+    border: 2px solid var(--border-color);
+    box-shadow: none;
+}
+
+/* --- ## শেষ ## --- */
+
 
 .palette-divider {
     border: none;
@@ -397,23 +438,6 @@ body {
 .submit-btn:hover {
     background-color: var(--primary-btn-hover);
 }
-
-/* --- অন্যান্য স্টাইল (আগের মতোই থাকবে) --- */
-.modal,
-.modal-content,
-.close-btn,
-#summary-table,
-#final-submit-btn,
-.warning-text,
-.result-page,
-.result-card,
-.review-page,
-.review-card,
-.action-btn {
-    /* এখানে আপনার আগের CSS কোড অপরিবর্তিত রাখুন */
-}
-
-/* আপনার আগের কোড থেকে নিচের অংশটুকু এখানে কপি-পেস্ট করুন */
 
 /* --- মডাল (Pop-up) --- */
 .modal {
