@@ -607,3 +607,102 @@ body {
 .fa-times-circle {
     color: #dc3545;
 }
+
+/* -------- style.css (এই অংশটি ফাইলের শেষে যোগ করুন) -------- */
+
+/* --- মডালের মধ্যে সতর্কবার্তা --- */
+.warning-text {
+    margin-top: 15px;
+    padding: 10px;
+    background-color: #fff3cd;
+    border: 1px solid #ffeeba;
+    border-radius: 4px;
+    color: #856404;
+    text-align: center;
+}
+
+/* ======================================= */
+/* --- ফলাফল এবং রিভিউ পেজের স্টাইল (আপডেটেড) --- */
+/* ======================================= */
+
+.result-page {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    /* কার্ডকে উপরে রাখতে */
+    padding: 40px 20px;
+    background-color: #f4f7f6;
+    min-height: calc(100vh - 70px);
+}
+
+.result-card {
+    background-color: white;
+    padding: 30px 40px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    max-width: 600px;
+    width: 100%;
+}
+
+.result-title {
+    font-size: 2.2em;
+}
+
+.result-score {
+    font-size: 3em;
+    /* একটু ছোট করা হলো */
+}
+
+/* --- ফলাফল টেবিলের নতুন স্টাইল --- */
+.result-details-table {
+    width: 100%;
+    margin: 25px 0;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.result-details-table td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #eef1f7;
+    font-size: 1.1em;
+}
+
+.result-details-table tr:last-child td {
+    border-bottom: none;
+}
+
+.result-details-table td:first-child {
+    font-weight: 500;
+    color: #555;
+}
+
+.result-details-table td:last-child {
+    font-weight: bold;
+    text-align: right;
+    color: #333;
+}
+
+.result-details-table .accuracy-row {
+    background-color: #f8f9fa;
+    font-size: 1.2em;
+}
+
+.result-details-table .accuracy-row td {
+    color: var(--primary-btn-color);
+}
+
+
+/* --- রিভিউ কার্ডের নতুন স্টাইল --- */
+.review-unanswered {
+    background-color: #f8f9fa;
+    border-left-color: #6c757d;
+}
+
+.review-unanswered .your-ans span {
+    color: #6c757d;
+}
+
+.fa-minus-circle {
+    color: #6c757d;
+}

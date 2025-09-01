@@ -1,10 +1,10 @@
+// -------- app.js (সম্পূর্ণ নতুন কোড) --------
+
 document.addEventListener("DOMContentLoaded", () => {
     // --- গ্লোবাল ভেরিয়েবল ---
     let questions = quizData; // questions.js থেকে আসছে
     let userAnswers = []; // ইউজারের উত্তর ও স্ট্যাটাস ট্র্যাক করবে
     let currentQuestionIndex = 0;
-    let correctCount = 0;
-    let wrongCount = 0;
     let timerInterval;
 
     const EXAM_ID = "RRB NTPC CBT-1"; // পরীক্ষার নাম, স্কোর সেভের জন্য
@@ -49,7 +49,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
         renderQuestion();
         createPalette();
-        startTimer(90 * 60); // ৯০ মিনিট
+        // ## পরিবর্তন: পরীক্ষার সময় ১ ঘণ্টা (60 মিনিট) করা হয়েছে ##
+        startTimer(60 * 60);
 
         loadingSpinner.classList.add("hidden");
         examContainer.classList.remove("hidden");
@@ -74,8 +75,12 @@ document.addEventListener("DOMContentLoaded", () => {
             const isChecked = currentAnswer.selectedOption === option;
             const optionId = `opt_${q.qNo}_${option.replace(/\s+/g, "")}`;
             optionsContainerEl.innerHTML += `
-                <label for="${optionId}" class="option ${isChecked ? "selected" : ""}">
-                    <input type="radio" name="option" id="${optionId}" value="${option}" ${isChecked ? "checked" : ""}>
+                <label for="${optionId}" class="option ${
+                    isChecked ? "selected" : ""
+                }">
+                    <input type="radio" name="option" id="${optionId}" value="${option}" ${
+                        isChecked ? "checked" : ""
+                    }>
                     ${option}
                 </label>
             `;
@@ -123,7 +128,7 @@ document.addEventListener("DOMContentLoaded", () => {
         timerInterval = setInterval(() => {
             if (--timer < 0) {
                 clearInterval(timerInterval);
-                alert("Time's up! Submitting your test automatically.");
+                alert("সময় শেষ! আপনার পরীক্ষা অটোমেটিক সাবমিট করা হচ্ছে।");
                 showFinalResult();
                 return;
             }
@@ -176,6 +181,7 @@ document.addEventListener("DOMContentLoaded", () => {
             notVisited: userAnswers.filter((a) => a.status === "not-visited")
                 .length,
         };
+        // ## পরিবর্তন: নেগেটিভ মার্কিং এর সতর্কবার্তা যোগ করা হয়েছে ##
         document.getElementById("summary-table").innerHTML = `
             <tr><th>Status</th><th>Count</th></tr>
             <tr><td>Total Questions</td><td>${questions.length}</td></tr>
@@ -183,6 +189,17 @@ document.addEventListener("DOMContentLoaded", () => {
             <tr><td>Not Answered</td><td>${summary.notAnswered}</td></tr>
             <tr><td>Not Visited</td><td>${summary.notVisited}</td></tr>
         `;
+        const modalContent = document.querySelector(".modal-content");
+        // পুরনো warning থাকলে রিমুভ করুন
+        const oldWarning = modalContent.querySelector(".warning-text");
+        if (oldWarning) oldWarning.remove();
+        // নতুন warning যোগ করুন
+        document.getElementById("summary-table").insertAdjacentHTML(
+            "afterend",
+            `
+            <p class="warning-text">আপনি কি নিশ্চিত? সাবমিট করার পর কোনো পরিবর্তন করতে পারবেন না।<br><b>মনে রাখবেন: প্রতি ৩টি ভুল উত্তরের জন্য ১ নম্বর কাটা হবে।</b></p>
+        `,
+        );
         document.getElementById("submit-modal").style.display = "flex";
     });
 
@@ -192,62 +209,90 @@ document.addEventListener("DOMContentLoaded", () => {
 
     finalSubmitBtn.addEventListener("click", showFinalResult);
 
-    // --- ফলাফল দেখানো এবং সেভ করা (সুন্দর ডিজাইন সহ) ---
+    // --- ## নতুন এবং উন্নত ফলাফল দেখানো এবং সেভ করার ফাংশন ## ---
     function showFinalResult() {
         clearInterval(timerInterval);
-        finalSubmitBtn.disabled = true;
-        finalSubmitBtn.textContent = "Submitting...";
-
-        // ফলাফল গণনা
-        correctCount = 0;
-        wrongCount = 0;
-        userAnswers.forEach((ans, index) => {
-            if (ans.status === "answered" || ans.status === "marked-answered") {
-                if (ans.selectedOption === questions[index].correctAnswer) {
-                    correctCount++;
-                } else {
-                    wrongCount++;
-                }
-            }
-        });
-
-        // কাউন্টার আপডেট করা
-        document.getElementById("correct-count").textContent =
-            `✔️ ${correctCount}`;
-        document.getElementById("wrong-count").textContent = `❌ ${wrongCount}`;
-
-        // ফলাফল সেভ করা
-        saveQuizResult(
-            EXAM_ID,
-            SET_NAME,
-            correctCount,
-            wrongCount,
-            questions.length,
-        );
-
-        // UI-তে ফলাফল দেখানো (নতুন এবং উন্নত ডিজাইন)
-        const container = document.getElementById("exam-container");
-        container.innerHTML = `
-            <div class="result-page">
-                <div class="result-card">
-                    <h2 class="result-title">🎉 পরীক্ষা শেষ!</h2>
-                    <p class="result-score-text">আপনার স্কোর:</p>
-                    <p class="result-score">
-                        <span class="final-score">${correctCount}</span> / ${questions.length}
-                    </p>
-                    <p class="result-message">আপনার ফলাফল ড্যাশবোর্ডের জন্য সেভ করা হয়েছে।</p>
-                    <div class="result-actions">
-                        <button onclick="showReview()" class="action-btn review">রিভিউ দেখুন</button>
-                        <a href="../../dashboard.html" class="action-btn dashboard">ড্যাশবোর্ডে যান</a>
-                        <button onclick="location.reload()" class="action-btn retry">🔁 আবার দিন</button>
-                    </div>
-                </div>
+        document.getElementById("submit-modal").style.display = "none";
+        document.getElementById("exam-container").innerHTML = `
+            <div id="loading-spinner" class="loading-spinner">
+                <div class="spinner"></div>
+                <p>Generating Your Result...</p>
             </div>`;
+
+        setTimeout(() => {
+            // ফলাফল গণনা
+            let correctCount = 0;
+            let wrongCount = 0;
+            userAnswers.forEach((ans, index) => {
+                // শুধুমাত্র উত্তর দেওয়া প্রশ্নগুলোকেই গণনার মধ্যে আনা হবে
+                if (
+                    ans.status === "answered" ||
+                    ans.status === "marked-answered"
+                ) {
+                    if (ans.selectedOption === questions[index].correctAnswer) {
+                        correctCount++;
+                    } else {
+                        wrongCount++;
+                    }
+                }
+            });
+
+            // নতুন গণনা
+            const totalQuestions = questions.length;
+            const attemptedCount = correctCount + wrongCount;
+            const unansweredCount = totalQuestions - attemptedCount;
+            const positiveMarks = correctCount * 1; // প্রতিটি সঠিক উত্তরের জন্য ১ নম্বর
+            const negativeMarks = wrongCount / 3; // প্রতি ৩টি ভুলের জন্য ১ নম্বর কাটা
+            const finalScore = positiveMarks - negativeMarks;
+            const accuracy =
+                attemptedCount > 0 ? (correctCount / attemptedCount) * 100 : 0;
+
+            // স্কোর সেভ করা
+            saveQuizResult(
+                EXAM_ID,
+                SET_NAME,
+                finalScore, // চূড়ান্ত স্কোর সেভ করা হচ্ছে
+                wrongCount,
+                totalQuestions,
+            );
+
+            // UI-তে ফলাফল দেখানো (নতুন ডিজাইন)
+            const container = document.getElementById("exam-container");
+            container.innerHTML = `
+                <div class="result-page">
+                    <div class="result-card">
+                        <h2 class="result-title">🎉 পরীক্ষার ফলাফল</h2>
+                        <p class="result-score-text">আপনার চূড়ান্ত স্কোর:</p>
+                        <p class="result-score">
+                            <span class="final-score">${finalScore.toFixed(2)}</span> / ${totalQuestions}
+                        </p>
+
+                        <table class="result-details-table">
+                            <tbody>
+                                <tr><td>মোট প্রশ্ন</td><td>${totalQuestions}</td></tr>
+                                <tr><td>উত্তর দিয়েছেন (Attempted)</td><td>${attemptedCount}</td></tr>
+                                <tr><td>সঠিক উত্তর</td><td>${correctCount}</td></tr>
+                                <tr><td>ভুল উত্তর</td><td>${wrongCount}</td></tr>
+                                <tr><td>উত্তর দেননি (Unanswered)</td><td>${unansweredCount}</td></tr>
+                                <tr><td>প্রাপ্ত নম্বর</td><td>+${positiveMarks.toFixed(2)}</td></tr>
+                                <tr><td>নেগেটিভ মার্কস</td><td>-${negativeMarks.toFixed(2)}</td></tr>
+                                <tr class="accuracy-row"><td>সঠিকতার হার (Accuracy)</td><td>${accuracy.toFixed(2)}%</td></tr>
+                            </tbody>
+                        </table>
+
+                        <div class="result-actions">
+                            <button onclick="showReview()" class="action-btn review">রিভিউ দেখুন</button>
+                            <a href="../../dashboard.html" class="action-btn dashboard">ড্যাশবোর্ডে যান</a>
+                            <button onclick="location.reload()" class="action-btn retry">🔁 আবার দিন</button>
+                        </div>
+                    </div>
+                </div>`;
+        }, 1500); // ফলাফল দেখাতে একটু দেরি করা হলো, দেখতে ভালো লাগে
     }
 
+    // রিভিউ ফাংশন (আগের মতোই)
     window.showReview = function () {
         const container = document.getElementById("exam-container");
-        // UI-তে রিভিউ দেখানো (নতুন এবং উন্নত ডিজাইন)
         let reviewHTML = `
             <div class="review-page">
                 <h2 class="review-title">📝 পরীক্ষার রিভিউ</h2>`;
@@ -255,9 +300,19 @@ document.addEventListener("DOMContentLoaded", () => {
         questions.forEach((q, i) => {
             const userAnswer = userAnswers[i];
             const isCorrect = userAnswer.selectedOption === q.correctAnswer;
+            const isAttempted =
+                userAnswer.status === "answered" ||
+                userAnswer.status === "marked-answered";
+
+            let cardClass = "";
+            if (isAttempted) {
+                cardClass = isCorrect ? "review-correct" : "review-incorrect";
+            } else {
+                cardClass = "review-unanswered";
+            }
 
             reviewHTML += `
-                <div class="review-card ${isCorrect ? "review-correct" : "review-incorrect"}">
+                <div class="review-card ${cardClass}">
                     <h3 class="review-question">
                         <i class="fas fa-question-circle"></i> প্রশ্ন ${i + 1}: ${q.questionText}
                     </h3>
@@ -265,7 +320,9 @@ document.addEventListener("DOMContentLoaded", () => {
                         <strong><i class="fas fa-check-circle"></i> সঠিক উত্তর:</strong> ${q.correctAnswer}
                     </p>
                     <p class="review-answer your-ans">
-                        <strong><i class="fas ${isCorrect ? "fa-check-circle" : "fa-times-circle"}"></i> আপনার উত্তর:</strong> 
+                        <strong>
+                           ${isAttempted ? (isCorrect ? '<i class="fas fa-check-circle"></i> আপনার উত্তর:' : '<i class="fas fa-times-circle"></i> আপনার উত্তর:') : '<i class="fas fa-minus-circle"></i> আপনার উত্তর:'}
+                        </strong> 
                         <span class="font-bold">
                             ${userAnswer.selectedOption || "উত্তর দেননি"}
                         </span>
@@ -275,13 +332,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
         reviewHTML += `
             <div class="review-footer">
+                 <a href="../../dashboard.html" class="action-btn dashboard">ড্যাশবোর্ডে যান</a>
                 <button onclick="location.reload()" class="action-btn retry">🔁 আবার দিন</button>
             </div></div>`;
 
         container.innerHTML = reviewHTML;
     };
 
-    // --- আপনার আগের স্কোর সেভ করার ফাংশন (অপরিবর্তিত) ---
+    // --- স্কোর সেভ করার ফাংশন (অপরিবর্তিত) ---
     function saveQuizResult(
         chapterName,
         setName,
@@ -312,21 +370,32 @@ document.addEventListener("DOMContentLoaded", () => {
                 };
 
                 const oldSetData = chapterData.quiz_sets[setKey];
+                // এখানে স্কোর গণনা একটু ভিন্ন হবে কারণ এখন finalScore আসছে
+                const correctCountBeforeUpdate = oldSetData
+                    ? oldSetData.totalQuestions - oldSetData.wrong
+                    : 0;
+
                 if (oldSetData) {
-                    chapterData.totalCorrect -= oldSetData.score;
-                    chapterData.totalWrong -=
-                        oldSetData.totalQuestions - oldSetData.score;
+                    chapterData.totalCorrect -= correctCountBeforeUpdate;
+                    chapterData.totalWrong -= oldSetData.wrong;
                     chapterData.totalScore -= oldSetData.score;
                 } else {
                     chapterData.completedQuizzesCount += 1;
                 }
 
-                chapterData.totalCorrect += score;
+                const correctCountAfterUpdate =
+                    totalQuestions -
+                    wrong -
+                    (totalQuestions -
+                        userAnswers.filter((a) => a.selectedOption).length);
+
+                chapterData.totalCorrect += correctCountAfterUpdate;
                 chapterData.totalWrong += wrong;
-                chapterData.totalScore += score;
+                chapterData.totalScore += score; // এখানে চূড়ান্ত স্কোর যোগ হচ্ছে
 
                 chapterData.quiz_sets[setKey] = {
-                    score: score,
+                    score: score, // চূড়ান্ত স্কোর
+                    wrong: wrong, // ভুল উত্তরের সংখ্যা
                     totalQuestions: totalQuestions,
                     attemptedAt:
                         firebase.firestore.FieldValue.serverTimestamp(),
