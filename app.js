@@ -4,12 +4,12 @@ document.addEventListener("DOMContentLoaded", () => {
     let userAnswers = [];
     let currentQuestionIndex = 0;
     let timerInterval;
-    let remainingTime; // টাইমারের বর্তমান সময় ট্র্যাক করতে
-    let isPaused = false; // পজ অবস্থা ট্র্যাক করতে
+    let remainingTime;
+    let isPaused = false;
 
     const EXAM_ID = "RRB NTPC CBT-1";
     const SET_NAME = "Mock Test 1";
-    const progressKey = `examProgress_${EXAM_ID}_${SET_NAME}`; // লোকাল স্টোরেজের জন্য ইউনিক কী
+    const progressKey = `examProgress_${EXAM_ID}_${SET_NAME}`;
 
     // --- UI এলিমেন্ট ---
     const loadingSpinner = document.getElementById("loading-spinner");
@@ -27,6 +27,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const pauseBtn = document.getElementById("pause-btn");
     const pauseOverlay = document.getElementById("pause-overlay");
     const resumeBtnOverlay = document.getElementById("resume-btn-overlay");
+
+    // ## মোবাইল টগল বাটনগুলোকে সঠিকভাবে সিলেক্ট করা হয়েছে ##
+    const examBody = document.getElementById("exam-body");
+    const togglePaletteBtn = document.getElementById("toggle-palette-btn");
+    const backToQuestionBtn = document.getElementById("back-to-question-btn");
 
     // --- অ্যাপ শুরু ---
     firebase.auth().onAuthStateChanged(function (user) {
@@ -46,24 +51,34 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         if (!loadProgress()) {
-            // যদি কোনো সেভ করা ডেটা না থাকে, তাহলে নতুন করে শুরু করুন
             userAnswers = questions.map((q) => ({
                 qNo: q.qNo,
                 selectedOption: null,
                 status: "not-visited",
             }));
-            remainingTime = 60 * 60; // ৬০ মিনিট
+            remainingTime = 60 * 60;
         }
 
         renderQuestion();
         createPalette();
         startTimer(remainingTime);
 
+        // ## মোবাইল টগল বাটনগুলোর জন্য ইভেন্ট লিসেনার যোগ করা হয়েছে ##
+        if (togglePaletteBtn && backToQuestionBtn) {
+            togglePaletteBtn.addEventListener("click", () => {
+                examBody.classList.add("show-palette");
+            });
+
+            backToQuestionBtn.addEventListener("click", () => {
+                examBody.classList.remove("show-palette");
+            });
+        }
+
         loadingSpinner.classList.add("hidden");
         examContainer.classList.remove("hidden");
     }
 
-    // --- ## Save/Load Progress Logic ## ---
+    // --- Save/Load Progress ---
     function saveProgress() {
         const progress = {
             answers: userAnswers,
@@ -72,7 +87,6 @@ document.addEventListener("DOMContentLoaded", () => {
         };
         localStorage.setItem(progressKey, JSON.stringify(progress));
     }
-
     function loadProgress() {
         const savedProgress = localStorage.getItem(progressKey);
         if (savedProgress) {
@@ -85,15 +99,15 @@ document.addEventListener("DOMContentLoaded", () => {
         return false;
     }
 
-    // --- ## Pause/Resume Logic ## ---
+    // --- Pause/Resume ---
     function togglePause() {
         isPaused = !isPaused;
         if (isPaused) {
-            clearInterval(timerInterval); // টাইমার বন্ধ করুন
+            clearInterval(timerInterval);
             pauseOverlay.classList.remove("hidden");
             pauseBtn.innerHTML = '<i class="fas fa-play"></i>';
         } else {
-            startTimer(remainingTime); // টাইমার আবার চালু করুন
+            startTimer(remainingTime);
             pauseOverlay.classList.add("hidden");
             pauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
         }
@@ -103,12 +117,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // --- পরীক্ষার মূল লজিক ---
     function renderQuestion() {
-        // ... (এই ফাংশনটি অপরিবর্তিত)
         if (currentQuestionIndex >= questions.length) return;
         const currentAnswer = userAnswers[currentQuestionIndex];
-        if (currentAnswer.status === "not-visited") {
+        if (currentAnswer.status === "not-visited")
             currentAnswer.status = "not-answered";
-        }
         const q = questions[currentQuestionIndex];
         questionNumberEl.textContent = `Question No. ${q.qNo}`;
         questionTextEl.textContent = q.questionText;
@@ -133,7 +145,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function createPalette() {
-        // ... (এই ফাংশনটি সামান্য পরিবর্তিত)
         questionPaletteEl.innerHTML = "";
         questions.forEach((q, index) => {
             const btn = document.createElement("button");
@@ -144,13 +155,16 @@ document.addEventListener("DOMContentLoaded", () => {
                 currentQuestionIndex = index;
                 renderQuestion();
                 saveProgress();
+                // ## মোবাইল ভিউতে প্রশ্ন সেকশনে ফিরে যাওয়ার জন্য এই কোডটি এখানে যোগ করা হয়েছে ##
+                if (window.innerWidth <= 992) {
+                    examBody.classList.remove("show-palette");
+                }
             });
             questionPaletteEl.appendChild(btn);
         });
     }
 
     function updatePalette() {
-        // ... (এই ফাংশনটি অপরিবর্তিত)
         document.querySelectorAll(".palette-btn").forEach((btn, index) => {
             btn.className = "palette-btn " + userAnswers[index].status;
             if (index === currentQuestionIndex) btn.classList.add("current");
@@ -167,7 +181,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 showFinalResult();
                 return;
             }
-            saveProgress(); // প্রতি সেকেন্ডে অগ্রগতি সেভ করুন
+            saveProgress();
             let h = String(Math.floor(remainingTime / 3600)).padStart(2, "0");
             let m = String(Math.floor((remainingTime % 3600) / 60)).padStart(
                 2,
@@ -188,9 +202,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     saveNextBtn.addEventListener("click", () => {
         const currentAns = userAnswers[currentQuestionIndex];
-        if (currentAns.selectedOption) {
-            currentAns.status = "answered";
-        }
+        if (currentAns.selectedOption) currentAns.status = "answered";
         goToNextQuestion();
     });
 
@@ -210,7 +222,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     submitBtn.addEventListener("click", () => {
-        // ... (এই ফাংশনটি অপরিবর্তিত)
         const summary = {
             answered: userAnswers.filter(
                 (a) =>
@@ -235,9 +246,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function showFinalResult() {
         clearInterval(timerInterval);
-        localStorage.removeItem(progressKey); // পরীক্ষা শেষে সেভ করা ডেটা মুছে দিন
+        localStorage.removeItem(progressKey);
 
-        // ... ফলাফল গণনা
         let correctCount = 0,
             wrongCount = 0;
         userAnswers.forEach((ans, index) => {
@@ -264,7 +274,6 @@ document.addEventListener("DOMContentLoaded", () => {
             totalQuestions,
         );
 
-        // ## নতুন ফলাফল পেজের HTML ##
         const container = document.getElementById("exam-container");
         container.innerHTML = `
         <div class="result-page">
@@ -292,29 +301,18 @@ document.addEventListener("DOMContentLoaded", () => {
             </div>
         </div>`;
     }
-    // ... বাকি ফাংশনগুলো (showReview, saveQuizResult) অপরিবর্তিত
-
-    // --- app.js (শুধুমাত্র এই ফাংশনটি প্রতিস্থাপন করুন) ---
 
     window.showReview = function () {
         const container = document.getElementById("exam-container");
-
-        // ## নতুন এবং উন্নত ডিজাইনের জন্য HTML তৈরি ##
-        let reviewHTML = `
-            <div class="review-page">
-                <h2 class="review-title"><i class="fas fa-clipboard-list"></i> পরীক্ষার রিভিউ</h2>`;
-
+        let reviewHTML = `<div class="review-page"><h2 class="review-title"><i class="fas fa-clipboard-list"></i> পরীক্ষার রিভিউ</h2>`;
         questions.forEach((q, i) => {
             const userAnswer = userAnswers[i];
             const isCorrect = userAnswer.selectedOption === q.correctAnswer;
             const isAttempted =
                 userAnswer.status === "answered" ||
                 userAnswer.status === "marked-answered";
-
             let cardClass = "";
             let yourAnswerIcon = "";
-
-            // কার্ডের ক্লাস এবং আপনার উত্তরের আইকন নির্ধারণ
             if (isAttempted) {
                 if (isCorrect) {
                     cardClass = "review-correct";
@@ -325,36 +323,18 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             } else {
                 cardClass = "review-unanswered";
-                yourAnswerIcon = '<i class="far fa-circle"></i>'; // উত্তর না দেওয়ার জন্য আইকন
+                yourAnswerIcon = '<i class="far fa-circle"></i>';
             }
-
             reviewHTML += `
                 <div class="review-card ${cardClass}">
-                    <h3 class="review-question">
-                        <i class="fas fa-question-circle"></i> প্রশ্ন ${i + 1}: ${q.questionText}
-                    </h3>
+                    <h3 class="review-question"><i class="fas fa-question-circle"></i> প্রশ্ন ${i + 1}: ${q.questionText}</h3>
                     <div class="review-answers-container">
-                        <p class="review-answer correct-ans">
-                            <strong><i class="fas fa-check-circle"></i> সঠিক উত্তর:</strong> 
-                            <span>${q.correctAnswer}</span>
-                        </p>
-                        <p class="review-answer your-ans">
-                            <strong>${yourAnswerIcon} আপনার উত্তর:</strong> 
-                            <span>
-                                ${userAnswer.selectedOption || "উত্তর দেননি"}
-                            </span>
-                        </p>
+                        <p class="review-answer correct-ans"><strong><i class="fas fa-check-circle"></i> সঠিক উত্তর:</strong> <span>${q.correctAnswer}</span></p>
+                        <p class="review-answer your-ans"><strong>${yourAnswerIcon} আপনার উত্তর:</strong> <span>${userAnswer.selectedOption || "উত্তর দেননি"}</span></p>
                     </div>
                 </div>`;
         });
-
-        reviewHTML += `
-            <div class="review-footer">
-                <a href="../../dashboard.html" class="action-btn dashboard"><i class="fas fa-tachometer-alt"></i> ড্যাশবোর্ডে যান</a>
-                <button onclick="location.reload()" class="action-btn retry"><i class="fas fa-redo"></i> আবার দিন</button>
-            </div>
-        </div>`;
-
+        reviewHTML += `<div class="review-footer"><a href="../../dashboard.html" class="action-btn dashboard"><i class="fas fa-tachometer-alt"></i> ড্যাশবোর্ডে যান</a><button onclick="location.reload()" class="action-btn retry"><i class="fas fa-redo"></i> আবার দিন</button></div></div>`;
         container.innerHTML = reviewHTML;
     };
 
@@ -365,9 +345,8 @@ document.addEventListener("DOMContentLoaded", () => {
         wrong,
         totalQuestions,
     ) {
-        // ... (এই ফাংশনটি অপরিবর্তিত)
         const user = firebase.auth().currentUser;
-        if (!user) return console.error("User not logged in.");
+        if (!user) return;
         const userDocRef = db.collection("users").doc(user.uid);
         const chapterKey = chapterName.replace(/\s/g, "_");
         const setKey = setName.replace(/\s/g, "_");
@@ -416,11 +395,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 transaction.update(userDocRef, updateData);
             });
         })
-            .then(() => {
-                console.log("Result saved successfully!");
-            })
-            .catch((error) => {
-                console.error("Error saving result: ", error);
-            });
+            .then(() => console.log("Result saved successfully!"))
+            .catch((error) => console.error("Error saving result: ", error));
     }
 });
