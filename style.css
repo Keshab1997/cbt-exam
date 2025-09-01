@@ -1,4 +1,4 @@
-/* --- style.css (সম্পূর্ণ আপডেটেড এবং রেসপন্সিভ কোড) --- */
+/* --- style.css (সম্পূর্ণ আপডেটেড এবং সমাধানকৃত কোড) --- */
 :root {
     --primary-bg: #f4f7f9;
     --secondary-bg: #ffffff;
@@ -109,7 +109,6 @@ body {
     display: flex;
     align-items: center;
     gap: 15px;
-    /* Gap কমানো হয়েছে */
 }
 
 .header-icon-btn {
@@ -117,7 +116,6 @@ body {
     border: none;
     color: white;
     font-size: 1.3em;
-    /* Size কমানো হয়েছে */
     cursor: pointer;
     padding: 8px;
     border-radius: 50%;
@@ -137,7 +135,6 @@ body {
     color: #f1c40f;
 }
 
-/* রিস্টার্ট বাটনের রঙ */
 .timer-container {
     display: flex;
     align-items: center;
@@ -482,12 +479,178 @@ body {
     cursor: pointer;
 }
 
+/* --- ## ফলাফল ও রিভিউ পেজের স্টাইল ঠিক করা হয়েছে ## --- */
 .result-page,
 .review-page {
     background-color: var(--primary-bg);
     padding: 20px;
     overflow-y: auto;
     height: 100%;
+    box-sizing: border-box;
+}
+
+.result-card {
+    background-color: white;
+    padding: 30px 40px;
+    border-radius: 15px;
+    box-shadow: var(--shadow);
+    max-width: 700px;
+    margin: 20px auto;
+}
+
+.result-title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    font-size: 2em;
+    color: var(--header-bg);
+    margin-bottom: 20px;
+}
+
+.result-summary {
+    text-align: center;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+}
+
+.result-score-text {
+    font-size: 1.1em;
+    color: var(--light-text-color);
+}
+
+.result-score {
+    font-size: 3em;
+    font-weight: 700;
+    color: var(--primary-btn-color);
+    margin: 10px 0;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    text-align: left;
+}
+
+.stat-item {
+    background: var(--primary-bg);
+    padding: 15px;
+    border-radius: 10px;
+    border-left: 5px solid;
+}
+
+.stat-item h4 {
+    margin: 0 0 5px 0;
+    color: var(--light-text-color);
+    font-size: 0.9em;
+    text-transform: uppercase;
+}
+
+.stat-item p {
+    margin: 0;
+    font-size: 1.5em;
+    font-weight: 600;
+}
+
+.stat-correct {
+    border-color: var(--answered-color);
+}
+
+.stat-correct p {
+    color: var(--answered-color);
+}
+
+.stat-wrong {
+    border-color: var(--not-answered-color);
+}
+
+.stat-wrong p {
+    color: var(--not-answered-color);
+}
+
+.stat-attempted {
+    border-color: var(--primary-btn-color);
+}
+
+.stat-attempted p {
+    color: var(--primary-btn-color);
+}
+
+.stat-unanswered {
+    border-color: var(--light-text-color);
+}
+
+.stat-unanswered p {
+    color: var(--light-text-color);
+}
+
+.accuracy-section {
+    margin-top: 20px;
+}
+
+.accuracy-label {
+    display: flex;
+    justify-content: space-between;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.progress-bar {
+    height: 15px;
+    background-color: #e0e6ed;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background-color: var(--answered-color);
+    border-radius: 10px;
+    transition: width 0.5s ease;
+}
+
+.result-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+.action-btn {
+    padding: 12px 25px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.action-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.action-btn.review {
+    background-color: #17a2b8;
+    color: white;
+}
+
+.action-btn.dashboard {
+    background-color: var(--primary-btn-color);
+    color: white;
+}
+
+.action-btn.retry {
+    background-color: #6c757d;
+    color: white;
 }
 
 .review-page .review-title {
