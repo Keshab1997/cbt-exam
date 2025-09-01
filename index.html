@@ -4,11 +4,20 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>CBT Exam Platform</title>
-        <link rel="stylesheet" href="style.css" />
+
+        <!-- ## নতুন ফন্ট ও আইকন যোগ করা হয়েছে ## -->
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+            rel="stylesheet"
+        />
         <link
             rel="stylesheet"
             href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
         />
+        <!-- ## শেষ ## -->
+        <link rel="stylesheet" href="style.css" />
     </head>
     <body>
         <div id="loading-spinner" class="loading-spinner">
@@ -19,22 +28,24 @@
         <div id="exam-container" class="exam-container hidden">
             <header class="exam-header">
                 <div class="logo">RRB NTPC CBT-1</div>
-
-                <!-- ## নতুন কাউন্টার যোগ করা হয়েছে ## -->
-                <div class="score-tracker">
-                    <span id="correct-count" class="correct">✔️ 0</span>
-                    <span id="wrong-count" class="wrong">❌ 0</span>
-                </div>
-                <!-- ## শেষ ## -->
-
-                <div class="timer-container">
-                    <span>Time Left:</span>
-                    <div id="timer">00:00:00</div>
+                <div class="header-center">
+                    <div class="score-tracker">
+                        <span id="correct-count" class="correct" title="Correct"
+                            >✔️ 0</span
+                        >
+                        <span id="wrong-count" class="wrong" title="Wrong"
+                            >❌ 0</span
+                        >
+                    </div>
+                    <div class="timer-container">
+                        <i class="far fa-clock"></i>
+                        <span>Time Left:</span>
+                        <div id="timer">00:00:00</div>
+                    </div>
                 </div>
                 <div class="user-profile">
                     <i class="fas fa-user-circle"></i>
                     <span id="user-display-name">Guest</span>
-                    <!-- নাম দেখানোর জন্য -->
                 </div>
             </header>
 
@@ -50,18 +61,20 @@
                         <!-- Options will be loaded here by JavaScript -->
                     </div>
                     <div class="question-footer">
+                        <!-- ## বাটনগুলোতে আইকন যোগ করা হয়েছে ## -->
                         <button id="mark-review-btn">
-                            Mark for Review & Next
+                            <i class="fas fa-star"></i> Mark & Next
                         </button>
-                        <button id="clear-response-btn">Clear Response</button>
+                        <button id="clear-response-btn">
+                            <i class="fas fa-times"></i> Clear Response
+                        </button>
                         <button id="save-next-btn" class="primary">
-                            Save & Next
+                            Save & Next <i class="fas fa-chevron-right"></i>
                         </button>
                     </div>
                 </div>
 
                 <aside class="palette-section">
-                    <!-- ## এই অংশটি ঠিক করা হয়েছে ## -->
                     <div class="palette-legend">
                         <div>
                             <span class="palette-dot answered"></span> Answered
@@ -83,13 +96,15 @@
                         </div>
                     </div>
                     <hr class="palette-divider" />
-                    <!-- ## শেষ ## -->
 
+                    <div class="palette-header">
+                        <h4>Question Palette</h4>
+                    </div>
                     <div id="question-palette" class="question-palette">
                         <!-- Palette buttons will be loaded here -->
                     </div>
                     <button id="submit-btn" class="submit-btn">
-                        Submit Test
+                        <i class="fas fa-check-circle"></i> Submit Test
                     </button>
                 </aside>
             </main>
@@ -100,9 +115,14 @@
             <div class="modal-content">
                 <span class="close-btn">&times;</span>
                 <h2>Test Summary</h2>
-                <table id="summary-table">
-                    <!-- Summary will be generated here -->
-                </table>
+                <table id="summary-table"></table>
+                <p class="warning-text">
+                    আপনি কি নিশ্চিত? সাবমিট করার পর কোনো পরিবর্তন করতে পারবেন
+                    না।<br /><b
+                        >মনে রাখবেন: প্রতি ৩টি ভুল উত্তরের জন্য ১ নম্বর কাটা
+                        হবে।</b
+                    >
+                </p>
                 <button id="final-submit-btn">Confirm & Submit</button>
             </div>
         </div>
