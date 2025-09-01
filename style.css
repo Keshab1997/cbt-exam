@@ -86,11 +86,12 @@ body {
     height: 100vh;
 }
 
+/* --- ## হেডার স্টাইল আপডেট করা হয়েছে ## --- */
 .exam-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 8px 25px;
+    padding: 5px 15px; /* প্যাডিং কমানো হয়েছে */
     background: var(--header-bg);
     color: white;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
@@ -98,17 +99,26 @@ body {
     top: 0;
     z-index: 10;
     flex-shrink: 0;
+    gap: 10px; /* আইটেমগুলোর মধ্যে সামান্য গ্যাপ */
+    flex-wrap: nowrap; /* লাইন ভাঙা বন্ধ করা হয়েছে */
 }
 
 .logo {
-    font-size: 1.3em;
+    font-size: 1.2em;
     font-weight: 700;
+    white-space: nowrap; /* লেখা যেন এক লাইনে থাকে */
+    overflow: hidden;
+    text-overflow: ellipsis; /* লেখা বড় হলে ... দেখাবে */
+    flex: 1; /* প্রয়োজন অনুযায়ী জায়গা নিবে */
+    min-width: 0;
 }
 
 .header-center {
     display: flex;
     align-items: center;
-    gap: 15px;
+    justify-content: center; /* সেন্টারে আনা হয়েছে */
+    gap: 10px; /* গ্যাপ কমানো হয়েছে */
+    flex: 2; /* লোগোর চেয়ে বেশি জায়গা দেওয়া হয়েছে */
 }
 
 .header-icon-btn {
@@ -140,21 +150,24 @@ body {
     align-items: center;
     gap: 8px;
     background-color: rgba(255, 255, 255, 0.1);
-    padding: 6px 12px;
+    padding: 5px 10px; /* প্যাডিং কমানো হয়েছে */
     border-radius: 20px;
 }
 
 #timer {
-    font-size: 1.2em;
+    font-size: 1.1em; /* ফন্ট সাইজ সামান্য কমানো হয়েছে */
     font-weight: 600;
 }
 
 .user-profile {
     display: flex;
     align-items: center;
+    justify-content: flex-end; /* ডান দিকে অ্যালাইন করা হয়েছে */
     gap: 10px;
     font-size: 1em;
+    flex: 1;
 }
+/* --- ## হেডার স্টাইল আপডেট শেষ ## --- */
 
 .exam-body {
     display: flex;
@@ -739,6 +752,8 @@ body {
     gap: 10px;
 }
 
+
+/* --- ## মোবাইল ভিউ (Media Query) আপডেট করা হয়েছে ## --- */
 @media (max-width: 992px) {
     body {
         overflow: auto;
@@ -749,37 +764,37 @@ body {
     }
 
     .exam-header {
-        flex-wrap: wrap;
+        flex-wrap: nowrap; /* নিশ্চিত করা হয়েছে যেন লাইন না ভাঙে */
         justify-content: space-between;
-        padding: 10px 15px;
-        row-gap: 10px;
+        padding: 5px 10px; /* মোবাইল এর জন্য প্যাডিং */
+        row-gap: 0;
     }
 
     .logo {
-        width: 50%;
-    }
-
-    .header-center {
-        order: 3;
-        width: 100%;
-        justify-content: space-between;
-    }
-
-    #pause-btn {
-        order: 2;
-    }
-
-    #restart-btn {
-        order: 3;
-    }
-
-    .timer-container {
+        width: auto; /* width 50% তুলে দেওয়া হয়েছে */
+        flex-shrink: 1; /* প্রয়োজনে ছোট হবে */
+        font-size: 1.1em; /* ফন্ট ছোট করা হয়েছে */
         order: 1;
     }
 
+    .header-center {
+        order: 3; /* ডান পাশে দেখানোর জন্য */
+        width: auto; /* width 100% তুলে দেওয়া হয়েছে */
+        justify-content: flex-end; /* ডান দিকে অ্যালাইন করা হয়েছে */
+    }
+    
+    .timer-container {
+        order: 2; /* মাঝখানে রাখার জন্য */
+    }
+
+    /* অপ্রয়োজনীয় আইকন বা লেখা মোবাইল এ হাইড করা হয়েছে */
     .user-profile.desktop-only,
     .timer-container .desktop-only {
         display: none;
+    }
+
+    #pause-btn, #restart-btn {
+      order: initial; /* order রিসেট করা হয়েছে */
     }
 
     .mobile-only {
