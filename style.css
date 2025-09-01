@@ -1,0 +1,113 @@
+/* --- বেসিক স্টাইল --- */
+:root {
+    --primary-bg: #eef1f7;
+    --secondary-bg: #ffffff;
+    --header-bg: #3b3f5c;
+    --text-color: #333;
+    --answered-color: #28a745;
+    --not-answered-color: #dc3545;
+    --marked-color: #6f42c1;
+    --marked-answered-color: #17a2b8;
+    --not-visited-color: #a7a7a7; /* Changed color for better visibility */
+    --primary-btn-color: #007bff;
+    --primary-btn-hover: #0056b3;
+    --danger-btn-color: #dc3545;
+    --danger-btn-hover: #c82333;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background-color: var(--primary-bg);
+    margin: 0;
+    color: var(--text-color);
+}
+
+.hidden { display: none !important; }
+
+/* --- লোডিং স্পিনার --- */
+.loading-spinner { display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; }
+.spinner { border: 8px solid #f3f3f3; border-top: 8px solid var(--primary-btn-color); border-radius: 50%; width: 60px; height: 60px; animation: spin 1s linear infinite; }
+@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+/* --- মূল কন্টেইনার --- */
+.exam-container { max-width: 1400px; margin: 1rem auto; background: var(--secondary-bg); box-shadow: 0 4px 15px rgba(0,0,0,0.1); border-radius: 8px; overflow: hidden; }
+
+/* --- হেডার --- */
+.exam-header { display: flex; justify-content: space-between; align-items: center; padding: 12px 25px; background: var(--header-bg); color: white; }
+.timer-container { text-align: center; }
+#timer { font-size: 1.5em; font-weight: bold; letter-spacing: 2px; }
+.user-profile { display: flex; align-items: center; gap: 8px; }
+
+/* --- পরীক্ষার মূল অংশ --- */
+.exam-body { display: flex; flex-wrap: wrap; }
+.question-section { flex: 3; padding: 25px; min-width: 300px; border-right: 1px solid #dee2e6; }
+#question-number { margin-top: 0; }
+#question-text { font-size: 1.25em; line-height: 1.6; margin-bottom: 25px; }
+.options-container .option { display: flex; align-items: center; padding: 15px; border: 1px solid #ccc; border-radius: 5px; margin-bottom: 12px; cursor: pointer; transition: background-color 0.2s, border-color 0.2s; }
+.options-container .option:hover { background-color: #f8f9fa; }
+.options-container .option.selected { background-color: #e0f0ff; border-color: var(--primary-btn-color); }
+.options-container input[type="radio"] { margin-right: 15px; width: 18px; height: 18px; flex-shrink: 0; }
+.question-footer { margin-top: 30px; border-top: 1px solid #dee2e6; padding-top: 20px; display: flex; flex-wrap: wrap; gap: 10px; }
+.question-footer button { padding: 10px 18px; border: 1px solid #ccc; background: #f0f0f0; cursor: pointer; border-radius: 5px; font-weight: 500; transition: background-color 0.2s; }
+.question-footer button:hover { background-color: #e2e6ea; }
+.question-footer button.primary { background: var(--answered-color); color: white; border-color: var(--answered-color); }
+.question-footer button.primary:hover { background: #218838; }
+
+/* --- প্রশ্ন প্যানেল --- */
+.palette-section { flex: 1; padding: 25px; background: #f8f9fa; min-width: 280px; }
+
+/* ## এই অংশটি আপনার ডিজাইন ঠিক করবে ## */
+.palette-legend { margin-bottom: 15px; }
+.palette-legend div {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+.palette-dot {
+    width: 15px;
+    height: 15px;
+    border-radius: 3px;
+    flex-shrink: 0;
+    margin-right: 10px;
+}
+.palette-divider {
+    border: none;
+    border-top: 1px solid #dee2e6;
+    margin: 15px 0;
+}
+/* ## শেষ ## */
+
+.question-palette { display: grid; grid-template-columns: repeat(auto-fill, minmax(40px, 1fr)); gap: 10px; margin-bottom: 20px; }
+.palette-btn { width: 40px; height: 40px; border: 1px solid #ccc; cursor: pointer; font-weight: bold; transition: all 0.2s; border-radius: 4px; }
+.palette-btn.current { border: 2px solid var(--primary-btn-color); transform: scale(1.1); box-shadow: 0 0 10px rgba(0, 123, 255, 0.5); }
+.palette-btn.answered { background: var(--answered-color); color: white; border-color: var(--answered-color); }
+.palette-btn.not-answered { background: var(--not-answered-color); color: white; border-color: var(--not-answered-color); }
+.palette-btn.marked { background: var(--marked-color); color: white; border-color: var(--marked-color); }
+.palette-btn.marked-answered { background: var(--marked-answered-color); color: white; border-color: var(--marked-answered-color); }
+.palette-btn.not-visited { background: var(--secondary-bg); color: #555; }
+.submit-btn { width: 100%; padding: 15px; background: var(--primary-btn-color); color: white; border: none; border-radius: 5px; font-size: 16px; font-weight: bold; cursor: pointer; transition: background-color 0.2s; }
+.submit-btn:hover { background-color: var(--primary-btn-hover); }
+
+/* --- মডাল (Pop-up) --- */
+.modal { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.6); align-items: center; justify-content: center; }
+.modal-content { background-color: #fefefe; padding: 25px; border: 1px solid #888; width: 90%; max-width: 500px; border-radius: 8px; box-shadow: 0 5px 20px rgba(0,0,0,0.3); }
+.close-btn { color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer; line-height: 1; }
+.close-btn:hover, .close-btn:focus { color: black; }
+#summary-table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+#summary-table th, #summary-table td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+#summary-table td:last-child { text-align: center; font-weight: bold; }
+#final-submit-btn { width: 100%; padding: 12px; font-size: 16px; background: var(--danger-btn-color); color: white; border: none; border-radius: 5px; cursor: pointer; transition: background-color 0.2s; font-weight: bold; }
+#final-submit-btn:hover { background-color: var(--danger-btn-hover); }
+
+/* --- মোবাইল ডিভাইসের জন্য স্টাইল --- */
+@media (max-width: 1024px) {
+    .exam-body { flex-direction: column; }
+    .question-section { border-right: none; }
+    .palette-section { border-left: none; border-top: 1px solid #dee2e6; }
+}
+@media (max-width: 480px) {
+    .exam-header { flex-direction: column; gap: 10px; text-align: center; }
+    #timer { font-size: 1.3em; }
+    .question-footer { justify-content: center; }
+}

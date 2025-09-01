@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CBT Exam Platform</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+</head>
+<body>
+    <div id="loading-spinner" class="loading-spinner">
+        <div class="spinner"></div>
+        <p>Loading Exam...</p>
+    </div>
+
+    <div id="exam-container" class="exam-container hidden">
+        <header class="exam-header">
+            <div class="logo">RRB NTPC CBT-1</div>
+            <div class="timer-container">
+                <span>Time Left:</span>
+                <div id="timer">00:00:00</div>
+            </div>
+            <div class="user-profile">
+                <i class="fas fa-user-circle"></i> Guest User
+            </div>
+        </header>
+
+        <main class="exam-body">
+            <div class="question-section">
+                <div class="question-header">
+                    <h3 id="question-number">Question No. 1</h3>
+                </div>
+                <div class="question-content">
+                    <p id="question-text">Loading question...</p>
+                </div>
+                <div id="options-container" class="options-container">
+                    <!-- Options will be loaded here by JavaScript -->
+                </div>
+                <div class="question-footer">
+                    <button id="mark-review-btn">Mark for Review & Next</button>
+                    <button id="clear-response-btn">Clear Response</button>
+                    <button id="save-next-btn" class="primary">Save & Next</button>
+                </div>
+            </div>
+
+            <aside class="palette-section">
+                <!-- ## এই অংশটি ঠিক করা হয়েছে ## -->
+                <div class="palette-legend">
+                    <div><span class="palette-dot answered"></span> Answered</div>
+                    <div><span class="palette-dot not-answered"></span> Not Answered</div>
+                    <div><span class="palette-dot marked"></span> Marked</div>
+                    <div><span class="palette-dot not-visited"></span> Not Visited</div>
+                    <div><span class="palette-dot marked-answered"></span> Marked & Answered</div>
+                </div>
+                <hr class="palette-divider">
+                <!-- ## শেষ ## -->
+                
+                <div id="question-palette" class="question-palette">
+                    <!-- Palette buttons will be loaded here -->
+                </div>
+                <button id="submit-btn" class="submit-btn">Submit Test</button>
+            </aside>
+        </main>
+    </div>
+
+    <!-- Submit Confirmation Modal -->
+    <div id="submit-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <h2>Test Summary</h2>
+            <table id="summary-table">
+                <!-- Summary will be generated here -->
+            </table>
+            <button id="final-submit-btn">Confirm & Submit</button>
+        </div>
+    </div>
+    
+    <!-- Script Files -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script src="firebase-config.js"></script>
+    <script src="questions.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
