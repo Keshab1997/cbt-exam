@@ -14,18 +14,12 @@ document.addEventListener("DOMContentLoaded", () => {
     // --- UI এলিমেন্ট ---
     const loadingSpinner = document.getElementById("loading-spinner");
     const examContainer = document.getElementById("exam-container");
+    const userDisplayNameEl = document.getElementById("user-display-name");
     const questionTextEl = document.getElementById("question-text");
     const optionsContainerEl = document.getElementById("options-container");
     const questionNumberEl = document.getElementById("question-number");
     const questionPaletteEl = document.getElementById("question-palette");
-    const userDisplayNameEl = document.getElementById("user-display-name");
-    const pauseBtn = document.getElementById("pause-btn");
-    const restartBtn = document.getElementById("restart-btn"); // রিস্টার্ট বাটন
-    const pauseOverlay = document.getElementById("pause-overlay");
-    const resumeBtnOverlay = document.getElementById("resume-btn-overlay");
     const examBody = document.getElementById("exam-body");
-    const togglePaletteBtn = document.getElementById("toggle-palette-btn");
-    const backToQuestionBtn = document.getElementById("back-to-question-btn");
 
     // --- অ্যাপ শুরু ---
     firebase.auth().onAuthStateChanged(function (user) {
@@ -45,14 +39,14 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         if (!loadProgress()) {
-            resetExamState(); // নতুন করে শুরু
+            resetExamState(); // যদি কোনো সেভ করা ডেটা না থাকে, নতুন করে শুরু করুন
         }
 
         renderQuestion();
         createPalette();
         startTimer(remainingTime);
 
-        // --- ## সমস্ত বাটনের ইভেন্ট লিসেনার এখানে যোগ করা হয়েছে ## ---
+        // --- সমস্ত বাটনের ইভেন্ট লিসেনার এখানে যোগ করা হয়েছে ---
         addEventListeners();
 
         loadingSpinner.classList.add("hidden");
@@ -67,8 +61,9 @@ document.addEventListener("DOMContentLoaded", () => {
             selectedOption: null,
             status: "not-visited",
         }));
-        remainingTime = 60 * 60;
+        remainingTime = 60 * 60; // ৬০ মিনিট
         isPaused = false;
+        // সেভ করা ডেটা মুছে ফেলা হয়, যাতে পুরনো পরীক্ষা আবার লোড না হয়
         localStorage.removeItem(progressKey);
     }
 
@@ -93,22 +88,31 @@ document.addEventListener("DOMContentLoaded", () => {
             document.getElementById("submit-modal").style.display = "none";
         });
 
-        pauseBtn.addEventListener("click", togglePause);
-        resumeBtnOverlay.addEventListener("click", togglePause);
+        document
+            .getElementById("pause-btn")
+            .addEventListener("click", togglePause);
+        document
+            .getElementById("resume-btn-overlay")
+            .addEventListener("click", togglePause);
 
-        // রিস্টার্ট বাটন
-        restartBtn.addEventListener("click", () => {
+        // ## রিস্টার্ট বাটনের কার্যকারিতা ##
+        document.getElementById("restart-btn").addEventListener("click", () => {
             if (
                 confirm(
-                    "আপনি কি পরীক্ষাটি নতুন করে শুরু করতে চান? আপনার সমস্ত উত্তর মুছে যাবে।",
+                    "আপনি কি পরীক্ষাটি নতুন করে শুরু করতে চান? আপনার বর্তমান অগ্রগতি মুছে যাবে।",
                 )
             ) {
                 resetExamState();
-                location.reload(); // পেজ রিলোড করে নতুন করে শুরু
+                location.reload(); // পেজ রিলোড করে সম্পূর্ণ নতুন করে শুরু
             }
         });
 
-        // মোবাইল প্যালেট টগল
+        // ## মোবাইল প্যালেট টগলের কার্যকারিতা ##
+        const togglePaletteBtn = document.getElementById("toggle-palette-btn");
+        const backToQuestionBtn = document.getElementById(
+            "back-to-question-btn",
+        );
+
         if (togglePaletteBtn && backToQuestionBtn) {
             togglePaletteBtn.addEventListener("click", () =>
                 examBody.classList.add("show-palette"),
@@ -161,65 +165,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // --- Save/Load, Pause/Resume, এবং অন্যান্য ফাংশন অপরিবর্তিত ---
-    function saveProgress() {
-        /* ... */
-    }
-    function loadProgress() {
-        /* ... */
-    }
-    function togglePause() {
-        /* ... */
-    }
-    function renderQuestion() {
-        /* ... */
-    }
-    function createPalette() {
-        questionPaletteEl.innerHTML = "";
-        questions.forEach((q, index) => {
-            const btn = document.createElement("button");
-            btn.textContent = q.qNo;
-            btn.className = "palette-btn";
-            btn.dataset.index = index;
-            btn.addEventListener("click", () => {
-                currentQuestionIndex = index;
-                renderQuestion();
-                saveProgress();
-                if (window.innerWidth <= 992) {
-                    examBody.classList.remove("show-palette");
-                }
-            });
-            questionPaletteEl.appendChild(btn);
-        });
-    }
-    function updatePalette() {
-        /* ... */
-    }
-    function startTimer(duration) {
-        /* ... */
-    }
-    function goToNextQuestion() {
-        /* ... */
-    }
-    function showFinalResult() {
-        /* ... */
-    }
-    window.showReview = function () {
-        /* ... */
-    };
-    function saveQuizResult(
-        chapterName,
-        setName,
-        score,
-        wrong,
-        totalQuestions,
-    ) {
-        /* ... */
-    }
-
-    // --- অপরিবর্তিত ফাংশনগুলোর কোড এখানে পেস্ট করুন ---
-    // (নিচের কোডগুলো আগের উত্তর থেকে কপি করে এখানে বসান, কোনো পরিবর্তন ছাড়াই)
-
+    // --- Save/Load, Pause/Resume, এবং অন্যান্য ফাংশন ---
     function saveProgress() {
         const progress = {
             answers: userAnswers,
@@ -243,12 +189,14 @@ document.addEventListener("DOMContentLoaded", () => {
         isPaused = !isPaused;
         if (isPaused) {
             clearInterval(timerInterval);
-            pauseOverlay.classList.remove("hidden");
-            pauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+            document.getElementById("pause-overlay").classList.remove("hidden");
+            document.getElementById("pause-btn").innerHTML =
+                '<i class="fas fa-play"></i>';
         } else {
             startTimer(remainingTime);
-            pauseOverlay.classList.add("hidden");
-            pauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+            document.getElementById("pause-overlay").classList.add("hidden");
+            document.getElementById("pause-btn").innerHTML =
+                '<i class="fas fa-pause"></i>';
         }
     }
     function renderQuestion() {
@@ -277,6 +225,24 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         });
         updatePalette();
+    }
+    function createPalette() {
+        questionPaletteEl.innerHTML = "";
+        questions.forEach((q, index) => {
+            const btn = document.createElement("button");
+            btn.textContent = q.qNo;
+            btn.className = "palette-btn";
+            btn.dataset.index = index;
+            btn.addEventListener("click", () => {
+                currentQuestionIndex = index;
+                renderQuestion();
+                saveProgress();
+                if (window.innerWidth <= 992) {
+                    examBody.classList.remove("show-palette");
+                }
+            });
+            questionPaletteEl.appendChild(btn);
+        });
     }
     function updatePalette() {
         document.querySelectorAll(".palette-btn").forEach((btn, index) => {
@@ -398,7 +364,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     const correctCountBeforeUpdate =
                         oldSetData.totalQuestions -
                         oldSetData.wrong -
-                        (oldSetData.totalQuestions -
+                        (totalQuestions -
                             userAnswers.filter((a) => a.selectedOption).length);
                     chapterData.totalCorrect -= correctCountBeforeUpdate;
                     chapterData.totalWrong -= oldSetData.wrong;
