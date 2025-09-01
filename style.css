@@ -1,6 +1,5 @@
-/* --- style.css (লেআউট সমস্যা সমাধানসহ সম্পূর্ণ কোড) --- */
+/* --- style.css (সম্পূর্ণ আপডেটেড কোড) --- */
 
-/* --- ভেরিয়েবল এবং বেসিক স্টাইল --- */
 :root {
     --primary-bg: #f4f7f9;
     --secondary-bg: #ffffff;
@@ -9,13 +8,11 @@
     --light-text-color: #7f8c8d;
     --border-color: #e0e6ed;
     --shadow: 0 4px 15px rgba(0, 0, 0, 0.07);
-
     --answered-color: #27ae60;
     --not-answered-color: #e74c3c;
     --marked-color: #8e44ad;
     --marked-answered-color: #2980b9;
     --not-visited-color: #bdc3c7;
-
     --primary-btn-color: #3498db;
     --primary-btn-hover: #2980b9;
 }
@@ -28,7 +25,6 @@ body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     overflow: hidden;
-    /* ## মূল পরিবর্তন: পুরো পেজের স্ক্রলবার বন্ধ করা হয়েছে ## */
 }
 
 .hidden {
@@ -63,6 +59,50 @@ body {
     }
 }
 
+/* --- ## Pause Overlay স্টাইল ## --- */
+.pause-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 20;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    backdrop-filter: blur(5px);
+}
+
+.pause-content {
+    text-align: center;
+}
+
+.pause-content .fa-pause-circle {
+    font-size: 5em;
+    margin-bottom: 20px;
+}
+
+.pause-content h2 {
+    font-size: 2.5em;
+    margin-bottom: 10px;
+}
+
+.pause-content p {
+    font-size: 1.2em;
+}
+
+#resume-btn-overlay {
+    background: var(--primary-btn-color);
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 8px;
+    font-size: 1.1em;
+    cursor: pointer;
+    margin-top: 20px;
+}
 
 /* --- মূল কন্টেইনার --- */
 .exam-container {
@@ -71,7 +111,6 @@ body {
     display: flex;
     flex-direction: column;
     height: 100vh;
-    /* ## মূল পরিবর্তন: min-height এর বদলে height ব্যবহার করা হয়েছে ## */
 }
 
 /* --- হেডার --- */
@@ -87,7 +126,6 @@ body {
     top: 0;
     z-index: 10;
     flex-shrink: 0;
-    /* হেডারকে সঙ্কুচিত হতে বাধা দেওয়া হয়েছে */
 }
 
 .logo {
@@ -99,6 +137,20 @@ body {
     display: flex;
     align-items: center;
     gap: 20px;
+}
+
+.header-icon-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.4em;
+    cursor: pointer;
+    padding: 5px 10px;
+    border-radius: 50%;
+}
+
+.header-icon-btn:hover {
+    background-color: rgba(255, 255, 255, 0.1);
 }
 
 .timer-container {
@@ -130,14 +182,11 @@ body {
 .exam-body {
     display: flex;
     flex-grow: 1;
-    /* এটি বাকি সব জায়গা নেবে */
     padding: 20px;
     gap: 20px;
     overflow: hidden;
-    /* এটি তার চাইল্ড এলিমেন্টকে আবদ্ধ রাখবে */
 }
 
-/* ## মূল পরিবর্তন: দুটি সেকশনেই overflow যোগ করা হয়েছে ## */
 .question-section,
 .palette-section {
     background: var(--secondary-bg);
@@ -147,7 +196,6 @@ body {
     display: flex;
     flex-direction: column;
     overflow-y: auto;
-    /* এখানে স্ক্রলবার যোগ করা হয়েছে */
 }
 
 .question-section {
@@ -256,26 +304,14 @@ body {
     color: white;
 }
 
-#save-next-btn.primary:hover {
-    background: #229954;
-}
-
 #mark-review-btn {
     background-color: var(--marked-color);
     color: white;
 }
 
-#mark-review-btn:hover {
-    background-color: #7d3c98;
-}
-
 #clear-response-btn {
     background-color: var(--light-text-color);
     color: white;
-}
-
-#clear-response-btn:hover {
-    background-color: #626567;
 }
 
 .palette-section {
@@ -300,10 +336,6 @@ body {
     color: var(--text-color);
     border: 1px solid var(--border-color);
     transition: transform 0.2s ease;
-}
-
-.palette-legend div:hover {
-    transform: translateY(-2px);
 }
 
 .palette-dot {
@@ -376,9 +408,6 @@ body {
 
 .palette-btn.current {
     border-color: var(--primary-btn-color);
-    transform: scale(1.1);
-    box-shadow: 0 0 10px rgba(52, 152, 219, 0.5);
-    outline: none;
 }
 
 .palette-btn.answered {
@@ -425,11 +454,6 @@ body {
     gap: 10px;
 }
 
-.submit-btn:hover {
-    background-color: var(--primary-btn-hover);
-}
-
-/* --- মডাল, ফলাফল ও রিভিউ পেজের স্টাইল অপরিবর্তিত --- */
 .modal {
     display: none;
     position: fixed;
@@ -453,63 +477,215 @@ body {
     box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
 }
 
-.close-btn {
-    color: #aaa;
-    float: right;
-    font-size: 28px;
-    font-weight: bold;
-    cursor: pointer;
-    line-height: 1;
+/* --- ## নতুন এবং স্মার্ট ফলাফল ও রিভিউ পেজের স্টাইল ## --- */
+.result-page,
+.review-page {
+    background-color: #f4f7f6;
+    padding: 30px;
+    overflow-y: auto;
+    height: 100%;
 }
 
-.close-btn:hover,
-.close-btn:focus {
-    color: black;
+.result-card {
+    background-color: white;
+    padding: 30px 40px;
+    border-radius: 15px;
+    box-shadow: var(--shadow);
+    max-width: 700px;
+    margin: 20px auto;
 }
 
-#summary-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 20px 0;
+.result-title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    font-size: 2em;
+    color: var(--header-bg);
+    margin-bottom: 20px;
 }
 
-#summary-table th,
-#summary-table td {
-    border: 1px solid #ddd;
-    padding: 10px;
+.result-summary {
+    text-align: center;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+}
+
+.result-score-text {
+    font-size: 1.1em;
+    color: var(--light-text-color);
+}
+
+.result-score {
+    font-size: 3em;
+    font-weight: 700;
+    color: var(--primary-btn-color);
+    margin: 10px 0;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
     text-align: left;
 }
 
-#summary-table td:last-child {
-    text-align: center;
-    font-weight: bold;
+.stat-item {
+    background: var(--primary-bg);
+    padding: 15px;
+    border-radius: 10px;
+    border-left: 5px solid;
 }
 
-#final-submit-btn {
-    width: 100%;
-    padding: 12px;
-    font-size: 16px;
-    background: #dc3545;
-    color: white;
+.stat-item h4 {
+    margin: 0 0 5px 0;
+    color: var(--light-text-color);
+    font-size: 0.9em;
+}
+
+.stat-item p {
+    margin: 0;
+    font-size: 1.5em;
+    font-weight: 600;
+}
+
+.stat-correct {
+    border-color: var(--answered-color);
+}
+
+.stat-correct p {
+    color: var(--answered-color);
+}
+
+.stat-wrong {
+    border-color: var(--not-answered-color);
+}
+
+.stat-wrong p {
+    color: var(--not-answered-color);
+}
+
+.stat-attempted {
+    border-color: var(--primary-btn-color);
+}
+
+.stat-attempted p {
+    color: var(--primary-btn-color);
+}
+
+.stat-unanswered {
+    border-color: var(--light-text-color);
+}
+
+.stat-unanswered p {
+    color: var(--light-text-color);
+}
+
+.accuracy-section {
+    margin-top: 20px;
+}
+
+.accuracy-label {
+    display: flex;
+    justify-content: space-between;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.progress-bar {
+    height: 15px;
+    background-color: #e0e6ed;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background-color: var(--answered-color);
+    border-radius: 10px;
+    transition: width 0.5s ease;
+}
+
+.result-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+.action-btn {
+    padding: 12px 25px;
     border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.2s;
+    border-radius: 8px;
+    font-size: 1em;
     font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
 }
 
-#final-submit-btn:hover {
-    background-color: #c82333;
+.action-btn.review {
+    background-color: #17a2b8;
+    color: white;
 }
 
-.warning-text {
-    margin-top: 15px;
-    padding: 10px;
-    background-color: #fff3cd;
-    border: 1px solid #ffeeba;
-    border-radius: 4px;
-    color: #856404;
+.action-btn.dashboard {
+    background-color: var(--primary-btn-color);
+    color: white;
+}
+
+.action-btn.retry {
+    background-color: #6c757d;
+    color: white;
+}
+
+.review-title {
     text-align: center;
+    color: var(--header-bg);
+    margin-bottom: 30px;
+    font-size: 2em;
+}
+
+.review-card {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    border-left: 5px solid;
+    box-shadow: var(--shadow);
+}
+
+.review-correct {
+    border-color: var(--answered-color);
+}
+
+.review-incorrect {
+    border-color: var(--not-answered-color);
+}
+
+.review-unanswered {
+    border-color: var(--light-text-color);
+}
+
+.review-question {
+    font-size: 1.1em;
+    font-weight: 600;
+    margin-bottom: 15px;
+}
+
+.review-answer {
+    margin: 8px 0;
+    font-size: 1em;
+}
+
+.review-footer {
+    text-align: center;
+    margin-top: 30px;
 }
 
 @media (max-width: 1200px) {
@@ -535,7 +711,7 @@ body {
 @media (max-width: 768px) {
     .exam-header {
         flex-direction: column;
-        gap: 15px;
+        gap: 10px;
         padding: 15px;
     }
 
@@ -544,205 +720,7 @@ body {
         align-items: stretch;
     }
 
-    .question-footer button {
-        justify-content: center;
+    .stats-grid {
+        grid-template-columns: 1fr;
     }
-}
-
-.action-btn {
-    padding: 12px 25px;
-    border: none;
-    border-radius: 6px;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    text-decoration: none;
-    display: inline-block;
-}
-
-.action-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-}
-
-.action-btn.review {
-    background-color: #17a2b8;
-    color: white;
-}
-
-.action-btn.dashboard {
-    background-color: #007bff;
-    color: white;
-}
-
-.action-btn.retry {
-    background-color: #6c757d;
-    color: white;
-}
-
-.result-page {
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    padding: 40px 20px;
-    background-color: #f4f7f6;
-    min-height: calc(100vh - 70px);
-}
-
-.result-card {
-    background-color: white;
-    padding: 30px 40px;
-    border-radius: 12px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    max-width: 600px;
-    width: 100%;
-}
-
-.result-title {
-    font-size: 2.2em;
-}
-
-.result-score {
-    font-size: 3em;
-}
-
-.result-details-table {
-    width: 100%;
-    margin: 25px 0;
-    border-collapse: collapse;
-    text-align: left;
-}
-
-.result-details-table td {
-    padding: 12px 15px;
-    border-bottom: 1px solid #eef1f7;
-    font-size: 1.1em;
-}
-
-.result-details-table tr:last-child td {
-    border-bottom: none;
-}
-
-.result-details-table td:first-child {
-    font-weight: 500;
-    color: #555;
-}
-
-.result-details-table td:last-child {
-    font-weight: bold;
-    text-align: right;
-    color: #333;
-}
-
-.result-details-table .accuracy-row {
-    background-color: #f8f9fa;
-    font-size: 1.2em;
-}
-
-.result-details-table .accuracy-row td {
-    color: var(--primary-btn-color);
-}
-
-.result-actions {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 15px;
-}
-
-.review-page {
-    padding: 30px;
-    background-color: #f8f9fa;
-}
-
-.review-title {
-    font-size: 2em;
-    text-align: center;
-    color: #3b3f5c;
-    margin-bottom: 30px;
-    border-bottom: 2px solid #dee2e6;
-    padding-bottom: 10px;
-}
-
-.review-card {
-    background-color: white;
-    padding: 20px;
-    border-radius: 8px;
-    margin-bottom: 20px;
-    border-left-width: 5px;
-    border-left-style: solid;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-}
-
-.review-correct {
-    border-left-color: #28a745;
-    background-color: #f0fff4;
-}
-
-.review-incorrect {
-    border-left-color: #dc3545;
-    background-color: #fff0f1;
-}
-
-.review-question {
-    font-size: 1.2em;
-    font-weight: 600;
-    color: #333;
-    margin-bottom: 15px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.review-answer {
-    margin: 8px 0;
-    font-size: 1.1em;
-}
-
-.review-answer strong {
-    color: #555;
-}
-
-.review-answer.correct-ans {
-    color: #28a745;
-}
-
-.review-answer.your-ans span {
-    font-weight: bold;
-}
-
-.review-incorrect .your-ans span {
-    color: #dc3545;
-}
-
-.review-footer {
-    text-align: center;
-    margin-top: 30px;
-}
-
-.fas {
-    margin-right: 5px;
-}
-
-.fa-check-circle {
-    color: #28a745;
-}
-
-.fa-times-circle {
-    color: #dc3545;
-}
-
-.review-unanswered {
-    background-color: #f8f9fa;
-    border-left-color: #6c757d;
-}
-
-.review-unanswered .your-ans span {
-    color: #6c757d;
-}
-
-.fa-minus-circle {
-    color: #6c757d;
 }

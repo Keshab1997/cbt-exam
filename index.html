@@ -23,11 +23,28 @@
             <p>Loading Exam...</p>
         </div>
 
+        <!-- ## Pause Overlay যোগ করা হয়েছে ## -->
+        <div id="pause-overlay" class="pause-overlay hidden">
+            <div class="pause-content">
+                <i class="fas fa-pause-circle"></i>
+                <h2>Exam Paused</h2>
+                <p>আপনি পরীক্ষাটি 잠시 বিরতি দিয়েছেন।</p>
+                <button id="resume-btn-overlay">Resume Exam</button>
+            </div>
+        </div>
+
         <div id="exam-container" class="exam-container hidden">
             <header class="exam-header">
                 <div class="logo">RRB NTPC CBT-1</div>
                 <div class="header-center">
-                    <!-- ## স্কোর ট্র্যাকারটি এখান থেকে সরিয়ে দেওয়া হয়েছে ## -->
+                    <!-- ## Pause বাটন যোগ করা হয়েছে ## -->
+                    <button
+                        id="pause-btn"
+                        class="header-icon-btn"
+                        title="Pause/Resume"
+                    >
+                        <i class="fas fa-pause"></i>
+                    </button>
                     <div class="timer-container">
                         <i class="far fa-clock"></i>
                         <span>Time Left:</span>
@@ -48,9 +65,7 @@
                     <div class="question-content">
                         <p id="question-text">Loading question...</p>
                     </div>
-                    <div id="options-container" class="options-container">
-                        <!-- Options will be loaded here by JavaScript -->
-                    </div>
+                    <div id="options-container" class="options-container"></div>
                     <div class="question-footer">
                         <button id="mark-review-btn">
                             <i class="fas fa-star"></i> Mark & Next
@@ -86,13 +101,8 @@
                         </div>
                     </div>
                     <hr class="palette-divider" />
-
-                    <div class="palette-header">
-                        <h4>Question Palette</h4>
-                    </div>
-                    <div id="question-palette" class="question-palette">
-                        <!-- Palette buttons will be loaded here -->
-                    </div>
+                    <div class="palette-header"><h4>Question Palette</h4></div>
+                    <div id="question-palette" class="question-palette"></div>
                     <button id="submit-btn" class="submit-btn">
                         <i class="fas fa-check-circle"></i> Submit Test
                     </button>
@@ -100,7 +110,6 @@
             </main>
         </div>
 
-        <!-- Submit Confirmation Modal -->
         <div id="submit-modal" class="modal">
             <div class="modal-content">
                 <span class="close-btn">&times;</span>
@@ -117,7 +126,6 @@
             </div>
         </div>
 
-        <!-- Script Files -->
         <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
         <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
         <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
