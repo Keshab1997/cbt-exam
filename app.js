@@ -294,28 +294,67 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     // ... বাকি ফাংশনগুলো (showReview, saveQuizResult) অপরিবর্তিত
 
+    // --- app.js (শুধুমাত্র এই ফাংশনটি প্রতিস্থাপন করুন) ---
+
     window.showReview = function () {
         const container = document.getElementById("exam-container");
-        let reviewHTML = `<div class="review-page"><h2 class="review-title">📝 পরীক্ষার রিভিউ</h2>`;
+
+        // ## নতুন এবং উন্নত ডিজাইনের জন্য HTML তৈরি ##
+        let reviewHTML = `
+            <div class="review-page">
+                <h2 class="review-title"><i class="fas fa-clipboard-list"></i> পরীক্ষার রিভিউ</h2>`;
+
         questions.forEach((q, i) => {
             const userAnswer = userAnswers[i];
             const isCorrect = userAnswer.selectedOption === q.correctAnswer;
             const isAttempted =
                 userAnswer.status === "answered" ||
                 userAnswer.status === "marked-answered";
-            let cardClass = isAttempted
-                ? isCorrect
-                    ? "review-correct"
-                    : "review-incorrect"
-                : "review-unanswered";
+
+            let cardClass = "";
+            let yourAnswerIcon = "";
+
+            // কার্ডের ক্লাস এবং আপনার উত্তরের আইকন নির্ধারণ
+            if (isAttempted) {
+                if (isCorrect) {
+                    cardClass = "review-correct";
+                    yourAnswerIcon = '<i class="fas fa-check-circle"></i>';
+                } else {
+                    cardClass = "review-incorrect";
+                    yourAnswerIcon = '<i class="fas fa-times-circle"></i>';
+                }
+            } else {
+                cardClass = "review-unanswered";
+                yourAnswerIcon = '<i class="far fa-circle"></i>'; // উত্তর না দেওয়ার জন্য আইকন
+            }
+
             reviewHTML += `
                 <div class="review-card ${cardClass}">
-                    <h3 class="review-question"><i class="fas fa-question-circle"></i> প্রশ্ন ${i + 1}: ${q.questionText}</h3>
-                    <p class="review-answer"><strong><i class="fas fa-check-circle"></i> সঠিক উত্তর:</strong> ${q.correctAnswer}</p>
-                    <p class="review-answer"><strong>আপনার উত্তর:</strong> <span class="font-bold">${userAnswer.selectedOption || "উত্তর দেননি"}</span></p>
+                    <h3 class="review-question">
+                        <i class="fas fa-question-circle"></i> প্রশ্ন ${i + 1}: ${q.questionText}
+                    </h3>
+                    <div class="review-answers-container">
+                        <p class="review-answer correct-ans">
+                            <strong><i class="fas fa-check-circle"></i> সঠিক উত্তর:</strong> 
+                            <span>${q.correctAnswer}</span>
+                        </p>
+                        <p class="review-answer your-ans">
+                            <strong>${yourAnswerIcon} আপনার উত্তর:</strong> 
+                            <span>
+                                ${userAnswer.selectedOption || "উত্তর দেননি"}
+                            </span>
+                        </p>
+                    </div>
                 </div>`;
         });
-        reviewHTML += `<div class="review-footer"><button onclick="location.reload()" class="action-btn retry"><i class="fas fa-redo"></i> আবার দিন</button></div></div>`;
+
+        reviewHTML += `
+            <div class="review-footer">
+                <a href="../../dashboard.html" class="action-btn dashboard"><i class="fas fa-tachometer-alt"></i> ড্যাশবোর্ডে যান</a>
+                <button onclick="location.reload()" class="action-btn retry"><i class="fas fa-redo"></i> আবার দিন</button>
+            </div>
+        </div>`;
+
         container.innerHTML = reviewHTML;
     };
 

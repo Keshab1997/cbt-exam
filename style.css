@@ -1,5 +1,4 @@
-/* --- style.css (সম্পূর্ণ আপডেটেড কোড) --- */
-
+/* --- style.css (সম্পূর্ণ আপডেটেড এবং রেসপন্সিভ কোড) --- */
 :root {
     --primary-bg: #f4f7f9;
     --secondary-bg: #ffffff;
@@ -33,7 +32,6 @@ body {
     display: none !important;
 }
 
-/* --- লোডিং স্পিনার --- */
 .loading-spinner {
     display: flex;
     flex-direction: column;
@@ -61,7 +59,6 @@ body {
     }
 }
 
-/* --- Pause Overlay --- */
 .pause-overlay {
     position: fixed;
     top: 0;
@@ -81,32 +78,6 @@ body {
     text-align: center;
 }
 
-.pause-content .fa-pause-circle {
-    font-size: 5em;
-    margin-bottom: 20px;
-}
-
-.pause-content h2 {
-    font-size: 2.5em;
-    margin-bottom: 10px;
-}
-
-.pause-content p {
-    font-size: 1.2em;
-}
-
-#resume-btn-overlay {
-    background: var(--primary-btn-color);
-    color: white;
-    border: none;
-    padding: 12px 30px;
-    border-radius: 8px;
-    font-size: 1.1em;
-    cursor: pointer;
-    margin-top: 20px;
-}
-
-/* --- মূল কন্টেইনার --- */
 .exam-container {
     max-width: 1500px;
     margin: 0 auto;
@@ -115,7 +86,6 @@ body {
     height: 100vh;
 }
 
-/* --- হেডার --- */
 .exam-header {
     display: flex;
     justify-content: space-between;
@@ -148,7 +118,11 @@ body {
     font-size: 1.4em;
     cursor: pointer;
     padding: 5px 10px;
-    border-radius: 50%;
+    border-radius: 8px;
+    transition: background-color 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
 }
 
 .header-icon-btn:hover {
@@ -176,11 +150,6 @@ body {
     font-size: 1em;
 }
 
-.user-profile .fa-user-circle {
-    font-size: 1.6em;
-}
-
-/* --- পরীক্ষার মূল অংশ --- */
 .exam-body {
     display: flex;
     flex-grow: 1;
@@ -204,21 +173,10 @@ body {
     flex: 3;
 }
 
-.question-header #question-number {
-    margin-top: 0;
-    font-size: 1.3em;
-    font-weight: 600;
-    color: var(--header-bg);
-    border-bottom: 2px solid var(--border-color);
-    padding-bottom: 10px;
-    margin-bottom: 20px;
-}
-
 #question-text {
     font-size: 1.2em;
     line-height: 1.6;
     margin-bottom: 25px;
-    font-weight: 500;
 }
 
 .options-container {
@@ -233,17 +191,11 @@ body {
     border-radius: 8px;
     margin-bottom: 12px;
     cursor: pointer;
-    transition: all 0.2s ease-in-out;
-}
-
-.options-container .option:hover {
-    border-color: var(--primary-btn-color);
 }
 
 .options-container .option.selected {
     background-color: #eaf5ff;
     border-color: var(--primary-btn-color);
-    color: var(--header-bg);
     font-weight: 600;
 }
 
@@ -259,7 +211,6 @@ body {
     border: 2px solid var(--border-color);
     margin-right: 15px;
     flex-shrink: 0;
-    transition: all 0.2s ease;
 }
 
 .options-container .option.selected::before {
@@ -285,7 +236,6 @@ body {
     border-radius: 8px;
     font-weight: 600;
     font-size: 0.9em;
-    transition: all 0.2s;
     display: flex;
     align-items: center;
     gap: 8px;
@@ -306,7 +256,6 @@ body {
     color: white;
 }
 
-/* --- প্রশ্ন প্যানেল --- */
 .palette-section {
     flex: 1;
     min-width: 320px;
@@ -325,9 +274,6 @@ body {
     border-radius: 6px;
     background-color: var(--primary-bg);
     font-size: 12px;
-    font-weight: 500;
-    color: var(--text-color);
-    border: 1px solid var(--border-color);
 }
 
 .palette-dot {
@@ -368,12 +314,8 @@ body {
     margin: 15px 0;
 }
 
-.palette-header {
-    margin-bottom: 15px;
-}
-
 .palette-header h4 {
-    margin: 0;
+    margin: 0 0 15px 0;
     font-size: 1.1em;
 }
 
@@ -391,7 +333,6 @@ body {
     cursor: pointer;
     font-weight: 600;
     font-size: 1em;
-    transition: all 0.2s;
     border-radius: 50%;
     display: flex;
     justify-content: center;
@@ -424,7 +365,6 @@ body {
 
 .palette-btn.not-visited {
     background: #ecf0f1;
-    color: var(--text-color);
     border: 2px solid var(--border-color);
 }
 
@@ -438,7 +378,6 @@ body {
     font-size: 1em;
     font-weight: bold;
     cursor: pointer;
-    transition: background-color 0.2s;
     margin-top: auto;
     display: flex;
     align-items: center;
@@ -446,7 +385,6 @@ body {
     gap: 10px;
 }
 
-/* --- ## Submit Modal ডিজাইন ঠিক করা হয়েছে ## --- */
 .modal {
     display: none;
     position: fixed;
@@ -470,13 +408,24 @@ body {
     max-width: 450px;
     text-align: center;
     position: relative;
+    animation: modal-pop 0.3s ease-out;
+}
+
+@keyframes modal-pop {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
 }
 
 .modal-content h2 {
     font-size: 1.8em;
-    color: var(--header-bg);
-    margin-top: 0;
-    margin-bottom: 20px;
+    margin: 0 0 20px 0;
 }
 
 .close-btn {
@@ -485,7 +434,6 @@ body {
     top: 10px;
     right: 15px;
     font-size: 28px;
-    font-weight: bold;
     cursor: pointer;
 }
 
@@ -502,29 +450,15 @@ body {
     border-bottom: 1px solid var(--border-color);
 }
 
-#summary-table th {
-    background-color: var(--primary-bg);
-    font-weight: 600;
-}
-
-#summary-table td:last-child {
-    text-align: right;
-    font-weight: bold;
-    color: var(--primary-btn-color);
-}
-
-#summary-table tr:last-child td {
-    border-bottom: none;
-}
-
 .warning-text {
     margin-top: 15px;
     padding: 12px;
-    background-color: #fff3cd;
-    border-left: 4px solid #ffeeba;
+    background-color: #fffbeb;
+    border-left: 4px solid #ffc107;
     color: #856404;
     text-align: left;
     font-size: 0.9em;
+    border-radius: 4px;
 }
 
 #final-submit-btn {
@@ -537,16 +471,8 @@ body {
     border: none;
     border-radius: 8px;
     cursor: pointer;
-    transition: background-color 0.2s;
-    font-weight: bold;
 }
 
-#final-submit-btn:hover {
-    background-color: var(--danger-btn-hover);
-}
-
-
-/* --- ফলাফল ও রিভিউ পেজের স্টাইল --- */
 .result-page,
 .review-page {
     background-color: var(--primary-bg);
@@ -555,177 +481,12 @@ body {
     height: 100%;
 }
 
-.result-card {
-    background-color: white;
-    padding: 30px 40px;
-    border-radius: 15px;
-    box-shadow: var(--shadow);
-    max-width: 700px;
-    margin: 20px auto;
-}
-
-.result-title {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 15px;
-    font-size: 2em;
-    color: var(--header-bg);
-    margin-bottom: 20px;
-}
-
-.result-summary {
-    text-align: center;
-    border-bottom: 1px solid var(--border-color);
-    padding-bottom: 20px;
-    margin-bottom: 20px;
-}
-
-.result-score-text {
-    font-size: 1.1em;
-    color: var(--light-text-color);
-}
-
-.result-score {
-    font-size: 3em;
-    font-weight: 700;
-    color: var(--primary-btn-color);
-    margin: 10px 0;
-}
-
-.stats-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 15px;
-    text-align: left;
-}
-
-.stat-item {
-    background: var(--primary-bg);
-    padding: 15px;
-    border-radius: 10px;
-    border-left: 5px solid;
-}
-
-.stat-item h4 {
-    margin: 0 0 5px 0;
-    color: var(--light-text-color);
-    font-size: 0.9em;
-    text-transform: uppercase;
-}
-
-.stat-item p {
-    margin: 0;
-    font-size: 1.5em;
-    font-weight: 600;
-}
-
-.stat-correct {
-    border-color: var(--answered-color);
-}
-
-.stat-correct p {
-    color: var(--answered-color);
-}
-
-.stat-wrong {
-    border-color: var(--not-answered-color);
-}
-
-.stat-wrong p {
-    color: var(--not-answered-color);
-}
-
-.stat-attempted {
-    border-color: var(--primary-btn-color);
-}
-
-.stat-attempted p {
-    color: var(--primary-btn-color);
-}
-
-.stat-unanswered {
-    border-color: var(--light-text-color);
-}
-
-.stat-unanswered p {
-    color: var(--light-text-color);
-}
-
-.accuracy-section {
-    margin-top: 20px;
-}
-
-.accuracy-label {
-    display: flex;
-    justify-content: space-between;
-    font-weight: 600;
-    margin-bottom: 8px;
-}
-
-.progress-bar {
-    height: 15px;
-    background-color: #e0e6ed;
-    border-radius: 10px;
-    overflow: hidden;
-}
-
-.progress-fill {
-    height: 100%;
-    background-color: var(--answered-color);
-    border-radius: 10px;
-    transition: width 0.5s ease;
-}
-
-.result-actions {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 15px;
-    margin-top: 30px;
-}
-
-.action-btn {
-    padding: 12px 25px;
-    border: none;
-    border-radius: 8px;
-    font-size: 1em;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.action-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-}
-
-.action-btn.review {
-    background-color: #17a2b8;
-    color: white;
-}
-
-.action-btn.dashboard {
-    background-color: var(--primary-btn-color);
-    color: white;
-}
-
-.action-btn.retry {
-    background-color: #6c757d;
-    color: white;
-}
-
 .review-page .review-title {
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 15px;
     font-size: 2.2em;
-    color: var(--header-bg);
     margin-bottom: 30px;
     padding-bottom: 15px;
     border-bottom: 2px solid var(--border-color);
@@ -739,11 +500,6 @@ body {
     max-width: 900px;
     border-left: 6px solid;
     box-shadow: var(--shadow);
-    transition: transform 0.2s ease;
-}
-
-.review-card:hover {
-    transform: translateY(-3px);
 }
 
 .review-correct {
@@ -763,14 +519,7 @@ body {
     align-items: flex-start;
     gap: 12px;
     font-size: 1.2em;
-    font-weight: 600;
-    color: var(--text-color);
     margin: 0 0 15px 0;
-}
-
-.review-question .fa-question-circle {
-    color: var(--primary-btn-color);
-    margin-top: 5px;
 }
 
 .review-answer {
@@ -783,28 +532,12 @@ body {
     border-radius: 6px;
 }
 
-.review-answer strong {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    color: var(--text-color);
-}
-
-.review-answer span {
-    font-weight: 500;
-}
-
 .correct-ans {
     background-color: #f0fff4;
 }
 
 .your-ans {
     background-color: var(--primary-bg);
-}
-
-.review-incorrect .your-ans span {
-    color: var(--not-answered-color);
-    font-weight: 600;
 }
 
 .fa-check-circle {
@@ -824,7 +557,18 @@ body {
     margin-top: 40px;
 }
 
-@media (max-width: 1200px) {
+.mobile-only {
+    display: none !important;
+}
+
+.desktop-only {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* --- ## মোবাইল রেসপন্সিভনেসের জন্য মিডিয়া কোয়েরি ## --- */
+@media (max-width: 992px) {
     body {
         overflow: auto;
     }
@@ -833,27 +577,99 @@ body {
         height: auto;
     }
 
-    .exam-body {
-        flex-direction: column;
-        overflow: visible;
-    }
-
-    .question-section,
-    .palette-section {
-        overflow-y: visible;
-    }
-}
-
-@media (max-width: 768px) {
     .exam-header {
+        flex-wrap: wrap;
+        justify-content: space-between;
+        padding: 10px 15px;
+    }
+
+    .header-center {
+        order: 3;
+        width: 100%;
+        justify-content: space-between;
+        margin-top: 10px;
+    }
+
+    #pause-btn {
+        order: 2;
+    }
+
+    .timer-container {
+        order: 1;
+    }
+
+    .user-profile.desktop-only,
+    .timer-container .desktop-only {
+        display: none;
+    }
+
+    .mobile-only {
+        display: inline-flex !important;
+        font-size: 1em !important;
+    }
+
+    .mobile-btn-text {
+        font-size: 0.8em;
+    }
+
+    .exam-body {
+        position: relative;
         flex-direction: column;
-        gap: 10px;
+        overflow: hidden;
         padding: 15px;
+        gap: 0;
+    }
+
+    .question-section {
+        width: 100%;
+        box-sizing: border-box;
+        transition: transform 0.3s ease-in-out;
+    }
+
+    .palette-section {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 5;
+        box-sizing: border-box;
+        transform: translateX(100%);
+        transition: transform 0.3s ease-in-out;
+    }
+
+    .exam-body.show-palette .palette-section {
+        transform: translateX(0);
+    }
+
+    .exam-body.show-palette .question-section {
+        transform: translateX(-100%);
     }
 
     .question-footer {
         flex-direction: column;
         align-items: stretch;
+    }
+
+    .question-footer button {
+        justify-content: center;
+    }
+
+    .back-btn {
+        width: 100%;
+        justify-content: center;
+        padding: 12px;
+        background-color: var(--header-bg);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 1em;
+        margin-bottom: 15px;
+    }
+
+    .result-card,
+    .review-card {
+        padding: 20px;
     }
 
     .stats-grid {
