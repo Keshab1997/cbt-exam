@@ -15,6 +15,8 @@
     --not-visited-color: #bdc3c7;
     --primary-btn-color: #3498db;
     --primary-btn-hover: #2980b9;
+    --danger-btn-color: #e74c3c;
+    --danger-btn-hover: #c0392b;
 }
 
 body {
@@ -59,7 +61,7 @@ body {
     }
 }
 
-/* --- ## Pause Overlay স্টাইল ## --- */
+/* --- Pause Overlay --- */
 .pause-overlay {
     position: fixed;
     top: 0;
@@ -236,7 +238,6 @@ body {
 
 .options-container .option:hover {
     border-color: var(--primary-btn-color);
-    background-color: #f8f9fa;
 }
 
 .options-container .option.selected {
@@ -259,10 +260,6 @@ body {
     margin-right: 15px;
     flex-shrink: 0;
     transition: all 0.2s ease;
-}
-
-.options-container .option:hover::before {
-    border-color: var(--primary-btn-color);
 }
 
 .options-container .option.selected::before {
@@ -294,11 +291,6 @@ body {
     gap: 8px;
 }
 
-.question-footer button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-}
-
 #save-next-btn.primary {
     background: var(--answered-color);
     color: white;
@@ -314,6 +306,7 @@ body {
     color: white;
 }
 
+/* --- প্রশ্ন প্যানেল --- */
 .palette-section {
     flex: 1;
     min-width: 320px;
@@ -335,7 +328,6 @@ body {
     font-weight: 500;
     color: var(--text-color);
     border: 1px solid var(--border-color);
-    transition: transform 0.2s ease;
 }
 
 .palette-dot {
@@ -454,34 +446,111 @@ body {
     gap: 10px;
 }
 
+/* --- ## Submit Modal ডিজাইন ঠিক করা হয়েছে ## --- */
 .modal {
     display: none;
     position: fixed;
-    z-index: 100;
+    z-index: 1000;
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.6);
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
     align-items: center;
     justify-content: center;
 }
 
 .modal-content {
-    background-color: #fefefe;
-    padding: 25px;
-    border: 1px solid #888;
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
     width: 90%;
-    max-width: 500px;
-    border-radius: 8px;
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+    max-width: 450px;
+    text-align: center;
+    position: relative;
 }
 
-/* --- ## নতুন এবং স্মার্ট ফলাফল ও রিভিউ পেজের স্টাইল ## --- */
+.modal-content h2 {
+    font-size: 1.8em;
+    color: var(--header-bg);
+    margin-top: 0;
+    margin-bottom: 20px;
+}
+
+.close-btn {
+    color: #aaa;
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#summary-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+#summary-table th,
+#summary-table td {
+    padding: 12px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+#summary-table th {
+    background-color: var(--primary-bg);
+    font-weight: 600;
+}
+
+#summary-table td:last-child {
+    text-align: right;
+    font-weight: bold;
+    color: var(--primary-btn-color);
+}
+
+#summary-table tr:last-child td {
+    border-bottom: none;
+}
+
+.warning-text {
+    margin-top: 15px;
+    padding: 12px;
+    background-color: #fff3cd;
+    border-left: 4px solid #ffeeba;
+    color: #856404;
+    text-align: left;
+    font-size: 0.9em;
+}
+
+#final-submit-btn {
+    width: 100%;
+    padding: 14px;
+    margin-top: 20px;
+    font-size: 1.1em;
+    background: var(--danger-btn-color);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    font-weight: bold;
+}
+
+#final-submit-btn:hover {
+    background-color: var(--danger-btn-hover);
+}
+
+
+/* --- ফলাফল ও রিভিউ পেজের স্টাইল --- */
 .result-page,
 .review-page {
-    background-color: #f4f7f6;
-    padding: 30px;
+    background-color: var(--primary-bg);
+    padding: 20px;
     overflow-y: auto;
     height: 100%;
 }
@@ -542,6 +611,7 @@ body {
     margin: 0 0 5px 0;
     color: var(--light-text-color);
     font-size: 0.9em;
+    text-transform: uppercase;
 }
 
 .stat-item p {
@@ -629,6 +699,11 @@ body {
     gap: 8px;
 }
 
+.action-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
 .action-btn.review {
     background-color: #17a2b8;
     color: white;
@@ -644,48 +719,109 @@ body {
     color: white;
 }
 
-.review-title {
-    text-align: center;
+.review-page .review-title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    font-size: 2.2em;
     color: var(--header-bg);
     margin-bottom: 30px;
-    font-size: 2em;
+    padding-bottom: 15px;
+    border-bottom: 2px solid var(--border-color);
 }
 
 .review-card {
     background-color: white;
     padding: 20px;
-    border-radius: 8px;
-    margin-bottom: 20px;
-    border-left: 5px solid;
+    border-radius: 12px;
+    margin: 0 auto 20px auto;
+    max-width: 900px;
+    border-left: 6px solid;
     box-shadow: var(--shadow);
+    transition: transform 0.2s ease;
+}
+
+.review-card:hover {
+    transform: translateY(-3px);
 }
 
 .review-correct {
-    border-color: var(--answered-color);
+    border-left-color: var(--answered-color);
 }
 
 .review-incorrect {
-    border-color: var(--not-answered-color);
+    border-left-color: var(--not-answered-color);
 }
 
 .review-unanswered {
-    border-color: var(--light-text-color);
+    border-left-color: var(--light-text-color);
 }
 
 .review-question {
-    font-size: 1.1em;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    font-size: 1.2em;
     font-weight: 600;
-    margin-bottom: 15px;
+    color: var(--text-color);
+    margin: 0 0 15px 0;
+}
+
+.review-question .fa-question-circle {
+    color: var(--primary-btn-color);
+    margin-top: 5px;
 }
 
 .review-answer {
-    margin: 8px 0;
-    font-size: 1em;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 8px 0 8px 10px;
+    font-size: 1.1em;
+    padding: 8px;
+    border-radius: 6px;
+}
+
+.review-answer strong {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-color);
+}
+
+.review-answer span {
+    font-weight: 500;
+}
+
+.correct-ans {
+    background-color: #f0fff4;
+}
+
+.your-ans {
+    background-color: var(--primary-bg);
+}
+
+.review-incorrect .your-ans span {
+    color: var(--not-answered-color);
+    font-weight: 600;
+}
+
+.fa-check-circle {
+    color: var(--answered-color);
+}
+
+.fa-times-circle {
+    color: var(--not-answered-color);
+}
+
+.fa-circle {
+    color: var(--light-text-color);
 }
 
 .review-footer {
     text-align: center;
-    margin-top: 30px;
+    margin-top: 40px;
 }
 
 @media (max-width: 1200px) {
