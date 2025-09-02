@@ -28,7 +28,6 @@ body {
     overflow: hidden;
 }
 
-/* --- ## ডেস্কটপ ভিউতে মোবাইল এলিমেন্ট লুকানোর জন্য সমাধান ## --- */
 .mobile-only,
 .mobile-text {
     display: none !important;
@@ -92,7 +91,6 @@ body {
     height: 100vh;
 }
 
-/* --- ## হেডার স্টাইল ## --- */
 .exam-header {
     display: flex;
     justify-content: space-between;
@@ -173,7 +171,6 @@ body {
     font-size: 1em;
 }
 
-/* --- ## পরীক্ষা কাঠামো স্টাইল ## --- */
 .exam-body {
     display: flex;
     flex-grow: 1;
@@ -281,7 +278,6 @@ body {
     color: white;
 }
 
-/* --- ## প্যালেট সেকশন স্টাইল ## --- */
 .palette-legend {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -406,9 +402,6 @@ body {
     gap: 10px;
 }
 
-/* --- ## নতুন বাটন ও Modal স্টাইল ## --- */
-
-/* Palette Section এর নতুন বাটনগুলোর জন্য স্টাইল */
 .palette-actions {
     display: flex;
     gap: 10px;
@@ -431,7 +424,6 @@ body {
     background-color: #e0e6ed;
 }
 
-/* সাধারণ Modal এবং তার কন্টেন্ট */
 .modal {
     display: none;
     position: fixed;
@@ -453,7 +445,6 @@ body {
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
     width: 90%;
     max-width: 550px;
-    /* Submit Modal এর জন্য আদর্শ */
     text-align: center;
     position: relative;
     animation: modal-pop 0.3s ease-out;
@@ -484,7 +475,6 @@ body {
     cursor: pointer;
 }
 
-/* Submit Review Modal এর জন্য বিশেষ স্টাইল */
 #review-summary-table {
     width: 100%;
     border-collapse: collapse;
@@ -521,7 +511,6 @@ body {
     border-radius: 4px;
 }
 
-/* Question Paper Modal এর স্টাইল */
 .qp-modal-content {
     max-width: 800px;
     height: 90vh;
@@ -566,585 +555,554 @@ body {
     font-weight: bold;
 }
 
-/* Instructions Modal এর স্টাইল */
 .instructions-content {
     text-align: left;
 }
 
-
 /* --- ## মোবাইল ভিউ (Media Query) সম্পূর্ণ আপডেট করা হয়েছে ## --- */
 @media (max-width: 992px) {
 
-    /* ## সমাধান: এই দুটি লাইন যোগ করুন ## */
     html,
     body {
         overflow: auto;
-        /* মোবাইল ভিউতে স্ক্রলিং স্বাভাবিক করা হলো */
         height: auto;
-        /* উচ্চতা কন্টেন্ট অনুযায়ী সেট করা হলো */
-
-        .exam-container {
-            height: auto;
-        }
-
-        .exam-header {
-            padding: 5px 10px;
-            gap: 10px;
-        }
-
-        .logo {
-            font-size: 1.1em;
-            text-align: left;
-        }
-
-        .timer-container {
-            flex: 0 0 auto;
-        }
-
-        .header-actions {
-            justify-content: flex-end;
-        }
-
-        .desktop-only,
-        .desktop-text {
-            display: none !important;
-        }
-
-        .mobile-only,
-        .mobile-text {
-            display: inline-flex !important;
-        }
-
-
-
-        .header-icon-btn.mobile-only {
-            font-size: 1.3em;
-            width: 40px;
-            height: 40px;
-        }
-
-        .exam-body {
-            position: relative;
-            flex-direction: column;
-            overflow: visible;
-            padding: 15px;
-            gap: 0;
-        }
-
-        .question-section {
-            width: 100%;
-            box-sizing: border-box;
-            transition: transform 0.3s ease-in-out;
-        }
-
-        .palette-section {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 5;
-            box-sizing: border-box;
-            transform: translateX(100%);
-            transition: transform 0.3s ease-in-out;
-        }
-
-        .exam-body.show-palette .palette-section {
-            transform: translateX(0);
-        }
-
-        .exam-body.show-palette .question-section {
-            transform: translateX(-100%);
-            overflow: hidden;
-        }
-
-        .question-footer {
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-
-        .question-footer button {
-            flex-grow: 1;
-            justify-content: center;
-            padding: 10px 15px;
-            font-size: 0.85em;
-        }
-
-        .back-btn {
-            width: 100%;
-            justify-content: center;
-            padding: 12px;
-            background-color: var(--header-bg);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 1em;
-            margin-bottom: 15px;
-        }
-
-        /* মোবাইল ভিউতে Modal এর স্টাইল */
-        .modal-content {
-            padding: 20px;
-        }
-
-        #review-summary-table {
-            font-size: 0.8em;
-        }
-
-        #review-summary-table th,
-        #review-summary-table td {
-            padding: 6px;
-        }
     }
 
-    /* --- ## পরীক্ষার ফলাফল (Result Page) এর জন্য নতুন CSS ## --- */
-
-    .result-page {
-        background-color: var(--primary-bg);
-        padding: 20px;
-        overflow-y: auto;
-        height: 100%;
-        box-sizing: border-box;
+    .exam-container {
+        height: auto;
     }
 
-    .result-card {
-        background-color: white;
-        padding: 30px 40px;
-        border-radius: 15px;
-        box-shadow: var(--shadow);
-        max-width: 700px;
-        margin: 20px auto;
-        animation: fade-in 0.5s ease-out;
+    .exam-header {
+        padding: 5px 10px;
+        gap: 10px;
     }
 
-    @keyframes fade-in {
-        from {
-            opacity: 0;
-            transform: translateY(20px);
-        }
-
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
-    .result-title {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 15px;
-        font-size: 2em;
-        color: var(--header-bg);
-        margin-bottom: 20px;
-        padding-bottom: 15px;
-        border-bottom: 1px solid var(--border-color);
-    }
-
-    .result-summary {
-        text-align: center;
-        margin-bottom: 25px;
-    }
-
-    .result-score-text {
+    .logo {
         font-size: 1.1em;
-        color: var(--light-text-color);
-        margin: 0;
-    }
-
-    .result-score {
-        font-size: 3em;
-        font-weight: 700;
-        color: var(--primary-btn-color);
-        margin: 10px 0;
-    }
-
-    .stats-grid {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 15px;
         text-align: left;
     }
 
-    .stat-item {
-        background: var(--primary-bg);
+    .timer-container {
+        flex: 0 0 auto;
+    }
+
+    .header-actions {
+        justify-content: flex-end;
+    }
+
+    .desktop-only,
+    .desktop-text {
+        display: none !important;
+    }
+
+    .mobile-only,
+    .mobile-text {
+        display: inline-flex !important;
+    }
+
+    .header-icon-btn.mobile-only {
+        font-size: 1.3em;
+        width: 40px;
+        height: 40px;
+    }
+
+    .exam-body {
+        position: relative;
+        flex-direction: column;
+        overflow: visible;
         padding: 15px;
-        border-radius: 10px;
-        border-left: 5px solid;
+        gap: 0;
     }
 
-    .stat-item h4 {
-        margin: 0 0 5px 0;
-        color: var(--light-text-color);
-        font-size: 0.9em;
-        font-weight: 600;
-        text-transform: uppercase;
+    .question-section {
+        width: 100%;
+        box-sizing: border-box;
+        transition: transform 0.3s ease-in-out;
     }
 
-    .stat-item p {
-        margin: 0;
-        font-size: 1.5em;
-        font-weight: 600;
+    .palette-section {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 5;
+        box-sizing: border-box;
+        transform: translateX(100%);
+        transition: transform 0.3s ease-in-out;
     }
 
-    .stat-correct {
-        border-color: var(--answered-color);
+    .exam-body.show-palette .palette-section {
+        transform: translateX(0);
     }
 
-    .stat-correct p {
-        color: var(--answered-color);
-    }
-
-    .stat-wrong {
-        border-color: var(--not-answered-color);
-    }
-
-    .stat-wrong p {
-        color: var(--not-answered-color);
-    }
-
-    .stat-attempted {
-        border-color: var(--primary-btn-color);
-    }
-
-    .stat-attempted p {
-        color: var(--primary-btn-color);
-    }
-
-    .stat-unanswered {
-        border-color: var(--light-text-color);
-    }
-
-    .stat-unanswered p {
-        color: var(--light-text-color);
-    }
-
-    .accuracy-section {
-        margin-top: 25px;
-    }
-
-    .accuracy-label {
-        display: flex;
-        justify-content: space-between;
-        font-weight: 600;
-        margin-bottom: 8px;
-        color: var(--text-color);
-    }
-
-    .progress-bar {
-        height: 15px;
-        background-color: #e0e6ed;
-        border-radius: 10px;
+    .exam-body.show-palette .question-section {
+        transform: translateX(-100%);
         overflow: hidden;
     }
 
-    .progress-fill {
-        height: 100%;
-        background: linear-gradient(90deg, var(--answered-color), #58d68d);
-        border-radius: 10px;
-        transition: width 0.8s ease-in-out;
-    }
-
-    .result-actions {
-        display: flex;
+    .question-footer {
         flex-wrap: wrap;
         justify-content: center;
-        gap: 15px;
-        margin-top: 30px;
-        border-top: 1px solid var(--border-color);
-        padding-top: 25px;
     }
 
-    .action-btn {
-        padding: 12px 25px;
+    .question-footer button {
+        flex-grow: 1;
+        justify-content: center;
+        padding: 10px 15px;
+        font-size: 0.85em;
+    }
+
+    .back-btn {
+        width: 100%;
+        justify-content: center;
+        padding: 12px;
+        background-color: var(--header-bg);
+        color: white;
         border: none;
         border-radius: 8px;
         font-size: 1em;
-        font-weight: bold;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        text-decoration: none;
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        color: white;
+        margin-bottom: 15px;
     }
 
-    .action-btn:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    }
-
-    .action-btn.review {
-        background-color: #17a2b8;
-        /* Teal color */
-    }
-
-    .action-btn.retry {
-        background-color: #6c757d;
-        /* Gray color */
-    }
-
-    /* --- মোবাইল ভিউ এর জন্য --- */
-    @media (max-width: 768px) {
-        .result-card {
-            padding: 20px;
-        }
-
-        .stats-grid {
-            grid-template-columns: 1fr;
-            /* একটি কলামে দেখাবে */
-        }
-
-        .result-title {
-            font-size: 1.5em;
-        }
-
-        .result-score {
-            font-size: 2.5em;
-        }
-    }
-
-    /* --- ## পরীক্ষা সিলেকশন পেজের স্টাইল ## --- */
-
-    .selection-container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        min-height: 100vh;
+    .modal-content {
         padding: 20px;
-        box-sizing: border-box;
-        background-color: var(--primary-bg);
-        /* আপনার থিমের ব্যাকগ্রাউন্ড রঙ */
     }
 
-    .selection-card {
-        background-color: var(--secondary-bg);
-        /* সাদা কার্ড */
-        padding: 40px;
-        border-radius: 15px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        text-align: center;
-        max-width: 500px;
-        width: 100%;
-        animation: fade-in-up 0.6s ease-out;
+    #review-summary-table {
+        font-size: 0.8em;
     }
 
-    /* সুন্দর একটি এন্ট্রি অ্যানিমেশন */
-    @keyframes fade-in-up {
-        from {
-            opacity: 0;
-            transform: translateY(30px);
-        }
+    #review-summary-table th,
+    #review-summary-table td {
+        padding: 6px;
+    }
+}
 
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
+/* --- ## পরীক্ষার ফলাফল (Result Page) এর জন্য নতুন CSS ## --- */
+.result-page {
+    background-color: var(--primary-bg);
+    padding: 20px;
+    overflow-y: auto;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+.result-card {
+    background-color: white;
+    padding: 30px 40px;
+    border-radius: 15px;
+    box-shadow: var(--shadow);
+    max-width: 700px;
+    margin: 20px auto;
+    animation: fade-in 0.5s ease-out;
+}
+
+@keyframes fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
     }
 
-    .selection-card h1 {
-        color: var(--header-bg);
-        /* হেডার এর রঙ */
-        margin-top: 0;
-        margin-bottom: 30px;
-        font-size: 1.8em;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 15px;
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.result-title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    font-size: 2em;
+    color: var(--header-bg);
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.result-summary {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.result-score-text {
+    font-size: 1.1em;
+    color: var(--light-text-color);
+    margin: 0;
+}
+
+.result-score {
+    font-size: 3em;
+    font-weight: 700;
+    color: var(--primary-btn-color);
+    margin: 10px 0;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    text-align: left;
+}
+
+.stat-item {
+    background: var(--primary-bg);
+    padding: 15px;
+    border-radius: 10px;
+    border-left: 5px solid;
+}
+
+.stat-item h4 {
+    margin: 0 0 5px 0;
+    color: var(--light-text-color);
+    font-size: 0.9em;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.stat-item p {
+    margin: 0;
+    font-size: 1.5em;
+    font-weight: 600;
+}
+
+.stat-correct {
+    border-color: var(--answered-color);
+}
+
+.stat-correct p {
+    color: var(--answered-color);
+}
+
+.stat-wrong {
+    border-color: var(--not-answered-color);
+}
+
+.stat-wrong p {
+    color: var(--not-answered-color);
+}
+
+.stat-attempted {
+    border-color: var(--primary-btn-color);
+}
+
+.stat-attempted p {
+    color: var(--primary-btn-color);
+}
+
+.stat-unanswered {
+    border-color: var(--light-text-color);
+}
+
+.stat-unanswered p {
+    color: var(--light-text-color);
+}
+
+.accuracy-section {
+    margin-top: 25px;
+}
+
+.accuracy-label {
+    display: flex;
+    justify-content: space-between;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: var(--text-color);
+}
+
+.progress-bar {
+    height: 15px;
+    background-color: #e0e6ed;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--answered-color), #58d68d);
+    border-radius: 10px;
+    transition: width 0.8s ease-in-out;
+}
+
+.result-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 30px;
+    border-top: 1px solid var(--border-color);
+    padding-top: 25px;
+}
+
+.action-btn {
+    padding: 12px 25px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: white;
+}
+
+.action-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.action-btn.review {
+    background-color: #17a2b8;
+}
+
+.action-btn.retry {
+    background-color: #6c757d;
+}
+
+@media (max-width: 768px) {
+    .result-card {
+        padding: 20px;
     }
 
-    #exam-select {
-        width: 100%;
-        padding: 15px;
-        font-size: 1.1em;
-        border: 2px solid var(--border-color);
-        border-radius: 8px;
-        margin-bottom: 30px;
-        cursor: pointer;
-        font-family: 'Poppins', sans-serif;
-        color: var(--text-color);
-        background-color: #fff;
-        -webkit-appearance: none;
-        /* iOS এর ডিফল্ট স্টাইল সরাতে */
-        -moz-appearance: none;
-        appearance: none;
-        /* একটি কাস্টম ড্রপডাউন অ্যারো */
-        background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23007CB2%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E');
-        background-repeat: no-repeat;
-        background-position: right 15px top 50%;
-        background-size: 14px auto;
-        padding-right: 40px;
-        /* অ্যারোর জন্য জায়গা */
+    .stats-grid {
+        grid-template-columns: 1fr;
     }
 
-    #exam-select:focus {
-        outline: none;
-        border-color: var(--primary-btn-color);
-        box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+    .result-title {
+        font-size: 1.5em;
     }
 
-    #start-exam-btn {
-        width: 100%;
-        padding: 15px;
-        background: var(--primary-btn-color);
-        /* আপনার থিমের প্রাইমারি বাটন রঙ */
-        color: white;
-        border: none;
-        border-radius: 8px;
-        font-size: 1.2em;
-        font-weight: bold;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 10px;
+    .result-score {
+        font-size: 2.5em;
+    }
+}
+
+/* --- ## পরীক্ষা সিলেকশন পেজের স্টাইল ## --- */
+.selection-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+    box-sizing: border-box;
+    background-color: var(--primary-bg);
+}
+
+.selection-card {
+    background-color: var(--secondary-bg);
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    max-width: 500px;
+    width: 100%;
+    animation: fade-in-up 0.6s ease-out;
+}
+
+@keyframes fade-in-up {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
     }
 
-    #start-exam-btn:hover {
-        background-color: var(--primary-btn-hover);
-        transform: translateY(-2px);
-        box-shadow: 0 4px 10px rgba(52, 152, 219, 0.3);
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
+}
 
-    /* --- ## পরীক্ষার রিভিউ (Review Page) এর জন্য নতুন CSS ## --- */
+.selection-card h1 {
+    color: var(--header-bg);
+    margin-top: 0;
+    margin-bottom: 30px;
+    font-size: 1.8em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+}
 
+#exam-select {
+    width: 100%;
+    padding: 15px;
+    font-size: 1.1em;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    margin-bottom: 30px;
+    cursor: pointer;
+    font-family: 'Poppins', sans-serif;
+    color: var(--text-color);
+    background-color: #fff;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23007CB2%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E');
+    background-repeat: no-repeat;
+    background-position: right 15px top 50%;
+    background-size: 14px auto;
+    padding-right: 40px;
+}
+
+#exam-select:focus {
+    outline: none;
+    border-color: var(--primary-btn-color);
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+}
+
+#start-exam-btn {
+    width: 100%;
+    padding: 15px;
+    background: var(--primary-btn-color);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.2em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+#start-exam-btn:hover {
+    background-color: var(--primary-btn-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(52, 152, 219, 0.3);
+}
+
+/* --- ## পরীক্ষার রিভিউ (Review Page) এর জন্য নতুন CSS ## --- */
+.review-page {
+    background-color: var(--primary-bg);
+    padding: 20px;
+    overflow-y: auto;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+.review-title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    font-size: 2em;
+    color: var(--header-bg);
+    margin-bottom: 30px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.review-card {
+    background-color: white;
+    padding: 25px;
+    border-radius: 12px;
+    margin: 0 auto 20px auto;
+    max-width: 900px;
+    border-left: 6px solid;
+    box-shadow: var(--shadow);
+    transition: transform 0.2s ease-in-out;
+}
+
+.review-card:hover {
+    transform: translateY(-4px);
+}
+
+.review-correct {
+    border-left-color: var(--answered-color);
+}
+
+.review-incorrect {
+    border-left-color: var(--not-answered-color);
+}
+
+.review-unanswered {
+    border-left-color: var(--light-text-color);
+}
+
+.review-question {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    font-size: 1.2em;
+    font-weight: 600;
+    margin: 0 0 20px 0;
+    color: var(--text-color);
+}
+
+.review-question i {
+    margin-top: 5px;
+}
+
+.review-answers-container {
+    padding-left: 10px;
+    border-left: 3px solid var(--border-color);
+}
+
+.review-answer {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 10px 0;
+    font-size: 1.1em;
+    padding: 10px;
+    border-radius: 8px;
+}
+
+.correct-ans {
+    background-color: #e8f8ef;
+}
+
+.your-ans {
+    background-color: var(--primary-bg);
+}
+
+.fa-check-circle {
+    color: var(--answered-color);
+}
+
+.fa-times-circle {
+    color: var(--not-answered-color);
+}
+
+.fa-circle {
+    color: var(--light-text-color);
+}
+
+.review-footer {
+    text-align: center;
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border-color);
+}
+
+.review-footer .action-btn.dashboard {
+    background-color: var(--primary-btn-color);
+}
+
+@media (max-width: 768px) {
     .review-page {
-        background-color: var(--primary-bg);
-        padding: 20px;
-        overflow-y: auto;
-        height: 100%;
-        box-sizing: border-box;
-    }
-
-    .review-title {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 15px;
-        font-size: 2em;
-        color: var(--header-bg);
-        margin-bottom: 30px;
-        padding-bottom: 15px;
-        border-bottom: 2px solid var(--border-color);
+        padding: 15px;
     }
 
     .review-card {
-        background-color: white;
-        padding: 25px;
-        border-radius: 12px;
-        margin: 0 auto 20px auto;
-        max-width: 900px;
-        border-left: 6px solid;
-        /* Correct/Incorrect/Unanswered অনুযায়ী রঙ পরিবর্তন হবে */
-        box-shadow: var(--shadow);
-        transition: transform 0.2s ease-in-out;
+        padding: 20px;
     }
 
-    .review-card:hover {
-        transform: translateY(-4px);
-    }
-
-    /* সঠিক উত্তরের জন্য সবুজ বর্ডার */
-    .review-correct {
-        border-left-color: var(--answered-color);
-    }
-
-    /* ভুল উত্তরের জন্য লাল বর্ডার */
-    .review-incorrect {
-        border-left-color: var(--not-answered-color);
-    }
-
-    /* উত্তর না দেওয়া প্রশ্নের জন্য ধূসর বর্ডার */
-    .review-unanswered {
-        border-left-color: var(--light-text-color);
+    .review-title {
+        font-size: 1.5em;
     }
 
     .review-question {
-        display: flex;
-        align-items: flex-start;
-        gap: 12px;
-        font-size: 1.2em;
-        font-weight: 600;
-        margin: 0 0 20px 0;
-        color: var(--text-color);
-    }
-
-    .review-question i {
-        margin-top: 5px;
-        /* আইকনটি যেন লেখার সাথে সুন্দরভাবে অ্যালাইন হয় */
-    }
-
-    .review-answers-container {
-        padding-left: 10px;
-        border-left: 3px solid var(--border-color);
+        font-size: 1.1em;
     }
 
     .review-answer {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        margin: 10px 0;
-        font-size: 1.1em;
-        padding: 10px;
-        border-radius: 8px;
+        font-size: 1em;
     }
-
-    /* সঠিক উত্তরের জন্য হালকা সবুজ ব্যাকগ্রাউন্ড */
-    .correct-ans {
-        background-color: #e8f8ef;
-    }
-
-    /* আপনার দেওয়া উত্তরের জন্য হালকা ধূসর ব্যাকগ্রাউন্ড */
-    .your-ans {
-        background-color: var(--primary-bg);
-    }
-
-    /* আইকনগুলোর রঙ */
-    .fa-check-circle {
-        color: var(--answered-color);
-    }
-
-    .fa-times-circle {
-        color: var(--not-answered-color);
-    }
-
-    .fa-circle {
-        color: var(--light-text-color);
-    }
-
-    .review-footer {
-        text-align: center;
-        margin-top: 40px;
-        padding-top: 20px;
-        border-top: 1px solid var(--border-color);
-    }
-
-    .review-footer .action-btn.dashboard {
-        background-color: var(--primary-btn-color);
-    }
-
-    /* --- মোবাইল ভিউ এর জন্য --- */
-    @media (max-width: 768px) {
-        .review-page {
-            padding: 15px;
-        }
-
-        .review-card {
-            padding: 20px;
-        }
-
-        .review-title {
-            font-size: 1.5em;
-        }
-
-        .review-question {
-            font-size: 1.1em;
-        }
-
-        .review-answer {
-            font-size: 1em;
-        }
-    }
+}
