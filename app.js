@@ -1,31 +1,85 @@
 document.addEventListener("DOMContentLoaded", () => {
     // --- গ্লোবাল ভেরিয়েবল ---
-    let questions = quizData;
+    let questions = []; // ## পরিবর্তন: প্রথমে এটি খালি থাকবে ##
     let userAnswers = [];
     let currentQuestionIndex = 0;
     let timerInterval;
     let remainingTime;
     let isPaused = false;
 
-    const EXAM_ID = "RRB NTPC CBT-1";
-    const SET_NAME = "Mock Test 1";
-    const progressKey = `examProgress_${EXAM_ID}_${SET_NAME}`;
+    // ## পরিবর্তন: পরীক্ষার নাম এবং সেট ডাইনামিকভাবে সেট হবে ##
+    let EXAM_ID = "Default Exam";
+    let SET_NAME = "Mock Test 1";
+    let progressKey = "";
 
     // --- UI এলিমেন্ট ---
     const loadingSpinner = document.getElementById("loading-spinner");
     const examContainer = document.getElementById("exam-container");
     const userDisplayNameEl = document.getElementById("user-display-name");
+    const logoEl = document.querySelector(".logo"); // ## নতুন: লোগো সিলেক্ট করা হয়েছে ##
     const questionTextEl = document.getElementById("question-text");
     const optionsContainerEl = document.getElementById("options-container");
     const questionNumberEl = document.getElementById("question-number");
     const questionPaletteEl = document.getElementById("question-palette");
     const examBody = document.getElementById("exam-body");
 
+    // --- ## নতুন ফাংশন: URL থেকে পরীক্ষার নাম পড়া ## ---
+    function getExamNameFromURL() {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get("exam"); // ?exam=...
+    }
+
+    // --- ## নতুন ফাংশন: পরীক্ষার প্রশ্ন ফাইল লোড করা ## ---
+    function loadQuestionScript(examName) {
+        return new Promise((resolve, reject) => {
+            if (!examName) {
+                loadingSpinner.innerHTML =
+                    "<p>No exam selected. Please use a valid exam URL (e.g., ?exam=cbt1).</p>";
+                reject("No exam name provided.");
+                return;
+            }
+
+            const script = document.createElement("script");
+            // ## পরিবর্তন: আপনার GitHub ফোল্ডার স্ট্রাকচার অনুযায়ী পাথ পরিবর্তন করুন ##
+            // script.src = `exams/${examName}_questions.js`; // যদি exams ফোল্ডারে থাকে
+            script.src = `${examName}.js`; // যদি রুট ফোল্ডারে cbt1.js, cbt2.js এভাবে থাকে
+
+            script.onload = () => {
+                questions = typeof quizData !== "undefined" ? quizData : [];
+
+                const examTitles = {
+                    cbt1: "RRB NTPC CBT-1",
+                    cbt2: "RRB NTPC CBT-2",
+                    groupd: "RRB Group D",
+                    // এখানে নতুন পরীক্ষার নাম যোগ করতে পারেন
+                };
+                EXAM_ID = examTitles[examName] || "Custom Exam";
+                logoEl.textContent = EXAM_ID;
+
+                progressKey = `examProgress_${EXAM_ID}_${SET_NAME}`;
+
+                resolve();
+            };
+            script.onerror = () => {
+                loadingSpinner.innerHTML = `<p>Error: Could not load questions for exam "${examName}".</p>`;
+                reject("Script load error.");
+            };
+            document.body.appendChild(script);
+        });
+    }
+
     // --- অ্যাপ শুরু ---
-    firebase.auth().onAuthStateChanged(function (user) {
+    firebase.auth().onAuthStateChanged(async function (user) {
         if (user) {
             userDisplayNameEl.textContent = user.displayName || "User";
-            initializeApp();
+
+            const examName = getExamNameFromURL();
+            try {
+                await loadQuestionScript(examName);
+                initializeApp();
+            } catch (error) {
+                console.error("Failed to initialize exam:", error);
+            }
         } else {
             alert("এই পরীক্ষা দিতে হলে আপনাকে লগইন করতে হবে!");
             window.location.href =
@@ -35,26 +89,26 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function initializeApp() {
         if (!questions || questions.length === 0) {
-            loadingSpinner.innerHTML = "<p>No questions found.</p>";
+            loadingSpinner.innerHTML =
+                "<p>No questions found for this exam.</p>";
             return;
         }
 
         if (!loadProgress()) {
-            resetExamState(); // যদি কোনো সেভ করা ডেটা না থাকে, নতুন করে শুরু করুন
+            resetExamState();
         }
 
         renderQuestion();
         createPalette();
         startTimer(remainingTime);
-
-        // --- সমস্ত বাটনের ইভেন্ট লিসেনার এখানে যোগ করা হয়েছে ---
         addEventListeners();
 
         loadingSpinner.classList.add("hidden");
         examContainer.classList.remove("hidden");
     }
 
-    // --- পরীক্ষা রিসেট করার ফাংশন ---
+    // --- বাকি ফাংশনগুলো আগের মতোই থাকবে, শুধু কিছু ছোট পরিবর্তন করা হয়েছে ---
+
     function resetExamState() {
         currentQuestionIndex = 0;
         userAnswers = questions.map((q) => ({
@@ -64,11 +118,9 @@ document.addEventListener("DOMContentLoaded", () => {
         }));
         remainingTime = 60 * 60; // ৬০ মিনিট
         isPaused = false;
-        // সেভ করা ডেটা মুছে ফেলা হয়, যাতে পুরনো পরীক্ষা আবার লোড না হয়
         localStorage.removeItem(progressKey);
     }
 
-    // --- সমস্ত ইভেন্ট লিসেনার যোগ করার ফাংশন ---
     function addEventListeners() {
         document
             .getElementById("save-next-btn")
@@ -88,15 +140,12 @@ document.addEventListener("DOMContentLoaded", () => {
         document.querySelector(".close-btn").addEventListener("click", () => {
             document.getElementById("submit-modal").style.display = "none";
         });
-
         document
             .getElementById("pause-btn")
             .addEventListener("click", togglePause);
         document
             .getElementById("resume-btn-overlay")
             .addEventListener("click", togglePause);
-
-        // ## রিস্টার্ট বাটনের কার্যকারিতা ##
         document.getElementById("restart-btn").addEventListener("click", () => {
             if (
                 confirm(
@@ -104,16 +153,13 @@ document.addEventListener("DOMContentLoaded", () => {
                 )
             ) {
                 resetExamState();
-                location.reload(); // পেজ রিলোড করে সম্পূর্ণ নতুন করে শুরু
+                location.reload();
             }
         });
-
-        // ## মোবাইল প্যালেট টগলের কার্যকারিতা ##
         const togglePaletteBtn = document.getElementById("toggle-palette-btn");
         const backToQuestionBtn = document.getElementById(
             "back-to-question-btn",
         );
-
         if (togglePaletteBtn && backToQuestionBtn) {
             togglePaletteBtn.addEventListener("click", () =>
                 examBody.classList.add("show-palette"),
@@ -166,7 +212,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // --- Save/Load, Pause/Resume, এবং অন্যান্য ফাংশন ---
     function saveProgress() {
         const progress = {
             answers: userAnswers,
@@ -365,7 +410,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     const correctCountBeforeUpdate =
                         oldSetData.totalQuestions -
                         oldSetData.wrong -
-                        (totalQuestions -
+                        (oldSetData.totalQuestions -
                             userAnswers.filter((a) => a.selectedOption).length);
                     chapterData.totalCorrect -= correctCountBeforeUpdate;
                     chapterData.totalWrong -= oldSetData.wrong;
