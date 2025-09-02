@@ -87,8 +87,10 @@ document.addEventListener("DOMContentLoaded", () => {
                     console.error(error);
                 }
             } else {
+                // ## সমাধান: লগইন redirect URL আপডেট করা হয়েছে ##
                 alert("এই পরীক্ষা দিতে হলে আপনাকে লগইন করতে হবে!");
-                window.location.href = "../../login.html";
+                // বর্তমান পেজের URL redirect প্যারামিটার হিসেবে পাঠানো হচ্ছে
+                window.location.href = `/Study-With-Keshab/login.html?redirect=${encodeURIComponent(window.location.href)}`;
             }
         });
     } else {
@@ -308,7 +310,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const q = questions[currentQuestionIndex];
         questionNumberEl.textContent = `Question No. ${currentQuestionIndex + 1}`;
-        // ## সমাধান: q.question পরিবর্তন করে q.questionText করা হয়েছে ##
         questionTextEl.innerHTML = q.questionText;
 
         optionsContainerEl.innerHTML = "";
@@ -456,10 +457,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 cardClass = "review-unanswered";
                 yourAnswerIcon = '<i class="far fa-circle"></i>';
             }
-            // ## সমাধান: q.question পরিবর্তন করে q.questionText করা হয়েছে ##
             reviewHTML += `<div class="review-card ${cardClass}"><h3 class="review-question"><i class="fas fa-question-circle"></i> প্রশ্ন ${i + 1}: ${q.questionText}</h3><div class="review-answers-container"><p class="review-answer correct-ans"><strong><i class="fas fa-check-circle"></i> সঠিক উত্তর:</strong> <span>${q.options[q.answer]}</span></p><p class="review-answer your-ans"><strong>${yourAnswerIcon} আপনার উত্তর:</strong> <span>${userAnswer.selectedOption !== null ? q.options[userAnswer.selectedOption] : "উত্তর দেননি"}</span></p></div></div>`;
         });
-        reviewHTML += `<div class="review-footer"><a href="../../dashboard.html" class="action-btn dashboard"><i class="fas fa-tachometer-alt"></i> ড্যাশবোর্ডে যান</a><button onclick="location.reload()" class="action-btn retry"><i class="fas fa-redo"></i> আবার দিন</button></div></div>`;
+        // ## সমাধান: ড্যাশবোর্ড লিঙ্ক আপডেট করা হয়েছে ##
+        const base_url = "/Study-With-Keshab"; // আপনার GitHub Pages repository নাম
+        reviewHTML += `<div class="review-footer"><a href="${base_url}/dashboard.html" class="action-btn dashboard"><i class="fas fa-tachometer-alt"></i> ড্যাশবোর্ডে যান</a><button onclick="location.reload()" class="action-btn retry"><i class="fas fa-redo"></i> আবার দিন</button></div></div>`;
         container.innerHTML = reviewHTML;
     };
 
@@ -480,7 +482,6 @@ document.addEventListener("DOMContentLoaded", () => {
         questions.forEach((question, index) => {
             const questionNumber = index + 1;
             const userAnswer = userAnswers[index];
-            // ## সমাধান: question.question পরিবর্তন করে question.questionText করা হয়েছে ##
             let questionBlockHTML = `
                 <div class="qp-question-block">
                     <p class="qp-question-text">Q ${questionNumber}: ${question.questionText}</p>`;
