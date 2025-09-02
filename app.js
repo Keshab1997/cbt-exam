@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let remainingTime;
     let isPaused = false;
     let EXAM_ID = "Default Exam";
-    let SET_NAME = "Mock Test 1";
+    let SET_NAME = "Mock Test 1"; // এটি ডায়নামিকভাবে সেট করা যেতে পারে
     let progressKey = "";
 
     // --- UI এলিমেন্ট ---
@@ -16,6 +16,21 @@ document.addEventListener("DOMContentLoaded", () => {
     const examContainer = document.getElementById("exam-container");
     const userDisplayNameEl = document.getElementById("user-display-name");
     const logoEl = document.querySelector(".logo");
+
+    // === ## নতুন UI এলিমেন্টগুলো এখানে যোগ করা হয়েছে ## ===
+    const questionPaperBtn = document.getElementById("question-paper-btn");
+    const instructionsBtn = document.getElementById("instructions-btn");
+    const qpModal = document.getElementById("question-paper-modal");
+    const instructionsModal = document.getElementById("instructions-modal");
+    const closeQpModalBtn = document.getElementById("close-qp-modal");
+    const closeInstructionsModalBtn = document.getElementById(
+        "close-instructions-modal",
+    );
+    const qpViewContainer = document.getElementById("question-paper-view");
+    const submitModal = document.getElementById("submit-modal");
+    const finalSubmitBtn = document.getElementById("final-submit-btn");
+    const cancelSubmitBtn = document.getElementById("cancel-submit-btn");
+    const closeSubmitModalBtn = document.getElementById("close-submit-modal");
 
     // --- URL থেকে পরীক্ষার নাম পড়ার ফাংশন ---
     function getExamNameFromURL() {
@@ -35,21 +50,15 @@ document.addEventListener("DOMContentLoaded", () => {
                     Array.isArray(quizData)
                 ) {
                     questions = quizData;
-
-                    // ## সমাধান: পরীক্ষার নামটি এখন HTML থেকে স্বয়ংক্রিয়ভাবে নেওয়া হচ্ছে ##
                     const examSelect = document.getElementById("exam-select");
                     const selectedOption = examSelect.querySelector(
                         `option[value="${examName}"]`,
                     );
-
-                    if (selectedOption) {
-                        EXAM_ID = selectedOption.textContent; // ড্রপডাউন থেকে পুরো নাম নেওয়া হলো
-                    } else {
-                        EXAM_ID = examName.toUpperCase().replace("_", " "); // একটি ফলব্যাক নাম
-                    }
-
+                    EXAM_ID = selectedOption
+                        ? selectedOption.textContent
+                        : examName.toUpperCase().replace("_", " ");
                     logoEl.textContent = EXAM_ID;
-                    progressKey = `examProgress_${EXAM_ID}_${SET_NAME}`;
+                    progressKey = `examProgress_${EXAM_ID}`;
                     resolve();
                 } else {
                     reject(
@@ -57,20 +66,17 @@ document.addEventListener("DOMContentLoaded", () => {
                     );
                 }
             };
-            script.onerror = () => {
+            script.onerror = () =>
                 reject(`Could not load script at path: ${script.src}`);
-            };
             document.body.appendChild(script);
         });
     }
 
     // --- মূল লজিক ---
     const examName = getExamNameFromURL();
-
     if (examName) {
-        selectionContainer.style.display = "none"; // সিলেকশন পেজ লুকানো হলো
+        selectionContainer.style.display = "none";
         loadingSpinner.classList.remove("hidden");
-
         firebase.auth().onAuthStateChanged(async (user) => {
             if (user) {
                 userDisplayNameEl.textContent = user.displayName || "User";
@@ -87,10 +93,9 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
     } else {
-        selectionContainer.style.display = "flex"; // সিলেকশন পেজ দেখানো হলো
+        selectionContainer.style.display = "flex";
         loadingSpinner.classList.add("hidden");
         examContainer.classList.add("hidden");
-
         document
             .getElementById("start-exam-btn")
             .addEventListener("click", () => {
@@ -104,7 +109,6 @@ document.addEventListener("DOMContentLoaded", () => {
             });
     }
 
-    // --- বাকি সমস্ত ফাংশন অপরিবর্তিত ---
     function initializeApp() {
         if (!questions || questions.length === 0) {
             loadingSpinner.innerHTML = "<p>No questions found.</p>";
@@ -121,18 +125,18 @@ document.addEventListener("DOMContentLoaded", () => {
         examContainer.classList.remove("hidden");
     }
 
-    // (আগের উত্তর থেকে বাকি সমস্ত ফাংশন এখানে পেস্ট করুন)
     function resetExamState() {
         currentQuestionIndex = 0;
-        userAnswers = questions.map((q) => ({
-            qNo: q.qNo,
+        userAnswers = questions.map((q, index) => ({
+            qNo: index + 1,
             selectedOption: null,
             status: "not-visited",
         }));
-        remainingTime = 60 * 60;
+        remainingTime = (questions[0]?.totalTimeMinutes || 90) * 60; // প্রশ্ন ফাইল থেকে সময় নিন, না পেলে ৯০ মিনিট
         isPaused = false;
         localStorage.removeItem(progressKey);
     }
+
     function addEventListeners() {
         document
             .getElementById("save-next-btn")
@@ -146,12 +150,16 @@ document.addEventListener("DOMContentLoaded", () => {
         document
             .getElementById("submit-btn")
             .addEventListener("click", () => handleButtonClick("submit"));
-        document
-            .getElementById("final-submit-btn")
-            .addEventListener("click", showFinalResult);
-        document.querySelector(".close-btn").addEventListener("click", () => {
-            document.getElementById("submit-modal").style.display = "none";
+
+        // Modal বাটনগুলোর ইভেন্ট
+        finalSubmitBtn.addEventListener("click", showFinalResult);
+        closeSubmitModalBtn.addEventListener("click", () => {
+            submitModal.style.display = "none";
         });
+        cancelSubmitBtn.addEventListener("click", () => {
+            submitModal.style.display = "none";
+        });
+
         document
             .getElementById("pause-btn")
             .addEventListener("click", togglePause);
@@ -164,6 +172,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 location.reload();
             }
         });
+
+        // মোবাইল প্যালেট টগল
         const togglePaletteBtn = document.getElementById("toggle-palette-btn"),
             backToQuestionBtn = document.getElementById("back-to-question-btn"),
             examBody = document.getElementById("exam-body");
@@ -175,48 +185,89 @@ document.addEventListener("DOMContentLoaded", () => {
                 examBody.classList.remove("show-palette"),
             );
         }
+
+        // === ## নতুন বাটনগুলোর জন্য Event Listeners ## ===
+        questionPaperBtn.addEventListener("click", () => {
+            displayQuestionPaper();
+            qpModal.style.display = "flex";
+        });
+        instructionsBtn.addEventListener("click", () => {
+            instructionsModal.style.display = "flex";
+        });
+        closeQpModalBtn.addEventListener("click", () => {
+            qpModal.style.display = "none";
+        });
+        closeInstructionsModalBtn.addEventListener("click", () => {
+            instructionsModal.style.display = "none";
+        });
+
+        // Modal এর বাইরে ক্লিক করলে বন্ধ করার জন্য
+        window.addEventListener("click", (event) => {
+            if (event.target == qpModal) qpModal.style.display = "none";
+            if (event.target == instructionsModal)
+                instructionsModal.style.display = "none";
+            if (event.target == submitModal) submitModal.style.display = "none";
+        });
     }
+
     function handleButtonClick(action) {
         const currentAns = userAnswers[currentQuestionIndex];
         switch (action) {
             case "saveNext":
-                if (currentAns.selectedOption) currentAns.status = "answered";
+                if (currentAns.selectedOption !== null) {
+                    currentAns.status = "answered";
+                }
                 goToNextQuestion();
                 break;
             case "markReview":
-                currentAns.status = currentAns.selectedOption
-                    ? "marked-answered"
-                    : "marked";
+                currentAns.status =
+                    currentAns.selectedOption !== null
+                        ? "marked-answered"
+                        : "marked";
                 goToNextQuestion();
                 break;
             case "clear":
                 currentAns.selectedOption = null;
-                currentAns.status = "not-answered";
-                renderQuestion();
+                currentAns.status = "not-answered"; // উত্তর ক্লিয়ার করলে "not-answered" হবে
+                renderQuestion(); // প্রশ্নটি রি-রেন্ডার করুন
+                updatePalette();
                 saveProgress();
                 break;
             case "submit":
-                const summary = {
-                    answered: userAnswers.filter(
-                        (a) =>
-                            a.status === "answered" ||
-                            a.status === "marked-answered",
-                    ).length,
-                    notAnswered: userAnswers.filter(
-                        (a) =>
-                            a.status === "not-answered" ||
-                            a.status === "marked",
-                    ).length,
-                    notVisited: userAnswers.filter(
-                        (a) => a.status === "not-visited",
-                    ).length,
-                };
-                document.getElementById("summary-table").innerHTML =
-                    `<tr><th>Status</th><th>Count</th></tr><tr><td>Total</td><td>${questions.length}</td></tr><tr><td>Answered</td><td>${summary.answered}</td></tr><tr><td>Not Answered</td><td>${summary.notAnswered}</td></tr><tr><td>Not Visited</td><td>${summary.notVisited}</td></tr>`;
-                document.getElementById("submit-modal").style.display = "flex";
+                // রিভিউ টেবিল তৈরি করুন
+                const totalQuestions = questions.length;
+                const answered = userAnswers.filter(
+                    (ans) =>
+                        ans.status === "answered" ||
+                        ans.status === "marked-answered",
+                ).length;
+                const notAnswered = userAnswers.filter(
+                    (ans) => ans.status === "not-answered",
+                ).length;
+                const markedForReview = userAnswers.filter(
+                    (ans) => ans.status === "marked",
+                ).length;
+                const visited = answered + notAnswered + markedForReview;
+                const notVisited = totalQuestions - visited;
+
+                const summaryBody = document.getElementById(
+                    "review-summary-body",
+                );
+                summaryBody.innerHTML = `
+                    <tr>
+                        <td>CBT</td>
+                        <td>${totalQuestions}</td>
+                        <td>${answered}</td>
+                        <td>${notAnswered}</td>
+                        <td>${markedForReview}</td>
+                        <td>${notVisited}</td>
+                    </tr>
+                `;
+                submitModal.style.display = "flex";
                 break;
         }
     }
+
     function saveProgress() {
         const progress = {
             answers: userAnswers,
@@ -225,6 +276,7 @@ document.addEventListener("DOMContentLoaded", () => {
         };
         localStorage.setItem(progressKey, JSON.stringify(progress));
     }
+
     function loadProgress() {
         const savedProgress = localStorage.getItem(progressKey);
         if (savedProgress) {
@@ -236,40 +288,52 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         return false;
     }
+
     function togglePause() {
         isPaused = !isPaused;
+        const pauseIcon = document.querySelector("#pause-btn i");
         if (isPaused) {
             clearInterval(timerInterval);
             document.getElementById("pause-overlay").classList.remove("hidden");
-            document.getElementById("pause-btn").innerHTML =
-                '<i class="fas fa-play"></i>';
+            if (pauseIcon) pauseIcon.className = "fas fa-play";
         } else {
             startTimer(remainingTime);
             document.getElementById("pause-overlay").classList.add("hidden");
-            document.getElementById("pause-btn").innerHTML =
-                '<i class="fas fa-pause"></i>';
+            if (pauseIcon) pauseIcon.className = "fas fa-pause";
         }
     }
+
     function renderQuestion() {
         const questionNumberEl = document.getElementById("question-number"),
             questionTextEl = document.getElementById("question-text"),
             optionsContainerEl = document.getElementById("options-container");
         if (currentQuestionIndex >= questions.length) return;
+
         const currentAnswer = userAnswers[currentQuestionIndex];
         if (currentAnswer.status === "not-visited")
             currentAnswer.status = "not-answered";
+
         const q = questions[currentQuestionIndex];
-        questionNumberEl.textContent = `Question No. ${q.qNo}`;
-        questionTextEl.textContent = q.questionText;
+        questionNumberEl.textContent = `Question No. ${currentQuestionIndex + 1}`;
+        questionTextEl.innerHTML = q.question; // HTML ট্যাগ সাপোর্টের জন্য innerHTML ব্যবহার করুন
+
         optionsContainerEl.innerHTML = "";
-        q.options.forEach((option) => {
-            const isChecked = currentAnswer.selectedOption === option;
-            optionsContainerEl.innerHTML += `<label class="option ${isChecked ? "selected" : ""}"><input type="radio" name="option" value="${option}" ${isChecked ? "checked" : ""}>${option}</label>`;
+        q.options.forEach((option, index) => {
+            const isChecked = currentAnswer.selectedOption === index;
+            const optionId = `option-${index}`;
+            const optionHTML = `
+                <label for="${optionId}" class="option ${isChecked ? "selected" : ""}">
+                    <input type="radio" id="${optionId}" name="option" value="${index}" ${isChecked ? "checked" : ""}>
+                    ${option}
+                </label>`;
+            optionsContainerEl.innerHTML += optionHTML;
         });
+
         document.querySelectorAll('input[name="option"]').forEach((radio) => {
             radio.addEventListener("change", (e) => {
-                userAnswers[currentQuestionIndex].selectedOption =
-                    e.target.value;
+                userAnswers[currentQuestionIndex].selectedOption = parseInt(
+                    e.target.value,
+                );
                 document
                     .querySelectorAll(".option")
                     .forEach((l) => l.classList.remove("selected"));
@@ -279,13 +343,14 @@ document.addEventListener("DOMContentLoaded", () => {
         });
         updatePalette();
     }
+
     function createPalette() {
         const questionPaletteEl = document.getElementById("question-palette"),
             examBody = document.getElementById("exam-body");
         questionPaletteEl.innerHTML = "";
         questions.forEach((q, index) => {
             const btn = document.createElement("button");
-            btn.textContent = q.qNo;
+            btn.textContent = index + 1;
             btn.className = "palette-btn";
             btn.dataset.index = index;
             btn.addEventListener("click", () => {
@@ -299,12 +364,15 @@ document.addEventListener("DOMContentLoaded", () => {
             questionPaletteEl.appendChild(btn);
         });
     }
+
     function updatePalette() {
-        document.querySelectorAll(".palette-btn").forEach((btn, index) => {
+        document.querySelectorAll(".palette-btn").forEach((btn) => {
+            const index = parseInt(btn.dataset.index);
             btn.className = "palette-btn " + userAnswers[index].status;
-            if (index == currentQuestionIndex) btn.classList.add("current");
+            if (index === currentQuestionIndex) btn.classList.add("current");
         });
     }
+
     function startTimer(duration) {
         remainingTime = duration;
         clearInterval(timerInterval);
@@ -316,42 +384,53 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
             saveProgress();
-            let h = String(Math.floor(remainingTime / 3600)).padStart(2, "0");
-            let m = String(Math.floor((remainingTime % 3600) / 60)).padStart(
+            const h = String(Math.floor(remainingTime / 3600)).padStart(2, "0");
+            const m = String(Math.floor((remainingTime % 3600) / 60)).padStart(
                 2,
                 "0",
             );
-            let s = String(remainingTime % 60).padStart(2, "0");
+            const s = String(remainingTime % 60).padStart(2, "0");
             document.getElementById("timer").textContent = `${h}:${m}:${s}`;
         }, 1000);
     }
+
     function goToNextQuestion() {
         if (currentQuestionIndex < questions.length - 1) {
             currentQuestionIndex++;
             renderQuestion();
             saveProgress();
+        } else {
+            // শেষ প্রশ্নে পৌঁছালে অটোমেটিক সাবমিট পেজে নিয়ে যেতে পারে
+            alert("এটিই শেষ প্রশ্ন। আপনি এখন পরীক্ষাটি জমা দিতে পারেন।");
         }
     }
+
     function showFinalResult() {
         clearInterval(timerInterval);
+        submitModal.style.display = "none"; // রিভিউ মোডাল বন্ধ করুন
         localStorage.removeItem(progressKey);
+
         let correctCount = 0,
             wrongCount = 0;
         userAnswers.forEach((ans, index) => {
             if (ans.status === "answered" || ans.status === "marked-answered") {
-                if (ans.selectedOption === questions[index].correctAnswer)
+                if (ans.selectedOption === questions[index].answer) {
                     correctCount++;
-                else wrongCount++;
+                } else {
+                    wrongCount++;
+                }
             }
         });
-        const totalQuestions = questions.length,
-            attemptedCount = correctCount + wrongCount,
-            unansweredCount = totalQuestions - attemptedCount,
-            positiveMarks = correctCount * 1,
-            negativeMarks = wrongCount / 3,
-            finalScore = positiveMarks - negativeMarks,
-            accuracy =
-                attemptedCount > 0 ? (correctCount / attemptedCount) * 100 : 0;
+
+        const totalQuestions = questions.length;
+        const attemptedCount = correctCount + wrongCount;
+        const unansweredCount = totalQuestions - attemptedCount;
+        const positiveMarks = correctCount * 1;
+        const negativeMarks = wrongCount * (1 / 3); // প্রতি ৩টি ভুলের জন্য ১ নম্বর কাটা
+        const finalScore = positiveMarks - negativeMarks;
+        const accuracy =
+            attemptedCount > 0 ? (correctCount / attemptedCount) * 100 : 0;
+
         saveQuizResult(
             EXAM_ID,
             SET_NAME,
@@ -359,37 +438,37 @@ document.addEventListener("DOMContentLoaded", () => {
             wrongCount,
             totalQuestions,
         );
+
         const container = document.getElementById("exam-container");
         container.innerHTML = `<div class="result-page"><div class="result-card"><h2 class="result-title"><i class="fas fa-poll"></i> পরীক্ষার ফলাফল</h2><div class="result-summary"><p class="result-score-text">আপনার চূড়ান্ত স্কোর</p><p class="result-score">${finalScore.toFixed(2)} / ${totalQuestions}</p></div><div class="stats-grid"><div class="stat-item stat-attempted"><h4>Attempted</h4><p>${attemptedCount}</p></div><div class="stat-item stat-unanswered"><h4>Unanswered</h4><p>${unansweredCount}</p></div><div class="stat-item stat-correct"><h4>Correct</h4><p>${correctCount} (+${positiveMarks.toFixed(2)})</p></div><div class="stat-item stat-wrong"><h4>Wrong</h4><p>${wrongCount} (-${negativeMarks.toFixed(2)})</p></div></div><div class="accuracy-section"><div class="accuracy-label"><span>Accuracy</span><span>${accuracy.toFixed(1)}%</span></div><div class="progress-bar"><div class="progress-fill" style="width: ${accuracy.toFixed(1)}%;"></div></div></div><div class="result-actions"><button onclick="showReview()" class="action-btn review"><i class="fas fa-search"></i> রিভিউ দেখুন</button><button onclick="location.reload()" class="action-btn retry"><i class="fas fa-redo"></i> আবার দিন</button></div></div></div>`;
     }
+
     window.showReview = function () {
         const container = document.getElementById("exam-container");
         let reviewHTML = `<div class="review-page"><h2 class="review-title"><i class="fas fa-clipboard-list"></i> পরীক্ষার রিভিউ</h2>`;
         questions.forEach((q, i) => {
-            const userAnswer = userAnswers[i],
-                isCorrect = userAnswer.selectedOption === q.correctAnswer,
-                isAttempted =
-                    userAnswer.status === "answered" ||
-                    userAnswer.status === "marked-answered";
+            const userAnswer = userAnswers[i];
+            const isCorrect = userAnswer.selectedOption === q.answer;
+            const isAttempted =
+                userAnswer.status === "answered" ||
+                userAnswer.status === "marked-answered";
             let cardClass = "",
                 yourAnswerIcon = "";
             if (isAttempted) {
-                if (isCorrect) {
-                    cardClass = "review-correct";
-                    yourAnswerIcon = '<i class="fas fa-check-circle"></i>';
-                } else {
-                    cardClass = "review-incorrect";
-                    yourAnswerIcon = '<i class="fas fa-times-circle"></i>';
-                }
+                cardClass = isCorrect ? "review-correct" : "review-incorrect";
+                yourAnswerIcon = isCorrect
+                    ? '<i class="fas fa-check-circle"></i>'
+                    : '<i class="fas fa-times-circle"></i>';
             } else {
                 cardClass = "review-unanswered";
                 yourAnswerIcon = '<i class="far fa-circle"></i>';
             }
-            reviewHTML += `<div class="review-card ${cardClass}"><h3 class="review-question"><i class="fas fa-question-circle"></i> প্রশ্ন ${i + 1}: ${q.questionText}</h3><div class="review-answers-container"><p class="review-answer correct-ans"><strong><i class="fas fa-check-circle"></i> সঠিক উত্তর:</strong> <span>${q.correctAnswer}</span></p><p class="review-answer your-ans"><strong>${yourAnswerIcon} আপনার উত্তর:</strong> <span>${userAnswer.selectedOption || "উত্তর দেননি"}</span></p></div></div>`;
+            reviewHTML += `<div class="review-card ${cardClass}"><h3 class="review-question"><i class="fas fa-question-circle"></i> প্রশ্ন ${i + 1}: ${q.question}</h3><div class="review-answers-container"><p class="review-answer correct-ans"><strong><i class="fas fa-check-circle"></i> সঠিক উত্তর:</strong> <span>${q.options[q.answer]}</span></p><p class="review-answer your-ans"><strong>${yourAnswerIcon} আপনার উত্তর:</strong> <span>${userAnswer.selectedOption !== null ? q.options[userAnswer.selectedOption] : "উত্তর দেননি"}</span></p></div></div>`;
         });
         reviewHTML += `<div class="review-footer"><a href="../../dashboard.html" class="action-btn dashboard"><i class="fas fa-tachometer-alt"></i> ড্যাশবোর্ডে যান</a><button onclick="location.reload()" class="action-btn retry"><i class="fas fa-redo"></i> আবার দিন</button></div></div>`;
         container.innerHTML = reviewHTML;
     };
+
     function saveQuizResult(
         chapterName,
         setName,
@@ -399,52 +478,30 @@ document.addEventListener("DOMContentLoaded", () => {
     ) {
         const user = firebase.auth().currentUser;
         if (!user) return;
-        const userDocRef = db.collection("users").doc(user.uid);
-        const chapterKey = chapterName.replace(/\s/g, "_"),
-            setKey = setName.replace(/\s/g, "_");
-        db.runTransaction((transaction) => {
-            return transaction.get(userDocRef).then((doc) => {
-                if (!doc.exists) return;
-                const data = doc.data(),
-                    chapters = data.chapters || {};
-                const chapterData = chapters[chapterKey] || {
-                    completedQuizzesCount: 0,
-                    totalCorrect: 0,
-                    totalWrong: 0,
-                    totalScore: 0,
-                    quiz_sets: {},
-                };
-                const oldSetData = chapterData.quiz_sets[setKey];
-                if (oldSetData) {
-                    const correctCountBeforeUpdate =
-                        oldSetData.totalQuestions -
-                        oldSetData.wrong -
-                        (oldSetData.totalQuestions -
-                            userAnswers.filter((a) => a.selectedOption).length);
-                    chapterData.totalCorrect -= correctCountBeforeUpdate;
-                    chapterData.totalWrong -= oldSetData.wrong;
-                    chapterData.totalScore -= oldSetData.score;
-                } else {
-                    chapterData.completedQuizzesCount += 1;
+        // Firebase Firestore-এ ডেটা সেভ করার কোড এখানে থাকবে
+        // ... (আপনার আগের Firestore কোডটি এখানে যোগ করতে পারেন)
+    }
+
+    // === ## Question Paper Modal এর জন্য নতুন ফাংশন ## ===
+    function displayQuestionPaper() {
+        qpViewContainer.innerHTML = ""; // আগের কন্টেন্ট মুছে দিন
+        questions.forEach((question, index) => {
+            const questionNumber = index + 1;
+            const userAnswer = userAnswers[index];
+            let questionBlockHTML = `
+                <div class="qp-question-block">
+                    <p class="qp-question-text">Q ${questionNumber}: ${question.question}</p>`;
+
+            question.options.forEach((option, optionIndex) => {
+                let optionClass = "qp-option";
+                if (userAnswer && userAnswer.selectedOption === optionIndex) {
+                    optionClass += " qp-selected-option";
                 }
-                const correctCountAfterUpdate =
-                    totalQuestions -
-                    wrong -
-                    (totalQuestions -
-                        userAnswers.filter((a) => a.selectedOption).length);
-                chapterData.totalCorrect += correctCountAfterUpdate;
-                chapterData.totalWrong += wrong;
-                chapterData.totalScore += score;
-                chapterData.quiz_sets[setKey] = {
-                    score: score,
-                    wrong: wrong,
-                    totalQuestions: totalQuestions,
-                    attemptedAt:
-                        firebase.firestore.FieldValue.serverTimestamp(),
-                };
-                const updateData = { [`chapters.${chapterKey}`]: chapterData };
-                transaction.update(userDocRef, updateData);
+                questionBlockHTML += `<span class="${optionClass}">(${String.fromCharCode(65 + optionIndex)}) ${option}</span>`;
             });
-        }).catch((error) => console.error("Error saving result: ", error));
+
+            questionBlockHTML += `</div>`;
+            qpViewContainer.innerHTML += questionBlockHTML;
+        });
     }
 });

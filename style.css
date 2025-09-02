@@ -28,6 +28,12 @@ body {
     overflow: hidden;
 }
 
+/* --- ## ডেস্কটপ ভিউতে মোবাইল এলিমেন্ট লুকানোর জন্য সমাধান ## --- */
+.mobile-only,
+.mobile-text {
+    display: none !important;
+}
+
 .hidden {
     display: none !important;
 }
@@ -260,10 +266,6 @@ body {
     gap: 8px;
 }
 
-.mobile-text {
-    display: none;
-}
-
 #save-next-btn.primary {
     background: var(--answered-color);
     color: white;
@@ -404,8 +406,171 @@ body {
     gap: 10px;
 }
 
-/* অন্যান্য CSS কোড এখানে অপরিবর্তিত থাকবে... */
-/* ...Modal, Result Page, Review Page... */
+/* --- ## নতুন বাটন ও Modal স্টাইল ## --- */
+
+/* Palette Section এর নতুন বাটনগুলোর জন্য স্টাইল */
+.palette-actions {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.action-btn-secondary {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    background-color: var(--primary-bg);
+    color: var(--text-color);
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.2s;
+}
+
+.action-btn-secondary:hover {
+    background-color: #e0e6ed;
+}
+
+/* সাধারণ Modal এবং তার কন্টেন্ট */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    width: 90%;
+    max-width: 550px;
+    /* Submit Modal এর জন্য আদর্শ */
+    text-align: center;
+    position: relative;
+    animation: modal-pop 0.3s ease-out;
+}
+
+@keyframes modal-pop {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.modal-content h2 {
+    margin: 0 0 20px 0;
+}
+
+.close-btn {
+    color: #aaa;
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 28px;
+    cursor: pointer;
+}
+
+/* Submit Review Modal এর জন্য বিশেষ স্টাইল */
+#review-summary-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 0.9em;
+}
+
+#review-summary-table th,
+#review-summary-table td {
+    border: 1px solid var(--border-color);
+    padding: 10px;
+    text-align: center;
+}
+
+#review-summary-table th {
+    background-color: var(--primary-bg);
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.warning-text {
+    margin-top: 15px;
+    padding: 12px;
+    background-color: #fffbeb;
+    border-left: 4px solid #ffc107;
+    color: #856404;
+    text-align: left;
+    font-size: 0.9em;
+    border-radius: 4px;
+}
+
+/* Question Paper Modal এর স্টাইল */
+.qp-modal-content {
+    max-width: 800px;
+    height: 90vh;
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+}
+
+.qp-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 15px;
+    margin-bottom: 15px;
+    flex-shrink: 0;
+}
+
+.qp-view {
+    overflow-y: auto;
+    padding-right: 15px;
+}
+
+.qp-question-block {
+    margin-bottom: 25px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 15px;
+}
+
+.qp-question-text {
+    font-weight: 600;
+    margin-bottom: 15px;
+}
+
+.qp-option {
+    display: block;
+    margin: 5px 0 5px 20px;
+}
+
+.qp-selected-option {
+    color: var(--primary-btn-color);
+    font-weight: bold;
+}
+
+/* Instructions Modal এর স্টাইল */
+.instructions-content {
+    text-align: left;
+}
+
 
 /* --- ## মোবাইল ভিউ (Media Query) সম্পূর্ণ আপডেট করা হয়েছে ## --- */
 @media (max-width: 992px) {
@@ -429,7 +594,6 @@ body {
 
     .timer-container {
         flex: 0 0 auto;
-        /* টাইমার যেন সংকুচিত না হয় */
     }
 
     .header-actions {
@@ -446,10 +610,7 @@ body {
         display: inline-flex !important;
     }
 
-    .mobile-text {
-        margin-left: 5px;
-        /* আইকন আর লেখার মধ্যে গ্যাপ */
-    }
+
 
     .header-icon-btn.mobile-only {
         font-size: 1.3em;
@@ -461,7 +622,6 @@ body {
         position: relative;
         flex-direction: column;
         overflow: visible;
-        /* 슬라이드 애니메이션 এর জন্য visible রাখা হয়েছে */
         padding: 15px;
         gap: 0;
     }
@@ -491,18 +651,15 @@ body {
     .exam-body.show-palette .question-section {
         transform: translateX(-100%);
         overflow: hidden;
-        /* স্লাইড হওয়ার সময় যেন কনটেন্ট বাইরে না যায় */
     }
 
     .question-footer {
         flex-wrap: wrap;
-        /* বাটনগুলো যেন প্রয়োজনে নিচে নামে */
         justify-content: center;
     }
 
     .question-footer button {
         flex-grow: 1;
-        /* বাটনগুলো যেন সমান জায়গা নেয় */
         justify-content: center;
         padding: 10px 15px;
         font-size: 0.85em;
@@ -519,7 +676,18 @@ body {
         font-size: 1em;
         margin-bottom: 15px;
     }
-}
 
-/* --- Selection Page, Modal, Result/Review Page এর বাকি CSS কোড অপরিবর্তিত থাকবে --- */
-/* ... ... ... */
+    /* মোবাইল ভিউতে Modal এর স্টাইল */
+    .modal-content {
+        padding: 20px;
+    }
+
+    #review-summary-table {
+        font-size: 0.8em;
+    }
+
+    #review-summary-table th,
+    #review-summary-table td {
+        padding: 6px;
+    }
+}
