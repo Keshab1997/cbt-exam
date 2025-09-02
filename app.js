@@ -23,13 +23,19 @@ document.addEventListener("DOMContentLoaded", () => {
         return urlParams.get("exam");
     }
 
-    // --- পরীক্ষার প্রশ্ন ফাইল লোড করার ফাংশংশন ---
+    // --- পরীক্ষার প্রশ্ন ফাইল লোড করার ফাংশন ---
     function loadQuestionScript(examName) {
         return new Promise((resolve, reject) => {
             const script = document.createElement("script");
+
+            // ## সমাধান: সঠিক পাথ ব্যবহার করা হয়েছে ##
             script.src = `exams/${examName}_questions.js`;
+
             script.onload = () => {
-                if (typeof quizData !== "undefined") {
+                if (
+                    typeof quizData !== "undefined" &&
+                    Array.isArray(quizData)
+                ) {
                     questions = quizData;
                     const examTitles = {
                         cbt1: "RRB NTPC CBT-1",
@@ -41,20 +47,24 @@ document.addEventListener("DOMContentLoaded", () => {
                     progressKey = `examProgress_${EXAM_ID}_${SET_NAME}`;
                     resolve();
                 } else {
-                    reject(`quizData not found in script for ${examName}`);
+                    reject(
+                        `quizData is not defined or not an array in ${examName}_questions.js`,
+                    );
                 }
             };
-            script.onerror = () =>
-                reject(`Could not load script for ${examName}`);
+            script.onerror = () => {
+                const errorMessage = `Error: Could not load the question file at path "${script.src}". Please check if the file exists and the path is correct.`;
+                console.error(errorMessage);
+                reject(errorMessage);
+            };
             document.body.appendChild(script);
         });
     }
 
-    // --- মূল লজিক: পরীক্ষা শুরু করা অথবা সিলেকশন পেজ দেখানো ---
+    // --- মূল লজিক ---
     const examName = getExamNameFromURL();
 
     if (examName) {
-        // যদি URL-এ পরীক্ষার নাম থাকে, তাহলে পরীক্ষা শুরু করুন
         selectionContainer.classList.add("hidden");
         loadingSpinner.classList.remove("hidden");
 
@@ -65,19 +75,18 @@ document.addEventListener("DOMContentLoaded", () => {
                     await loadQuestionScript(examName);
                     initializeApp();
                 } catch (error) {
-                    loadingSpinner.innerHTML = `<p>Error loading exam. Please check the exam code.</p>`;
+                    loadingSpinner.innerHTML = `<p>Error loading exam. Please check the exam code and file path.</p><p style="font-size: 0.8em; color: #7f8c8d;">${error}</p>`;
                     console.error(error);
                 }
             } else {
                 alert("এই পরীক্ষা দিতে হলে আপনাকে লগইন করতে হবে!");
-                window.location.href = "../../login.html"; // আপনার লগইন পেজের সঠিক পাথ
+                window.location.href = "../../login.html";
             }
         });
     } else {
-        // যদি URL-এ পরীক্ষার নাম না থাকে, তাহলে সিলেকশন পেজ দেখান
         selectionContainer.classList.remove("hidden");
-        examContainer.classList.add("hidden");
         loadingSpinner.classList.add("hidden");
+        examContainer.classList.add("hidden");
 
         document
             .getElementById("start-exam-btn")
@@ -92,20 +101,22 @@ document.addEventListener("DOMContentLoaded", () => {
             });
     }
 
-    // --- বাকি সমস্ত ফাংশন অপরিবর্তিত থাকবে ---
+    // --- বাকি সমস্ত ফাংশন অপরিবর্তিত ---
     function initializeApp() {
         if (!questions || questions.length === 0) {
             loadingSpinner.innerHTML = "<p>No questions found.</p>";
             return;
         }
+        // Ensure main content is created if not present
+        if (!document.getElementById("question-number")) {
+            document.querySelector(".question-section").innerHTML =
+                `<div class="question-header"><h3 id="question-number"></h3></div><div class="question-content"><p id="question-text"></p></div><div id="options-container" class="options-container"></div><div class="question-footer"><button id="mark-review-btn"><i class="fas fa-star"></i> Mark & Next</button><button id="clear-response-btn"><i class="fas fa-times"></i> Clear Response</button><button id="save-next-btn" class="primary">Save & Next <i class="fas fa-chevron-right"></i></button></div>`;
+            document.querySelector(".palette-section").innerHTML =
+                `<button id="back-to-question-btn" class="back-btn mobile-only"><i class="fas fa-arrow-left"></i> Back to Question</button><div class="palette-legend"><div><span class="palette-dot answered"></span> Answered</div><div><span>...</span></div></div><hr class="palette-divider" /><div class="palette-header"><h4>Question Palette</h4></div><div id="question-palette" class="question-palette"></div><button id="submit-btn" class="submit-btn"><i class="fas fa-check-circle"></i> Submit Test</button>`;
+        }
         if (!loadProgress()) {
             resetExamState();
         }
-        // HTML কন্টেন্টগুলো এখানে যোগ করুন, কারণ এগুলো শুধু পরীক্ষার সময় দরকার
-        document.querySelector(".question-section").innerHTML =
-            `<div class="question-header"><h3 id="question-number"></h3></div><div class="question-content"><p id="question-text"></p></div><div id="options-container" class="options-container"></div><div class="question-footer"><button id="mark-review-btn"><i class="fas fa-star"></i> Mark & Next</button><button id="clear-response-btn"><i class="fas fa-times"></i> Clear Response</button><button id="save-next-btn" class="primary">Save & Next <i class="fas fa-chevron-right"></i></button></div>`;
-        document.querySelector(".palette-section").innerHTML =
-            `<button id="back-to-question-btn" class="back-btn mobile-only"><i class="fas fa-arrow-left"></i> Back to Question</button><div class="palette-legend"><div><span class="palette-dot answered"></span> Answered</div><div><span class="palette-dot not-answered"></span> Not Answered</div><div><span class="palette-dot marked"></span> Marked</div><div><span class="palette-dot not-visited"></span> Not Visited</div><div><span class="palette-dot marked-answered"></span> Marked & Answered</div></div><hr class="palette-divider" /><div class="palette-header"><h4>Question Palette</h4></div><div id="question-palette" class="question-palette"></div><button id="submit-btn" class="submit-btn"><i class="fas fa-check-circle"></i> Submit Test</button>`;
         renderQuestion();
         createPalette();
         startTimer(remainingTime);
@@ -167,17 +178,14 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
         const togglePaletteBtn = document.getElementById("toggle-palette-btn"),
-            backToQuestionBtn = document.getElementById("back-to-question-btn");
+            backToQuestionBtn = document.getElementById("back-to-question-btn"),
+            examBody = document.getElementById("exam-body");
         if (togglePaletteBtn && backToQuestionBtn) {
             togglePaletteBtn.addEventListener("click", () =>
-                document
-                    .getElementById("exam-body")
-                    .classList.add("show-palette"),
+                examBody.classList.add("show-palette"),
             );
             backToQuestionBtn.addEventListener("click", () =>
-                document
-                    .getElementById("exam-body")
-                    .classList.remove("show-palette"),
+                examBody.classList.remove("show-palette"),
             );
         }
     }
