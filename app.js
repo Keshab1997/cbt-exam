@@ -87,9 +87,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     console.error(error);
                 }
             } else {
-                // ## সমাধান: লগইন redirect URL আপডেট করা হয়েছে ##
                 alert("এই পরীক্ষা দিতে হলে আপনাকে লগইন করতে হবে!");
-                // বর্তমান পেজের URL redirect প্যারামিটার হিসেবে পাঠানো হচ্ছে
                 window.location.href = `/Study-With-Keshab/login.html?redirect=${encodeURIComponent(window.location.href)}`;
             }
         });
@@ -205,15 +203,17 @@ document.addEventListener("DOMContentLoaded", () => {
                 instructionsModal.style.display = "none";
             if (event.target == submitModal) submitModal.style.display = "none";
         });
+
+        // === ## কি-বোর্ড শর্টকাটের জন্য Event Listener যোগ করা হয়েছে ## ===
+        document.addEventListener("keydown", handleKeyPress);
     }
 
     function handleButtonClick(action) {
         const currentAns = userAnswers[currentQuestionIndex];
         switch (action) {
             case "saveNext":
-                if (currentAns.selectedOption !== null) {
+                if (currentAns.selectedOption !== null)
                     currentAns.status = "answered";
-                }
                 goToNextQuestion();
                 break;
             case "markReview":
@@ -459,8 +459,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
             reviewHTML += `<div class="review-card ${cardClass}"><h3 class="review-question"><i class="fas fa-question-circle"></i> প্রশ্ন ${i + 1}: ${q.questionText}</h3><div class="review-answers-container"><p class="review-answer correct-ans"><strong><i class="fas fa-check-circle"></i> সঠিক উত্তর:</strong> <span>${q.options[q.answer]}</span></p><p class="review-answer your-ans"><strong>${yourAnswerIcon} আপনার উত্তর:</strong> <span>${userAnswer.selectedOption !== null ? q.options[userAnswer.selectedOption] : "উত্তর দেননি"}</span></p></div></div>`;
         });
-        // ## সমাধান: ড্যাশবোর্ড লিঙ্ক আপডেট করা হয়েছে ##
-        const base_url = "/Study-With-Keshab"; // আপনার GitHub Pages repository নাম
+        const base_url = "/Study-With-Keshab";
         reviewHTML += `<div class="review-footer"><a href="${base_url}/dashboard.html" class="action-btn dashboard"><i class="fas fa-tachometer-alt"></i> ড্যাশবোর্ডে যান</a><button onclick="location.reload()" class="action-btn retry"><i class="fas fa-redo"></i> আবার দিন</button></div></div>`;
         container.innerHTML = reviewHTML;
     };
@@ -497,5 +496,36 @@ document.addEventListener("DOMContentLoaded", () => {
             questionBlockHTML += `</div>`;
             qpViewContainer.innerHTML += questionBlockHTML;
         });
+    }
+
+    // === ## কি-বোর্ড প্রেস হ্যান্ডেল করার ফাংশন ## ===
+    function handleKeyPress(event) {
+        // যদি কোনো Modal খোলা থাকে, তাহলে শর্টকাট কাজ করবে না
+        if (document.querySelector('.modal[style*="display: flex"]')) {
+            return;
+        }
+
+        const key = event.key;
+
+        // --- অপশন সিলেক্ট করার জন্য (1, 2, 3, 4) ---
+        if (key >= "1" && key <= "4") {
+            event.preventDefault(); // ব্রাউজারের ডিফল্ট আচরণ বন্ধ করার জন্য
+            const optionIndex = parseInt(key) - 1;
+
+            // অপশনগুলোকে label এর পরিবর্তে input দিয়ে টার্গেট করা ভালো
+            const optionInputs = document.querySelectorAll(
+                '.options-container input[type="radio"]',
+            );
+
+            if (optionInputs && optionInputs.length > optionIndex) {
+                optionInputs[optionIndex].click(); // রেডিও বাটনে ক্লিক করুন
+            }
+        }
+
+        // --- "Save & Next" এর জন্য (Enter) ---
+        if (key === "Enter") {
+            event.preventDefault(); // ফর্ম সাবমিট হওয়া থেকে আটকানোর জন্য
+            document.getElementById("save-next-btn").click(); // "Save & Next" বাটনে ক্লিক করুন
+        }
     }
 });

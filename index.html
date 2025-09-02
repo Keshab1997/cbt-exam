@@ -50,35 +50,37 @@
         </div>
 
         <div id="exam-container" class="exam-container hidden">
+            <!-- === ## হেডারটি সম্পূর্ণভাবে ঠিক করা হয়েছে ## === -->
             <header class="exam-header">
                 <div class="logo">RRB NTPC CBT-1</div>
+
                 <div class="timer-container">
                     <i class="far fa-clock"></i>
                     <span class="desktop-only">Time Left:</span>
                     <div id="timer">00:00:00</div>
                 </div>
-                    <div class="header-actions">
-                        <!-- ## সমাধান: বাটনগুলোকে desktop-only div থেকে বাইরে আনা হয়েছে ## -->
-                        <button id="pause-btn" class="header-icon-btn" title="Pause/Resume">
-                            <i class="fas fa-pause"></i>
-                        </button>
-                        <button id="restart-btn" class="header-icon-btn" title="Restart Exam">
-                            <i class="fas fa-redo"></i>
-                        </button>
 
-                        <div class="user-profile desktop-only">
-                            <i class="fas fa-user-circle"></i>
-                            <span id="user-display-name">Guest</span>
-                        </div>
+                <div class="header-actions">
+                    <button
+                        id="pause-btn"
+                        class="header-icon-btn"
+                        title="Pause/Resume"
+                    >
+                        <i class="fas fa-pause"></i>
+                    </button>
+                    <button
+                        id="restart-btn"
+                        class="header-icon-btn"
+                        title="Restart Exam"
+                    >
+                        <i class="fas fa-redo"></i>
+                    </button>
 
-                        <button id="toggle-palette-btn" class="header-icon-btn mobile-only" title="প্রশ্ন তালিকা ও জমা দিন">
-                            <i class="fas fa-th-large"></i>
-                        </button>
-                    </div>
                     <div class="user-profile desktop-only">
                         <i class="fas fa-user-circle"></i>
                         <span id="user-display-name">Guest</span>
                     </div>
+
                     <button
                         id="toggle-palette-btn"
                         class="header-icon-btn mobile-only"
@@ -117,7 +119,6 @@
                     </div>
                 </div>
 
-                <!-- === ## Palette Section আপডেট করা হয়েছে ## === -->
                 <aside class="palette-section">
                     <button
                         id="back-to-question-btn"
@@ -149,7 +150,6 @@
                     <div class="palette-header"><h4>Question Palette</h4></div>
                     <div id="question-palette" class="question-palette"></div>
 
-                    <!-- === নতুন বাটনগুলো এখানে যোগ করা হয়েছে === -->
                     <div class="palette-actions">
                         <button
                             id="question-paper-btn"
@@ -172,7 +172,6 @@
             </main>
         </div>
 
-        <!-- === Submit Modal (রিভিউ টেবিলের জন্য আপডেট করা হয়েছে) === -->
         <div id="submit-modal" class="modal">
             <div class="modal-content">
                 <span id="close-submit-modal" class="close-btn">&times;</span>
@@ -188,9 +187,7 @@
                             <th>Not Visited</th>
                         </tr>
                     </thead>
-                    <tbody id="review-summary-body">
-                        <!-- JS দিয়ে এখানে ডেটা আসবে -->
-                    </tbody>
+                    <tbody id="review-summary-body"></tbody>
                 </table>
                 <p class="warning-text">আপনি কি পরীক্ষাটি জমা দিতে চান?</p>
                 <div class="modal-actions">
@@ -204,22 +201,16 @@
             </div>
         </div>
 
-        <!-- === ## নতুন Modal গুলো এখানে যোগ করা হয়েছে ## === -->
-
-        <!-- Question Paper Modal -->
         <div id="question-paper-modal" class="modal">
             <div class="modal-content qp-modal-content">
                 <div class="qp-header">
                     <h2>Question Paper</h2>
                     <span id="close-qp-modal" class="close-btn">&times;</span>
                 </div>
-                <div id="question-paper-view" class="qp-view">
-                    <!-- JavaScript দিয়ে এখানে প্রশ্ন লোড হবে -->
-                </div>
+                <div id="question-paper-view" class="qp-view"></div>
             </div>
         </div>
 
-        <!-- Instructions Modal -->
         <div id="instructions-modal" class="modal">
             <div class="modal-content">
                 <span id="close-instructions-modal" class="close-btn"
@@ -231,7 +222,6 @@
                     <p>২. পরীক্ষার মোট সময় ৯০ মিনিট।</p>
                     <p>৩. প্রতিটি সঠিক উত্তরের জন্য ১ নম্বর যোগ করা হবে।</p>
                     <p>৪. প্রতি ৩টি ভুল উত্তরের জন্য ১ নম্বর কাটা হবে।</p>
-                    <!-- আপনি এখানে আরও নির্দেশাবলী যোগ করতে পারেন -->
                 </div>
             </div>
         </div>
