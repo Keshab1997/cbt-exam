@@ -691,3 +691,315 @@ body {
         padding: 6px;
     }
 }
+
+/* --- ## পরীক্ষার ফলাফল (Result Page) এর জন্য নতুন CSS ## --- */
+
+.result-page {
+    background-color: var(--primary-bg);
+    padding: 20px;
+    overflow-y: auto;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+.result-card {
+    background-color: white;
+    padding: 30px 40px;
+    border-radius: 15px;
+    box-shadow: var(--shadow);
+    max-width: 700px;
+    margin: 20px auto;
+    animation: fade-in 0.5s ease-out;
+}
+
+@keyframes fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.result-title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    font-size: 2em;
+    color: var(--header-bg);
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.result-summary {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.result-score-text {
+    font-size: 1.1em;
+    color: var(--light-text-color);
+    margin: 0;
+}
+
+.result-score {
+    font-size: 3em;
+    font-weight: 700;
+    color: var(--primary-btn-color);
+    margin: 10px 0;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    text-align: left;
+}
+
+.stat-item {
+    background: var(--primary-bg);
+    padding: 15px;
+    border-radius: 10px;
+    border-left: 5px solid;
+}
+
+.stat-item h4 {
+    margin: 0 0 5px 0;
+    color: var(--light-text-color);
+    font-size: 0.9em;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.stat-item p {
+    margin: 0;
+    font-size: 1.5em;
+    font-weight: 600;
+}
+
+.stat-correct {
+    border-color: var(--answered-color);
+}
+
+.stat-correct p {
+    color: var(--answered-color);
+}
+
+.stat-wrong {
+    border-color: var(--not-answered-color);
+}
+
+.stat-wrong p {
+    color: var(--not-answered-color);
+}
+
+.stat-attempted {
+    border-color: var(--primary-btn-color);
+}
+
+.stat-attempted p {
+    color: var(--primary-btn-color);
+}
+
+.stat-unanswered {
+    border-color: var(--light-text-color);
+}
+
+.stat-unanswered p {
+    color: var(--light-text-color);
+}
+
+.accuracy-section {
+    margin-top: 25px;
+}
+
+.accuracy-label {
+    display: flex;
+    justify-content: space-between;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: var(--text-color);
+}
+
+.progress-bar {
+    height: 15px;
+    background-color: #e0e6ed;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--answered-color), #58d68d);
+    border-radius: 10px;
+    transition: width 0.8s ease-in-out;
+}
+
+.result-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 30px;
+    border-top: 1px solid var(--border-color);
+    padding-top: 25px;
+}
+
+.action-btn {
+    padding: 12px 25px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: white;
+}
+
+.action-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.action-btn.review {
+    background-color: #17a2b8;
+    /* Teal color */
+}
+
+.action-btn.retry {
+    background-color: #6c757d;
+    /* Gray color */
+}
+
+/* --- মোবাইল ভিউ এর জন্য --- */
+@media (max-width: 768px) {
+    .result-card {
+        padding: 20px;
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+        /* একটি কলামে দেখাবে */
+    }
+
+    .result-title {
+        font-size: 1.5em;
+    }
+
+    .result-score {
+        font-size: 2.5em;
+    }
+}
+
+/* --- ## পরীক্ষা সিলেকশন পেজের স্টাইল ## --- */
+
+.selection-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+    box-sizing: border-box;
+    background-color: var(--primary-bg);
+    /* আপনার থিমের ব্যাকগ্রাউন্ড রঙ */
+}
+
+.selection-card {
+    background-color: var(--secondary-bg);
+    /* সাদা কার্ড */
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    max-width: 500px;
+    width: 100%;
+    animation: fade-in-up 0.6s ease-out;
+}
+
+/* সুন্দর একটি এন্ট্রি অ্যানিমেশন */
+@keyframes fade-in-up {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.selection-card h1 {
+    color: var(--header-bg);
+    /* হেডার এর রঙ */
+    margin-top: 0;
+    margin-bottom: 30px;
+    font-size: 1.8em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+}
+
+#exam-select {
+    width: 100%;
+    padding: 15px;
+    font-size: 1.1em;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    margin-bottom: 30px;
+    cursor: pointer;
+    font-family: 'Poppins', sans-serif;
+    color: var(--text-color);
+    background-color: #fff;
+    -webkit-appearance: none;
+    /* iOS এর ডিফল্ট স্টাইল সরাতে */
+    -moz-appearance: none;
+    appearance: none;
+    /* একটি কাস্টম ড্রপডাউন অ্যারো */
+    background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23007CB2%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E');
+    background-repeat: no-repeat;
+    background-position: right 15px top 50%;
+    background-size: 14px auto;
+    padding-right: 40px;
+    /* অ্যারোর জন্য জায়গা */
+}
+
+#exam-select:focus {
+    outline: none;
+    border-color: var(--primary-btn-color);
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+}
+
+#start-exam-btn {
+    width: 100%;
+    padding: 15px;
+    background: var(--primary-btn-color);
+    /* আপনার থিমের প্রাইমারি বাটন রঙ */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.2em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+#start-exam-btn:hover {
+    background-color: var(--primary-btn-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(52, 152, 219, 0.3);
+}
