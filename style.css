@@ -670,12 +670,42 @@ body {
     }
 
     #review-summary-table {
-        font-size: 0.8em;
+        border: none;
+        font-size: 1em;
     }
 
-    #review-summary-table th,
+    #review-summary-table thead {
+        display: none;
+    }
+
+    #review-summary-table tr {
+        display: block;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        margin-bottom: 15px;
+        padding: 10px;
+    }
+
     #review-summary-table td {
-        padding: 6px;
+        display: block;
+        text-align: right;
+        padding: 8px 10px;
+        border-bottom: 1px dashed var(--border-color);
+        position: relative;
+        padding-left: 50%;
+    }
+
+    #review-summary-table td:last-child {
+        border-bottom: none;
+    }
+
+    #review-summary-table td::before {
+        content: attr(data-label);
+        position: absolute;
+        left: 10px;
+        text-align: left;
+        font-weight: bold;
+        color: var(--text-color);
     }
 }
 

@@ -204,7 +204,6 @@ document.addEventListener("DOMContentLoaded", () => {
             if (event.target == submitModal) submitModal.style.display = "none";
         });
 
-        // === ## কি-বোর্ড শর্টকাটের জন্য Event Listener যোগ করা হয়েছে ## ===
         document.addEventListener("keydown", handleKeyPress);
     }
 
@@ -248,14 +247,16 @@ document.addEventListener("DOMContentLoaded", () => {
                 const summaryBody = document.getElementById(
                     "review-summary-body",
                 );
+
+                // ## সমাধান: প্রতিটি <td> তে data-label যোগ করা হয়েছে ##
                 summaryBody.innerHTML = `
                     <tr>
-                        <td>CBT</td>
-                        <td>${totalQuestions}</td>
-                        <td>${answered}</td>
-                        <td>${notAnswered}</td>
-                        <td>${markedForReview}</td>
-                        <td>${notVisited}</td>
+                        <td data-label="Section">CBT</td>
+                        <td data-label="Total Questions">${totalQuestions}</td>
+                        <td data-label="Answered">${answered}</td>
+                        <td data-label="Not Answered">${notAnswered}</td>
+                        <td data-label="Marked for Review">${markedForReview}</td>
+                        <td data-label="Not Visited">${notVisited}</td>
                     </tr>
                 `;
                 submitModal.style.display = "flex";
@@ -498,34 +499,24 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // === ## কি-বোর্ড প্রেস হ্যান্ডেল করার ফাংশন ## ===
     function handleKeyPress(event) {
-        // যদি কোনো Modal খোলা থাকে, তাহলে শর্টকাট কাজ করবে না
         if (document.querySelector('.modal[style*="display: flex"]')) {
             return;
         }
-
         const key = event.key;
-
-        // --- অপশন সিলেক্ট করার জন্য (1, 2, 3, 4) ---
         if (key >= "1" && key <= "4") {
-            event.preventDefault(); // ব্রাউজারের ডিফল্ট আচরণ বন্ধ করার জন্য
+            event.preventDefault();
             const optionIndex = parseInt(key) - 1;
-
-            // অপশনগুলোকে label এর পরিবর্তে input দিয়ে টার্গেট করা ভালো
             const optionInputs = document.querySelectorAll(
                 '.options-container input[type="radio"]',
             );
-
             if (optionInputs && optionInputs.length > optionIndex) {
-                optionInputs[optionIndex].click(); // রেডিও বাটনে ক্লিক করুন
+                optionInputs[optionIndex].click();
             }
         }
-
-        // --- "Save & Next" এর জন্য (Enter) ---
         if (key === "Enter") {
-            event.preventDefault(); // ফর্ম সাবমিট হওয়া থেকে আটকানোর জন্য
-            document.getElementById("save-next-btn").click(); // "Save & Next" বাটনে ক্লিক করুন
+            event.preventDefault();
+            document.getElementById("save-next-btn").click();
         }
     }
 });
