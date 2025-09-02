@@ -18,7 +18,6 @@
         <link rel="stylesheet" href="style.css" />
     </head>
     <body>
-        <!-- ## নতুন সিলেকশন সেকশন যোগ করা হয়েছে ## -->
         <div id="selection-container" class="selection-container">
             <div class="selection-card">
                 <h1>
@@ -31,7 +30,6 @@
                     <option value="cbt1">RRB NTPC CBT-1</option>
                     <option value="cbt2">RRB NTPC CBT-2</option>
                     <option value="groupd">RRB Group D</option>
-                    <!-- এখানে নতুন পরীক্ষা যোগ করতে পারেন -->
                 </select>
                 <button id="start-exam-btn">পরীক্ষা শুরু করুন</button>
             </div>
@@ -51,7 +49,6 @@
             </div>
         </div>
 
-        <!-- পরীক্ষার মূল কন্টেইনারটি প্রথমে লুকানো থাকবে -->
         <div id="exam-container" class="exam-container hidden">
             <header class="exam-header">
                 <div class="logo">RRB NTPC CBT-1</div>
@@ -89,13 +86,80 @@
                     ><span class="mobile-btn-text">Palette</span>
                 </button>
             </header>
+
+            <!-- ## সমাধান: মূল কাঠামোটি এখানে রাখা হয়েছে ## -->
             <main id="exam-body" class="exam-body">
-                <div class="question-section"><!-- ... --></div>
-                <aside class="palette-section"><!-- ... --></aside>
+                <div class="question-section">
+                    <div class="question-header">
+                        <h3 id="question-number"></h3>
+                    </div>
+                    <div class="question-content">
+                        <p id="question-text"></p>
+                    </div>
+                    <div id="options-container" class="options-container"></div>
+                    <div class="question-footer">
+                        <button id="mark-review-btn">
+                            <i class="fas fa-star"></i> Mark & Next
+                        </button>
+                        <button id="clear-response-btn">
+                            <i class="fas fa-times"></i> Clear Response
+                        </button>
+                        <button id="save-next-btn" class="primary">
+                            Save & Next <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+                <aside class="palette-section">
+                    <button
+                        id="back-to-question-btn"
+                        class="back-btn mobile-only"
+                    >
+                        <i class="fas fa-arrow-left"></i> Back to Question
+                    </button>
+                    <div class="palette-legend">
+                        <div>
+                            <span class="palette-dot answered"></span> Answered
+                        </div>
+                        <div>
+                            <span class="palette-dot not-answered"></span> Not
+                            Answered
+                        </div>
+                        <div>
+                            <span class="palette-dot marked"></span> Marked
+                        </div>
+                        <div>
+                            <span class="palette-dot not-visited"></span> Not
+                            Visited
+                        </div>
+                        <div>
+                            <span class="palette-dot marked-answered"></span>
+                            Marked & Answered
+                        </div>
+                    </div>
+                    <hr class="palette-divider" />
+                    <div class="palette-header"><h4>Question Palette</h4></div>
+                    <div id="question-palette" class="question-palette"></div>
+                    <button id="submit-btn" class="submit-btn">
+                        <i class="fas fa-check-circle"></i> Submit Test
+                    </button>
+                </aside>
             </main>
         </div>
 
-        <div id="submit-modal" class="modal"><!-- ... --></div>
+        <div id="submit-modal" class="modal">
+            <div class="modal-content">
+                <span class="close-btn">&times;</span>
+                <h2>Test Summary</h2>
+                <table id="summary-table"></table>
+                <p class="warning-text">
+                    আপনি কি নিশ্চিত?<br /><b
+                        >মনে রাখবেন: প্রতি ৩টি ভুল উত্তরের জন্য ১ নম্বর কাটা
+                        হবে।</b
+                    >
+                </p>
+                <button id="final-submit-btn">Confirm & Submit</button>
+            </div>
+        </div>
 
         <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
         <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>

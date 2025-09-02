@@ -16,6 +16,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const examContainer = document.getElementById("exam-container");
     const userDisplayNameEl = document.getElementById("user-display-name");
     const logoEl = document.querySelector(".logo");
+    const questionTextEl = document.getElementById("question-text");
+    const optionsContainerEl = document.getElementById("options-container");
+    const questionNumberEl = document.getElementById("question-number");
+    const questionPaletteEl = document.getElementById("question-palette");
+    const examBody = document.getElementById("exam-body");
 
     // --- URL থেকে পরীক্ষার নাম পড়ার ফাংশন ---
     function getExamNameFromURL() {
@@ -26,11 +31,12 @@ document.addEventListener("DOMContentLoaded", () => {
     // --- পরীক্ষার প্রশ্ন ফাইল লোড করার ফাংশন ---
     function loadQuestionScript(examName) {
         return new Promise((resolve, reject) => {
+            if (!examName) {
+                reject("No exam name specified in URL.");
+                return;
+            }
             const script = document.createElement("script");
-
-            // ## সমাধান: সঠিক পাথ ব্যবহার করা হয়েছে ##
             script.src = `exams/${examName}_questions.js`;
-
             script.onload = () => {
                 if (
                     typeof quizData !== "undefined" &&
@@ -48,14 +54,14 @@ document.addEventListener("DOMContentLoaded", () => {
                     resolve();
                 } else {
                     reject(
-                        `quizData is not defined or not an array in ${examName}_questions.js`,
+                        `quizData not defined or invalid in ${examName}_questions.js`,
                     );
                 }
             };
             script.onerror = () => {
-                const errorMessage = `Error: Could not load the question file at path "${script.src}". Please check if the file exists and the path is correct.`;
-                console.error(errorMessage);
-                reject(errorMessage);
+                const errorMsg = `Error: Could not load script at path "${script.src}". Check file name and path.`;
+                console.error(errorMsg);
+                reject(errorMsg);
             };
             document.body.appendChild(script);
         });
@@ -76,7 +82,6 @@ document.addEventListener("DOMContentLoaded", () => {
                     initializeApp();
                 } catch (error) {
                     loadingSpinner.innerHTML = `<p>Error loading exam. Please check the exam code and file path.</p><p style="font-size: 0.8em; color: #7f8c8d;">${error}</p>`;
-                    console.error(error);
                 }
             } else {
                 alert("এই পরীক্ষা দিতে হলে আপনাকে লগইন করতে হবে!");
@@ -90,7 +95,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         document
             .getElementById("start-exam-btn")
-            .addEventListener("click", function () {
+            .addEventListener("click", () => {
                 const selectedExam =
                     document.getElementById("exam-select").value;
                 if (selectedExam) {
@@ -101,51 +106,27 @@ document.addEventListener("DOMContentLoaded", () => {
             });
     }
 
-    // --- বাকি সমস্ত ফাংশন অপরিবর্তিত ---
+    // --- বাকি সমস্ত ফাংশন ---
     function initializeApp() {
         if (!questions || questions.length === 0) {
             loadingSpinner.innerHTML = "<p>No questions found.</p>";
             return;
         }
-        // Ensure main content is created if not present
-        if (!document.getElementById("question-number")) {
-            document.querySelector(".question-section").innerHTML =
-                `<div class="question-header"><h3 id="question-number"></h3></div><div class="question-content"><p id="question-text"></p></div><div id="options-container" class="options-container"></div><div class="question-footer"><button id="mark-review-btn"><i class="fas fa-star"></i> Mark & Next</button><button id="clear-response-btn"><i class="fas fa-times"></i> Clear Response</button><button id="save-next-btn" class="primary">Save & Next <i class="fas fa-chevron-right"></i></button></div>`;
-            document.querySelector(".palette-section").innerHTML =
-                `<button id="back-to-question-btn" class="back-btn mobile-only"><i class="fas fa-arrow-left"></i> Back to Question</button><div class="palette-legend"><div><span class="palette-dot answered"></span> Answered</div><div><span>...</span></div></div><hr class="palette-divider" /><div class="palette-header"><h4>Question Palette</h4></div><div id="question-palette" class="question-palette"></div><button id="submit-btn" class="submit-btn"><i class="fas fa-check-circle"></i> Submit Test</button>`;
-        }
+
         if (!loadProgress()) {
             resetExamState();
         }
+
+        addEventListeners(); // ## সমাধান: Event listener গুলোকে আগে কল করা হয়েছে ##
         renderQuestion();
         createPalette();
         startTimer(remainingTime);
-        addEventListeners();
+
         loadingSpinner.classList.add("hidden");
         examContainer.classList.remove("hidden");
     }
 
-    // (আগের উত্তর থেকে বাকি সমস্ত ফাংশন এখানে পেস্ট করুন)
-    function resetExamState() {
-        /*...*/
-    }
-    function addEventListeners() {
-        /*...*/
-    }
-    // ... ইত্যাদি ...
-
-    // --- আগের উত্তর থেকে কপি করা সম্পূর্ণ ফাংশনগুলো ---
-    function resetExamState() {
-        currentQuestionIndex = 0;
-        userAnswers = questions.map((q) => ({
-            qNo: q.qNo,
-            selectedOption: null,
-            status: "not-visited",
-        }));
-        remainingTime = 60 * 60;
-        isPaused = false;
-        localStorage.removeItem(progressKey);
-    }
+    // --- সমস্ত ইভেন্ট লিসেনার যোগ করার ফাংশন ---
     function addEventListeners() {
         document
             .getElementById("save-next-btn")
@@ -177,9 +158,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 location.reload();
             }
         });
-        const togglePaletteBtn = document.getElementById("toggle-palette-btn"),
-            backToQuestionBtn = document.getElementById("back-to-question-btn"),
-            examBody = document.getElementById("exam-body");
+        const togglePaletteBtn = document.getElementById("toggle-palette-btn");
+        const backToQuestionBtn = document.getElementById(
+            "back-to-question-btn",
+        );
         if (togglePaletteBtn && backToQuestionBtn) {
             togglePaletteBtn.addEventListener("click", () =>
                 examBody.classList.add("show-palette"),
@@ -188,6 +170,19 @@ document.addEventListener("DOMContentLoaded", () => {
                 examBody.classList.remove("show-palette"),
             );
         }
+    }
+
+    // (আগের উত্তর থেকে বাকি সমস্ত ফাংশন এখানে পেস্ট করুন)
+    function resetExamState() {
+        currentQuestionIndex = 0;
+        userAnswers = questions.map((q) => ({
+            qNo: q.qNo,
+            selectedOption: null,
+            status: "not-visited",
+        }));
+        remainingTime = 60 * 60;
+        isPaused = false;
+        localStorage.removeItem(progressKey);
     }
     function handleButtonClick(action) {
         const currentAns = userAnswers[currentQuestionIndex];
@@ -264,9 +259,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
     function renderQuestion() {
-        const questionNumberEl = document.getElementById("question-number"),
-            questionTextEl = document.getElementById("question-text"),
-            optionsContainerEl = document.getElementById("options-container");
         if (currentQuestionIndex >= questions.length) return;
         const currentAnswer = userAnswers[currentQuestionIndex];
         if (currentAnswer.status === "not-visited")
@@ -293,8 +285,6 @@ document.addEventListener("DOMContentLoaded", () => {
         updatePalette();
     }
     function createPalette() {
-        const questionPaletteEl = document.getElementById("question-palette"),
-            examBody = document.getElementById("exam-body");
         questionPaletteEl.innerHTML = "";
         questions.forEach((q, index) => {
             const btn = document.createElement("button");
