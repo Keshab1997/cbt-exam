@@ -89,7 +89,9 @@ document.addEventListener("DOMContentLoaded", () => {
             } else {
                 alert("এই পরীক্ষা দিতে হলে আপনাকে লগইন করতে হবে!");
                 window.location.href =
-                    "https://keshab1997.github.io/Study-With-Keshab/login.html";
+                    "https://keshab1997.github.io/Study-With-Keshab/login.html?redirect=exams/index.html?exam=" +";
+
+
             }
         });
     } else {

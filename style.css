@@ -1003,3 +1003,143 @@ body {
     transform: translateY(-2px);
     box-shadow: 0 4px 10px rgba(52, 152, 219, 0.3);
 }
+
+/* --- ## পরীক্ষার রিভিউ (Review Page) এর জন্য নতুন CSS ## --- */
+
+.review-page {
+    background-color: var(--primary-bg);
+    padding: 20px;
+    overflow-y: auto;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+.review-title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    font-size: 2em;
+    color: var(--header-bg);
+    margin-bottom: 30px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.review-card {
+    background-color: white;
+    padding: 25px;
+    border-radius: 12px;
+    margin: 0 auto 20px auto;
+    max-width: 900px;
+    border-left: 6px solid;
+    /* Correct/Incorrect/Unanswered অনুযায়ী রঙ পরিবর্তন হবে */
+    box-shadow: var(--shadow);
+    transition: transform 0.2s ease-in-out;
+}
+
+.review-card:hover {
+    transform: translateY(-4px);
+}
+
+/* সঠিক উত্তরের জন্য সবুজ বর্ডার */
+.review-correct {
+    border-left-color: var(--answered-color);
+}
+
+/* ভুল উত্তরের জন্য লাল বর্ডার */
+.review-incorrect {
+    border-left-color: var(--not-answered-color);
+}
+
+/* উত্তর না দেওয়া প্রশ্নের জন্য ধূসর বর্ডার */
+.review-unanswered {
+    border-left-color: var(--light-text-color);
+}
+
+.review-question {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    font-size: 1.2em;
+    font-weight: 600;
+    margin: 0 0 20px 0;
+    color: var(--text-color);
+}
+
+.review-question i {
+    margin-top: 5px;
+    /* আইকনটি যেন লেখার সাথে সুন্দরভাবে অ্যালাইন হয় */
+}
+
+.review-answers-container {
+    padding-left: 10px;
+    border-left: 3px solid var(--border-color);
+}
+
+.review-answer {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 10px 0;
+    font-size: 1.1em;
+    padding: 10px;
+    border-radius: 8px;
+}
+
+/* সঠিক উত্তরের জন্য হালকা সবুজ ব্যাকগ্রাউন্ড */
+.correct-ans {
+    background-color: #e8f8ef;
+}
+
+/* আপনার দেওয়া উত্তরের জন্য হালকা ধূসর ব্যাকগ্রাউন্ড */
+.your-ans {
+    background-color: var(--primary-bg);
+}
+
+/* আইকনগুলোর রঙ */
+.fa-check-circle {
+    color: var(--answered-color);
+}
+
+.fa-times-circle {
+    color: var(--not-answered-color);
+}
+
+.fa-circle {
+    color: var(--light-text-color);
+}
+
+.review-footer {
+    text-align: center;
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border-color);
+}
+
+.review-footer .action-btn.dashboard {
+    background-color: var(--primary-btn-color);
+}
+
+/* --- মোবাইল ভিউ এর জন্য --- */
+@media (max-width: 768px) {
+    .review-page {
+        padding: 15px;
+    }
+
+    .review-card {
+        padding: 20px;
+    }
+
+    .review-title {
+        font-size: 1.5em;
+    }
+
+    .review-question {
+        font-size: 1.1em;
+    }
+
+    .review-answer {
+        font-size: 1em;
+    }
+}
