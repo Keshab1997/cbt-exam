@@ -16,11 +16,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const examContainer = document.getElementById("exam-container");
     const userDisplayNameEl = document.getElementById("user-display-name");
     const logoEl = document.querySelector(".logo");
-    const questionTextEl = document.getElementById("question-text");
-    const optionsContainerEl = document.getElementById("options-container");
-    const questionNumberEl = document.getElementById("question-number");
-    const questionPaletteEl = document.getElementById("question-palette");
-    const examBody = document.getElementById("exam-body");
 
     // --- URL থেকে পরীক্ষার নাম পড়ার ফাংশন ---
     function getExamNameFromURL() {
@@ -31,37 +26,39 @@ document.addEventListener("DOMContentLoaded", () => {
     // --- পরীক্ষার প্রশ্ন ফাইল লোড করার ফাংশন ---
     function loadQuestionScript(examName) {
         return new Promise((resolve, reject) => {
-            if (!examName) {
-                reject("No exam name specified in URL.");
-                return;
-            }
             const script = document.createElement("script");
             script.src = `exams/${examName}_questions.js`;
+
             script.onload = () => {
                 if (
                     typeof quizData !== "undefined" &&
                     Array.isArray(quizData)
                 ) {
                     questions = quizData;
-                    const examTitles = {
-                        cbt1: "RRB NTPC CBT-1",
-                        cbt2: "RRB NTPC CBT-2",
-                        groupd: "RRB Group D",
-                    };
-                    EXAM_ID = examTitles[examName] || "Custom Exam";
+
+                    // ## সমাধান: পরীক্ষার নামটি এখন HTML থেকে স্বয়ংক্রিয়ভাবে নেওয়া হচ্ছে ##
+                    const examSelect = document.getElementById("exam-select");
+                    const selectedOption = examSelect.querySelector(
+                        `option[value="${examName}"]`,
+                    );
+
+                    if (selectedOption) {
+                        EXAM_ID = selectedOption.textContent; // ড্রপডাউন থেকে পুরো নাম নেওয়া হলো
+                    } else {
+                        EXAM_ID = examName.toUpperCase().replace("_", " "); // একটি ফলব্যাক নাম
+                    }
+
                     logoEl.textContent = EXAM_ID;
                     progressKey = `examProgress_${EXAM_ID}_${SET_NAME}`;
                     resolve();
                 } else {
                     reject(
-                        `quizData not defined or invalid in ${examName}_questions.js`,
+                        `quizData is not defined in ${examName}_questions.js`,
                     );
                 }
             };
             script.onerror = () => {
-                const errorMsg = `Error: Could not load script at path "${script.src}". Check file name and path.`;
-                console.error(errorMsg);
-                reject(errorMsg);
+                reject(`Could not load script at path: ${script.src}`);
             };
             document.body.appendChild(script);
         });
@@ -71,7 +68,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const examName = getExamNameFromURL();
 
     if (examName) {
-        selectionContainer.classList.add("hidden");
+        selectionContainer.style.display = "none"; // সিলেকশন পেজ লুকানো হলো
         loadingSpinner.classList.remove("hidden");
 
         firebase.auth().onAuthStateChanged(async (user) => {
@@ -82,6 +79,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     initializeApp();
                 } catch (error) {
                     loadingSpinner.innerHTML = `<p>Error loading exam. Please check the exam code and file path.</p><p style="font-size: 0.8em; color: #7f8c8d;">${error}</p>`;
+                    console.error(error);
                 }
             } else {
                 alert("এই পরীক্ষা দিতে হলে আপনাকে লগইন করতে হবে!");
@@ -89,7 +87,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
     } else {
-        selectionContainer.classList.remove("hidden");
+        selectionContainer.style.display = "flex"; // সিলেকশন পেজ দেখানো হলো
         loadingSpinner.classList.add("hidden");
         examContainer.classList.add("hidden");
 
@@ -106,27 +104,35 @@ document.addEventListener("DOMContentLoaded", () => {
             });
     }
 
-    // --- বাকি সমস্ত ফাংশন ---
+    // --- বাকি সমস্ত ফাংশন অপরিবর্তিত ---
     function initializeApp() {
         if (!questions || questions.length === 0) {
             loadingSpinner.innerHTML = "<p>No questions found.</p>";
             return;
         }
-
         if (!loadProgress()) {
             resetExamState();
         }
-
-        addEventListeners(); // ## সমাধান: Event listener গুলোকে আগে কল করা হয়েছে ##
+        addEventListeners();
         renderQuestion();
         createPalette();
         startTimer(remainingTime);
-
         loadingSpinner.classList.add("hidden");
         examContainer.classList.remove("hidden");
     }
 
-    // --- সমস্ত ইভেন্ট লিসেনার যোগ করার ফাংশন ---
+    // (আগের উত্তর থেকে বাকি সমস্ত ফাংশন এখানে পেস্ট করুন)
+    function resetExamState() {
+        currentQuestionIndex = 0;
+        userAnswers = questions.map((q) => ({
+            qNo: q.qNo,
+            selectedOption: null,
+            status: "not-visited",
+        }));
+        remainingTime = 60 * 60;
+        isPaused = false;
+        localStorage.removeItem(progressKey);
+    }
     function addEventListeners() {
         document
             .getElementById("save-next-btn")
@@ -158,10 +164,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 location.reload();
             }
         });
-        const togglePaletteBtn = document.getElementById("toggle-palette-btn");
-        const backToQuestionBtn = document.getElementById(
-            "back-to-question-btn",
-        );
+        const togglePaletteBtn = document.getElementById("toggle-palette-btn"),
+            backToQuestionBtn = document.getElementById("back-to-question-btn"),
+            examBody = document.getElementById("exam-body");
         if (togglePaletteBtn && backToQuestionBtn) {
             togglePaletteBtn.addEventListener("click", () =>
                 examBody.classList.add("show-palette"),
@@ -170,19 +175,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 examBody.classList.remove("show-palette"),
             );
         }
-    }
-
-    // (আগের উত্তর থেকে বাকি সমস্ত ফাংশন এখানে পেস্ট করুন)
-    function resetExamState() {
-        currentQuestionIndex = 0;
-        userAnswers = questions.map((q) => ({
-            qNo: q.qNo,
-            selectedOption: null,
-            status: "not-visited",
-        }));
-        remainingTime = 60 * 60;
-        isPaused = false;
-        localStorage.removeItem(progressKey);
     }
     function handleButtonClick(action) {
         const currentAns = userAnswers[currentQuestionIndex];
@@ -259,6 +251,9 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
     function renderQuestion() {
+        const questionNumberEl = document.getElementById("question-number"),
+            questionTextEl = document.getElementById("question-text"),
+            optionsContainerEl = document.getElementById("options-container");
         if (currentQuestionIndex >= questions.length) return;
         const currentAnswer = userAnswers[currentQuestionIndex];
         if (currentAnswer.status === "not-visited")
@@ -285,6 +280,8 @@ document.addEventListener("DOMContentLoaded", () => {
         updatePalette();
     }
     function createPalette() {
+        const questionPaletteEl = document.getElementById("question-palette"),
+            examBody = document.getElementById("exam-body");
         questionPaletteEl.innerHTML = "";
         questions.forEach((q, index) => {
             const btn = document.createElement("button");
