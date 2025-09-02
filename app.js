@@ -1,114 +1,129 @@
 document.addEventListener("DOMContentLoaded", () => {
     // --- গ্লোবাল ভেরিয়েবল ---
-    let questions = []; // ## পরিবর্তন: প্রথমে এটি খালি থাকবে ##
+    let questions = [];
     let userAnswers = [];
     let currentQuestionIndex = 0;
     let timerInterval;
     let remainingTime;
     let isPaused = false;
-
-    // ## পরিবর্তন: পরীক্ষার নাম এবং সেট ডাইনামিকভাবে সেট হবে ##
     let EXAM_ID = "Default Exam";
     let SET_NAME = "Mock Test 1";
     let progressKey = "";
 
     // --- UI এলিমেন্ট ---
+    const selectionContainer = document.getElementById("selection-container");
     const loadingSpinner = document.getElementById("loading-spinner");
     const examContainer = document.getElementById("exam-container");
     const userDisplayNameEl = document.getElementById("user-display-name");
-    const logoEl = document.querySelector(".logo"); // ## নতুন: লোগো সিলেক্ট করা হয়েছে ##
-    const questionTextEl = document.getElementById("question-text");
-    const optionsContainerEl = document.getElementById("options-container");
-    const questionNumberEl = document.getElementById("question-number");
-    const questionPaletteEl = document.getElementById("question-palette");
-    const examBody = document.getElementById("exam-body");
+    const logoEl = document.querySelector(".logo");
 
-    // --- ## নতুন ফাংশন: URL থেকে পরীক্ষার নাম পড়া ## ---
+    // --- URL থেকে পরীক্ষার নাম পড়ার ফাংশন ---
     function getExamNameFromURL() {
         const urlParams = new URLSearchParams(window.location.search);
-        return urlParams.get("exam"); // ?exam=...
+        return urlParams.get("exam");
     }
 
-    // --- ## নতুন ফাংশন: পরীক্ষার প্রশ্ন ফাইল লোড করা ## ---
+    // --- পরীক্ষার প্রশ্ন ফাইল লোড করার ফাংশংশন ---
     function loadQuestionScript(examName) {
         return new Promise((resolve, reject) => {
-            if (!examName) {
-                loadingSpinner.innerHTML =
-                    "<p>No exam selected. Please use a valid exam URL (e.g., ?exam=cbt1).</p>";
-                reject("No exam name provided.");
-                return;
-            }
-
             const script = document.createElement("script");
-            // ## পরিবর্তন: আপনার GitHub ফোল্ডার স্ট্রাকচার অনুযায়ী পাথ পরিবর্তন করুন ##
-            // script.src = `exams/${examName}_questions.js`; // যদি exams ফোল্ডারে থাকে
-            script.src = `${examName}.js`; // যদি রুট ফোল্ডারে cbt1.js, cbt2.js এভাবে থাকে
-
+            script.src = `exams/${examName}_questions.js`;
             script.onload = () => {
-                questions = typeof quizData !== "undefined" ? quizData : [];
-
-                const examTitles = {
-                    cbt1: "RRB NTPC CBT-1",
-                    cbt2: "RRB NTPC CBT-2",
-                    groupd: "RRB Group D",
-                    // এখানে নতুন পরীক্ষার নাম যোগ করতে পারেন
-                };
-                EXAM_ID = examTitles[examName] || "Custom Exam";
-                logoEl.textContent = EXAM_ID;
-
-                progressKey = `examProgress_${EXAM_ID}_${SET_NAME}`;
-
-                resolve();
+                if (typeof quizData !== "undefined") {
+                    questions = quizData;
+                    const examTitles = {
+                        cbt1: "RRB NTPC CBT-1",
+                        cbt2: "RRB NTPC CBT-2",
+                        groupd: "RRB Group D",
+                    };
+                    EXAM_ID = examTitles[examName] || "Custom Exam";
+                    logoEl.textContent = EXAM_ID;
+                    progressKey = `examProgress_${EXAM_ID}_${SET_NAME}`;
+                    resolve();
+                } else {
+                    reject(`quizData not found in script for ${examName}`);
+                }
             };
-            script.onerror = () => {
-                loadingSpinner.innerHTML = `<p>Error: Could not load questions for exam "${examName}".</p>`;
-                reject("Script load error.");
-            };
+            script.onerror = () =>
+                reject(`Could not load script for ${examName}`);
             document.body.appendChild(script);
         });
     }
 
-    // --- অ্যাপ শুরু ---
-    firebase.auth().onAuthStateChanged(async function (user) {
-        if (user) {
-            userDisplayNameEl.textContent = user.displayName || "User";
+    // --- মূল লজিক: পরীক্ষা শুরু করা অথবা সিলেকশন পেজ দেখানো ---
+    const examName = getExamNameFromURL();
 
-            const examName = getExamNameFromURL();
-            try {
-                await loadQuestionScript(examName);
-                initializeApp();
-            } catch (error) {
-                console.error("Failed to initialize exam:", error);
+    if (examName) {
+        // যদি URL-এ পরীক্ষার নাম থাকে, তাহলে পরীক্ষা শুরু করুন
+        selectionContainer.classList.add("hidden");
+        loadingSpinner.classList.remove("hidden");
+
+        firebase.auth().onAuthStateChanged(async (user) => {
+            if (user) {
+                userDisplayNameEl.textContent = user.displayName || "User";
+                try {
+                    await loadQuestionScript(examName);
+                    initializeApp();
+                } catch (error) {
+                    loadingSpinner.innerHTML = `<p>Error loading exam. Please check the exam code.</p>`;
+                    console.error(error);
+                }
+            } else {
+                alert("এই পরীক্ষা দিতে হলে আপনাকে লগইন করতে হবে!");
+                window.location.href = "../../login.html"; // আপনার লগইন পেজের সঠিক পাথ
             }
-        } else {
-            alert("এই পরীক্ষা দিতে হলে আপনাকে লগইন করতে হবে!");
-            window.location.href =
-                "https://keshab1997.github.io/Study-With-Keshab/login.html";
-        }
-    });
+        });
+    } else {
+        // যদি URL-এ পরীক্ষার নাম না থাকে, তাহলে সিলেকশন পেজ দেখান
+        selectionContainer.classList.remove("hidden");
+        examContainer.classList.add("hidden");
+        loadingSpinner.classList.add("hidden");
 
+        document
+            .getElementById("start-exam-btn")
+            .addEventListener("click", function () {
+                const selectedExam =
+                    document.getElementById("exam-select").value;
+                if (selectedExam) {
+                    window.location.href = `index.html?exam=${selectedExam}`;
+                } else {
+                    alert("অনুগ্রহ করে একটি পরীক্ষা নির্বাচন করুন।");
+                }
+            });
+    }
+
+    // --- বাকি সমস্ত ফাংশন অপরিবর্তিত থাকবে ---
     function initializeApp() {
         if (!questions || questions.length === 0) {
-            loadingSpinner.innerHTML =
-                "<p>No questions found for this exam.</p>";
+            loadingSpinner.innerHTML = "<p>No questions found.</p>";
             return;
         }
-
         if (!loadProgress()) {
             resetExamState();
         }
-
+        // HTML কন্টেন্টগুলো এখানে যোগ করুন, কারণ এগুলো শুধু পরীক্ষার সময় দরকার
+        document.querySelector(".question-section").innerHTML =
+            `<div class="question-header"><h3 id="question-number"></h3></div><div class="question-content"><p id="question-text"></p></div><div id="options-container" class="options-container"></div><div class="question-footer"><button id="mark-review-btn"><i class="fas fa-star"></i> Mark & Next</button><button id="clear-response-btn"><i class="fas fa-times"></i> Clear Response</button><button id="save-next-btn" class="primary">Save & Next <i class="fas fa-chevron-right"></i></button></div>`;
+        document.querySelector(".palette-section").innerHTML =
+            `<button id="back-to-question-btn" class="back-btn mobile-only"><i class="fas fa-arrow-left"></i> Back to Question</button><div class="palette-legend"><div><span class="palette-dot answered"></span> Answered</div><div><span class="palette-dot not-answered"></span> Not Answered</div><div><span class="palette-dot marked"></span> Marked</div><div><span class="palette-dot not-visited"></span> Not Visited</div><div><span class="palette-dot marked-answered"></span> Marked & Answered</div></div><hr class="palette-divider" /><div class="palette-header"><h4>Question Palette</h4></div><div id="question-palette" class="question-palette"></div><button id="submit-btn" class="submit-btn"><i class="fas fa-check-circle"></i> Submit Test</button>`;
         renderQuestion();
         createPalette();
         startTimer(remainingTime);
         addEventListeners();
-
         loadingSpinner.classList.add("hidden");
         examContainer.classList.remove("hidden");
     }
 
-    // --- বাকি ফাংশনগুলো আগের মতোই থাকবে, শুধু কিছু ছোট পরিবর্তন করা হয়েছে ---
+    // (আগের উত্তর থেকে বাকি সমস্ত ফাংশন এখানে পেস্ট করুন)
+    function resetExamState() {
+        /*...*/
+    }
+    function addEventListeners() {
+        /*...*/
+    }
+    // ... ইত্যাদি ...
 
+    // --- আগের উত্তর থেকে কপি করা সম্পূর্ণ ফাংশনগুলো ---
     function resetExamState() {
         currentQuestionIndex = 0;
         userAnswers = questions.map((q) => ({
@@ -116,11 +131,10 @@ document.addEventListener("DOMContentLoaded", () => {
             selectedOption: null,
             status: "not-visited",
         }));
-        remainingTime = 60 * 60; // ৬০ মিনিট
+        remainingTime = 60 * 60;
         isPaused = false;
         localStorage.removeItem(progressKey);
     }
-
     function addEventListeners() {
         document
             .getElementById("save-next-btn")
@@ -147,29 +161,26 @@ document.addEventListener("DOMContentLoaded", () => {
             .getElementById("resume-btn-overlay")
             .addEventListener("click", togglePause);
         document.getElementById("restart-btn").addEventListener("click", () => {
-            if (
-                confirm(
-                    "আপনি কি পরীক্ষাটি নতুন করে শুরু করতে চান? আপনার বর্তমান অগ্রগতি মুছে যাবে।",
-                )
-            ) {
+            if (confirm("আপনি কি পরীক্ষাটি নতুন করে শুরু করতে চান?")) {
                 resetExamState();
                 location.reload();
             }
         });
-        const togglePaletteBtn = document.getElementById("toggle-palette-btn");
-        const backToQuestionBtn = document.getElementById(
-            "back-to-question-btn",
-        );
+        const togglePaletteBtn = document.getElementById("toggle-palette-btn"),
+            backToQuestionBtn = document.getElementById("back-to-question-btn");
         if (togglePaletteBtn && backToQuestionBtn) {
             togglePaletteBtn.addEventListener("click", () =>
-                examBody.classList.add("show-palette"),
+                document
+                    .getElementById("exam-body")
+                    .classList.add("show-palette"),
             );
             backToQuestionBtn.addEventListener("click", () =>
-                examBody.classList.remove("show-palette"),
+                document
+                    .getElementById("exam-body")
+                    .classList.remove("show-palette"),
             );
         }
     }
-
     function handleButtonClick(action) {
         const currentAns = userAnswers[currentQuestionIndex];
         switch (action) {
@@ -206,12 +217,11 @@ document.addEventListener("DOMContentLoaded", () => {
                     ).length,
                 };
                 document.getElementById("summary-table").innerHTML =
-                    `<tr><th>Status</th><th>Count</th></tr><tr><td>Total Questions</td><td>${questions.length}</td></tr><tr><td>Answered</td><td>${summary.answered}</td></tr><tr><td>Not Answered</td><td>${summary.notAnswered}</td></tr><tr><td>Not Visited</td><td>${summary.notVisited}</td></tr>`;
+                    `<tr><th>Status</th><th>Count</th></tr><tr><td>Total</td><td>${questions.length}</td></tr><tr><td>Answered</td><td>${summary.answered}</td></tr><tr><td>Not Answered</td><td>${summary.notAnswered}</td></tr><tr><td>Not Visited</td><td>${summary.notVisited}</td></tr>`;
                 document.getElementById("submit-modal").style.display = "flex";
                 break;
         }
     }
-
     function saveProgress() {
         const progress = {
             answers: userAnswers,
@@ -246,6 +256,9 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
     function renderQuestion() {
+        const questionNumberEl = document.getElementById("question-number"),
+            questionTextEl = document.getElementById("question-text"),
+            optionsContainerEl = document.getElementById("options-container");
         if (currentQuestionIndex >= questions.length) return;
         const currentAnswer = userAnswers[currentQuestionIndex];
         if (currentAnswer.status === "not-visited")
@@ -256,8 +269,7 @@ document.addEventListener("DOMContentLoaded", () => {
         optionsContainerEl.innerHTML = "";
         q.options.forEach((option) => {
             const isChecked = currentAnswer.selectedOption === option;
-            const optionId = `opt_${q.qNo}_${option.replace(/\s+/g, "")}`;
-            optionsContainerEl.innerHTML += `<label for="${optionId}" class="option ${isChecked ? "selected" : ""}"><input type="radio" name="option" id="${optionId}" value="${option}" ${isChecked ? "checked" : ""}>${option}</label>`;
+            optionsContainerEl.innerHTML += `<label class="option ${isChecked ? "selected" : ""}"><input type="radio" name="option" value="${option}" ${isChecked ? "checked" : ""}>${option}</label>`;
         });
         document.querySelectorAll('input[name="option"]').forEach((radio) => {
             radio.addEventListener("change", (e) => {
@@ -266,13 +278,15 @@ document.addEventListener("DOMContentLoaded", () => {
                 document
                     .querySelectorAll(".option")
                     .forEach((l) => l.classList.remove("selected"));
-                e.target.parentElement.classList.add("selected");
+                e.target.closest("label").classList.add("selected");
                 saveProgress();
             });
         });
         updatePalette();
     }
     function createPalette() {
+        const questionPaletteEl = document.getElementById("question-palette"),
+            examBody = document.getElementById("exam-body");
         questionPaletteEl.innerHTML = "";
         questions.forEach((q, index) => {
             const btn = document.createElement("button");
@@ -293,7 +307,7 @@ document.addEventListener("DOMContentLoaded", () => {
     function updatePalette() {
         document.querySelectorAll(".palette-btn").forEach((btn, index) => {
             btn.className = "palette-btn " + userAnswers[index].status;
-            if (index === currentQuestionIndex) btn.classList.add("current");
+            if (index == currentQuestionIndex) btn.classList.add("current");
         });
     }
     function startTimer(duration) {
@@ -302,7 +316,7 @@ document.addEventListener("DOMContentLoaded", () => {
         timerInterval = setInterval(() => {
             if (--remainingTime < 0) {
                 clearInterval(timerInterval);
-                alert("সময় শেষ! আপনার পরীক্ষা অটোমেটিক সাবমিট করা হচ্ছে।");
+                alert("Time's up!");
                 showFinalResult();
                 return;
             }
@@ -335,14 +349,14 @@ document.addEventListener("DOMContentLoaded", () => {
                 else wrongCount++;
             }
         });
-        const totalQuestions = questions.length;
-        const attemptedCount = correctCount + wrongCount;
-        const unansweredCount = totalQuestions - attemptedCount;
-        const positiveMarks = correctCount * 1;
-        const negativeMarks = wrongCount / 3;
-        const finalScore = positiveMarks - negativeMarks;
-        const accuracy =
-            attemptedCount > 0 ? (correctCount / attemptedCount) * 100 : 0;
+        const totalQuestions = questions.length,
+            attemptedCount = correctCount + wrongCount,
+            unansweredCount = totalQuestions - attemptedCount,
+            positiveMarks = correctCount * 1,
+            negativeMarks = wrongCount / 3,
+            finalScore = positiveMarks - negativeMarks,
+            accuracy =
+                attemptedCount > 0 ? (correctCount / attemptedCount) * 100 : 0;
         saveQuizResult(
             EXAM_ID,
             SET_NAME,
@@ -357,13 +371,13 @@ document.addEventListener("DOMContentLoaded", () => {
         const container = document.getElementById("exam-container");
         let reviewHTML = `<div class="review-page"><h2 class="review-title"><i class="fas fa-clipboard-list"></i> পরীক্ষার রিভিউ</h2>`;
         questions.forEach((q, i) => {
-            const userAnswer = userAnswers[i];
-            const isCorrect = userAnswer.selectedOption === q.correctAnswer;
-            const isAttempted =
-                userAnswer.status === "answered" ||
-                userAnswer.status === "marked-answered";
-            let cardClass = "";
-            let yourAnswerIcon = "";
+            const userAnswer = userAnswers[i],
+                isCorrect = userAnswer.selectedOption === q.correctAnswer,
+                isAttempted =
+                    userAnswer.status === "answered" ||
+                    userAnswer.status === "marked-answered";
+            let cardClass = "",
+                yourAnswerIcon = "";
             if (isAttempted) {
                 if (isCorrect) {
                     cardClass = "review-correct";
@@ -391,13 +405,13 @@ document.addEventListener("DOMContentLoaded", () => {
         const user = firebase.auth().currentUser;
         if (!user) return;
         const userDocRef = db.collection("users").doc(user.uid);
-        const chapterKey = chapterName.replace(/\s/g, "_");
-        const setKey = setName.replace(/\s/g, "_");
+        const chapterKey = chapterName.replace(/\s/g, "_"),
+            setKey = setName.replace(/\s/g, "_");
         db.runTransaction((transaction) => {
             return transaction.get(userDocRef).then((doc) => {
                 if (!doc.exists) return;
-                const data = doc.data();
-                const chapters = data.chapters || {};
+                const data = doc.data(),
+                    chapters = data.chapters || {};
                 const chapterData = chapters[chapterKey] || {
                     completedQuizzesCount: 0,
                     totalCorrect: 0,
@@ -436,8 +450,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 const updateData = { [`chapters.${chapterKey}`]: chapterData };
                 transaction.update(userDocRef, updateData);
             });
-        })
-            .then(() => console.log("Result saved successfully!"))
-            .catch((error) => console.error("Error saving result: ", error));
+        }).catch((error) => console.error("Error saving result: ", error));
     }
 });

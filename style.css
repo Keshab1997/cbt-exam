@@ -91,7 +91,8 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 5px 15px; /* প্যাডিং কমানো হয়েছে */
+    padding: 5px 15px;
+    /* প্যাডিং কমানো হয়েছে */
     background: var(--header-bg);
     color: white;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
@@ -99,26 +100,34 @@ body {
     top: 0;
     z-index: 10;
     flex-shrink: 0;
-    gap: 10px; /* আইটেমগুলোর মধ্যে সামান্য গ্যাপ */
-    flex-wrap: nowrap; /* লাইন ভাঙা বন্ধ করা হয়েছে */
+    gap: 10px;
+    /* আইটেমগুলোর মধ্যে সামান্য গ্যাপ */
+    flex-wrap: nowrap;
+    /* লাইন ভাঙা বন্ধ করা হয়েছে */
 }
 
 .logo {
     font-size: 1.2em;
     font-weight: 700;
-    white-space: nowrap; /* লেখা যেন এক লাইনে থাকে */
+    white-space: nowrap;
+    /* লেখা যেন এক লাইনে থাকে */
     overflow: hidden;
-    text-overflow: ellipsis; /* লেখা বড় হলে ... দেখাবে */
-    flex: 1; /* প্রয়োজন অনুযায়ী জায়গা নিবে */
+    text-overflow: ellipsis;
+    /* লেখা বড় হলে ... দেখাবে */
+    flex: 1;
+    /* প্রয়োজন অনুযায়ী জায়গা নিবে */
     min-width: 0;
 }
 
 .header-center {
     display: flex;
     align-items: center;
-    justify-content: center; /* সেন্টারে আনা হয়েছে */
-    gap: 10px; /* গ্যাপ কমানো হয়েছে */
-    flex: 2; /* লোগোর চেয়ে বেশি জায়গা দেওয়া হয়েছে */
+    justify-content: center;
+    /* সেন্টারে আনা হয়েছে */
+    gap: 10px;
+    /* গ্যাপ কমানো হয়েছে */
+    flex: 2;
+    /* লোগোর চেয়ে বেশি জায়গা দেওয়া হয়েছে */
 }
 
 .header-icon-btn {
@@ -150,23 +159,27 @@ body {
     align-items: center;
     gap: 8px;
     background-color: rgba(255, 255, 255, 0.1);
-    padding: 5px 10px; /* প্যাডিং কমানো হয়েছে */
+    padding: 5px 10px;
+    /* প্যাডিং কমানো হয়েছে */
     border-radius: 20px;
 }
 
 #timer {
-    font-size: 1.1em; /* ফন্ট সাইজ সামান্য কমানো হয়েছে */
+    font-size: 1.1em;
+    /* ফন্ট সাইজ সামান্য কমানো হয়েছে */
     font-weight: 600;
 }
 
 .user-profile {
     display: flex;
     align-items: center;
-    justify-content: flex-end; /* ডান দিকে অ্যালাইন করা হয়েছে */
+    justify-content: flex-end;
+    /* ডান দিকে অ্যালাইন করা হয়েছে */
     gap: 10px;
     font-size: 1em;
     flex: 1;
 }
+
 /* --- ## হেডার স্টাইল আপডেট শেষ ## --- */
 
 .exam-body {
@@ -764,27 +777,36 @@ body {
     }
 
     .exam-header {
-        flex-wrap: nowrap; /* নিশ্চিত করা হয়েছে যেন লাইন না ভাঙে */
+        flex-wrap: nowrap;
+        /* নিশ্চিত করা হয়েছে যেন লাইন না ভাঙে */
         justify-content: space-between;
-        padding: 5px 10px; /* মোবাইল এর জন্য প্যাডিং */
+        padding: 5px 10px;
+        /* মোবাইল এর জন্য প্যাডিং */
         row-gap: 0;
     }
 
     .logo {
-        width: auto; /* width 50% তুলে দেওয়া হয়েছে */
-        flex-shrink: 1; /* প্রয়োজনে ছোট হবে */
-        font-size: 1.1em; /* ফন্ট ছোট করা হয়েছে */
+        width: auto;
+        /* width 50% তুলে দেওয়া হয়েছে */
+        flex-shrink: 1;
+        /* প্রয়োজনে ছোট হবে */
+        font-size: 1.1em;
+        /* ফন্ট ছোট করা হয়েছে */
         order: 1;
     }
 
     .header-center {
-        order: 3; /* ডান পাশে দেখানোর জন্য */
-        width: auto; /* width 100% তুলে দেওয়া হয়েছে */
-        justify-content: flex-end; /* ডান দিকে অ্যালাইন করা হয়েছে */
+        order: 3;
+        /* ডান পাশে দেখানোর জন্য */
+        width: auto;
+        /* width 100% তুলে দেওয়া হয়েছে */
+        justify-content: flex-end;
+        /* ডান দিকে অ্যালাইন করা হয়েছে */
     }
-    
+
     .timer-container {
-        order: 2; /* মাঝখানে রাখার জন্য */
+        order: 2;
+        /* মাঝখানে রাখার জন্য */
     }
 
     /* অপ্রয়োজনীয় আইকন বা লেখা মোবাইল এ হাইড করা হয়েছে */
@@ -793,8 +815,10 @@ body {
         display: none;
     }
 
-    #pause-btn, #restart-btn {
-      order: initial; /* order রিসেট করা হয়েছে */
+    #pause-btn,
+    #restart-btn {
+        order: initial;
+        /* order রিসেট করা হয়েছে */
     }
 
     .mobile-only {
@@ -870,4 +894,75 @@ body {
     .stats-grid {
         grid-template-columns: 1fr;
     }
+}
+
+/* --- style.css (এই কোডটুকু ফাইলের শেষে যোগ করুন) --- */
+
+/* --- ## পরীক্ষা সিলেকশন পেজের স্টাইল ## --- */
+.selection-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.selection-card {
+    background-color: white;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    max-width: 450px;
+    width: 90%;
+    animation: fade-in 0.5s ease;
+}
+
+@keyframes fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.selection-card h1 {
+    color: var(--header-bg);
+    margin-bottom: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+}
+
+#exam-select {
+    width: 100%;
+    padding: 15px;
+    font-size: 1.1em;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    margin-bottom: 30px;
+    cursor: pointer;
+    font-family: 'Poppins', sans-serif;
+    color: var(--text-color);
+}
+
+#start-exam-btn {
+    width: 100%;
+    padding: 15px;
+    background-color: var(--primary-btn-color);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.2em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+#start-exam-btn:hover {
+    background-color: var(--primary-btn-hover);
 }

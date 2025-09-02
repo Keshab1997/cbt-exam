@@ -18,7 +18,26 @@
         <link rel="stylesheet" href="style.css" />
     </head>
     <body>
-        <div id="loading-spinner" class="loading-spinner">
+        <!-- ## নতুন সিলেকশন সেকশন যোগ করা হয়েছে ## -->
+        <div id="selection-container" class="selection-container">
+            <div class="selection-card">
+                <h1>
+                    <i class="fas fa-tasks"></i> আপনার পরীক্ষা নির্বাচন করুন
+                </h1>
+                <select id="exam-select">
+                    <option value="" disabled selected>
+                        -- একটি পরীক্ষা বাছুন --
+                    </option>
+                    <option value="cbt1">RRB NTPC CBT-1</option>
+                    <option value="cbt2">RRB NTPC CBT-2</option>
+                    <option value="groupd">RRB Group D</option>
+                    <!-- এখানে নতুন পরীক্ষা যোগ করতে পারেন -->
+                </select>
+                <button id="start-exam-btn">পরীক্ষা শুরু করুন</button>
+            </div>
+        </div>
+
+        <div id="loading-spinner" class="loading-spinner hidden">
             <div class="spinner"></div>
             <p>Loading Exam...</p>
         </div>
@@ -32,6 +51,7 @@
             </div>
         </div>
 
+        <!-- পরীক্ষার মূল কন্টেইনারটি প্রথমে লুকানো থাকবে -->
         <div id="exam-container" class="exam-container hidden">
             <header class="exam-header">
                 <div class="logo">RRB NTPC CBT-1</div>
@@ -43,7 +63,6 @@
                     >
                         <i class="fas fa-pause"></i>
                     </button>
-                    <!-- ## রিস্টার্ট বাটন যোগ করা হয়েছে ## -->
                     <button
                         id="restart-btn"
                         class="header-icon-btn"
@@ -52,105 +71,36 @@
                         <i class="fas fa-redo"></i>
                     </button>
                     <div class="timer-container">
-                        <i class="far fa-clock"></i>
-                        <span class="desktop-only">Time Left:</span>
+                        <i class="far fa-clock"></i
+                        ><span class="desktop-only">Time Left:</span>
                         <div id="timer">00:00:00</div>
                     </div>
                 </div>
                 <div class="user-profile desktop-only">
-                    <i class="fas fa-user-circle"></i>
-                    <span id="user-display-name">Guest</span>
+                    <i class="fas fa-user-circle"></i
+                    ><span id="user-display-name">Guest</span>
                 </div>
                 <button
                     id="toggle-palette-btn"
                     class="header-icon-btn mobile-only"
                     title="Toggle Palette"
                 >
-                    <i class="fas fa-th-large"></i>
-                    <span class="mobile-btn-text">Palette</span>
+                    <i class="fas fa-th-large"></i
+                    ><span class="mobile-btn-text">Palette</span>
                 </button>
             </header>
-
             <main id="exam-body" class="exam-body">
-                <div class="question-section">
-                    <div class="question-header">
-                        <h3 id="question-number">Question No. 1</h3>
-                    </div>
-                    <div class="question-content">
-                        <p id="question-text">Loading question...</p>
-                    </div>
-                    <div id="options-container" class="options-container"></div>
-                    <div class="question-footer">
-                        <button id="mark-review-btn">
-                            <i class="fas fa-star"></i> Mark & Next
-                        </button>
-                        <button id="clear-response-btn">
-                            <i class="fas fa-times"></i> Clear Response
-                        </button>
-                        <button id="save-next-btn" class="primary">
-                            Save & Next <i class="fas fa-chevron-right"></i>
-                        </button>
-                    </div>
-                </div>
-
-                <aside class="palette-section">
-                    <button
-                        id="back-to-question-btn"
-                        class="back-btn mobile-only"
-                    >
-                        <i class="fas fa-arrow-left"></i> Back to Question
-                    </button>
-                    <div class="palette-legend">
-                        <div>
-                            <span class="palette-dot answered"></span> Answered
-                        </div>
-                        <div>
-                            <span class="palette-dot not-answered"></span> Not
-                            Answered
-                        </div>
-                        <div>
-                            <span class="palette-dot marked"></span> Marked
-                        </div>
-                        <div>
-                            <span class="palette-dot not-visited"></span> Not
-                            Visited
-                        </div>
-                        <div>
-                            <span class="palette-dot marked-answered"></span>
-                            Marked & Answered
-                        </div>
-                    </div>
-                    <hr class="palette-divider" />
-                    <div class="palette-header"><h4>Question Palette</h4></div>
-                    <div id="question-palette" class="question-palette"></div>
-                    <button id="submit-btn" class="submit-btn">
-                        <i class="fas fa-check-circle"></i> Submit Test
-                    </button>
-                </aside>
+                <div class="question-section"><!-- ... --></div>
+                <aside class="palette-section"><!-- ... --></aside>
             </main>
         </div>
 
-        <div id="submit-modal" class="modal">
-            <div class="modal-content">
-                <span class="close-btn">&times;</span>
-                <h2>Test Summary</h2>
-                <table id="summary-table"></table>
-                <p class="warning-text">
-                    আপনি কি নিশ্চিত? সাবমিট করার পর কোনো পরিবর্তন করতে পারবেন
-                    না।<br /><b
-                        >মনে রাখবেন: প্রতি ৩টি ভুল উত্তরের জন্য ১ নম্বর কাটা
-                        হবে।</b
-                    >
-                </p>
-                <button id="final-submit-btn">Confirm & Submit</button>
-            </div>
-        </div>
+        <div id="submit-modal" class="modal"><!-- ... --></div>
 
         <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
         <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
         <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
         <script src="firebase-config.js"></script>
-        
         <script src="app.js"></script>
     </body>
 </html>
