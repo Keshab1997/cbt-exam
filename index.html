@@ -57,21 +57,22 @@
                     <span class="desktop-only">Time Left:</span>
                     <div id="timer">00:00:00</div>
                 </div>
-                <div class="header-actions">
-                    <div class="desktop-only">
-                        <button
-                            id="pause-btn"
-                            class="header-icon-btn"
-                            title="Pause/Resume"
-                        >
+                    <div class="header-actions">
+                        <!-- ## সমাধান: বাটনগুলোকে desktop-only div থেকে বাইরে আনা হয়েছে ## -->
+                        <button id="pause-btn" class="header-icon-btn" title="Pause/Resume">
                             <i class="fas fa-pause"></i>
                         </button>
-                        <button
-                            id="restart-btn"
-                            class="header-icon-btn"
-                            title="Restart Exam"
-                        >
+                        <button id="restart-btn" class="header-icon-btn" title="Restart Exam">
                             <i class="fas fa-redo"></i>
+                        </button>
+
+                        <div class="user-profile desktop-only">
+                            <i class="fas fa-user-circle"></i>
+                            <span id="user-display-name">Guest</span>
+                        </div>
+
+                        <button id="toggle-palette-btn" class="header-icon-btn mobile-only" title="প্রশ্ন তালিকা ও জমা দিন">
+                            <i class="fas fa-th-large"></i>
                         </button>
                     </div>
                     <div class="user-profile desktop-only">
