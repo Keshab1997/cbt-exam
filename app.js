@@ -10,6 +10,9 @@ document.addEventListener("DOMContentLoaded", () => {
     let SET_NAME = "Mock Test 1";
     let progressKey = "";
 
+    // --- Firebase ইনিশিয়ালাইজেশন ---
+    const db = firebase.firestore();
+
     // --- UI এলিমেন্ট ---
     const selectionContainer = document.getElementById("selection-container");
     const loadingSpinner = document.getElementById("loading-spinner");
@@ -248,7 +251,6 @@ document.addEventListener("DOMContentLoaded", () => {
                     "review-summary-body",
                 );
 
-                // ## সমাধান: প্রতিটি <td> তে data-label যোগ করা হয়েছে ##
                 summaryBody.innerHTML = `
                     <tr>
                         <td data-label="Section">CBT</td>
@@ -465,6 +467,7 @@ document.addEventListener("DOMContentLoaded", () => {
         container.innerHTML = reviewHTML;
     };
 
+    // === ## Firebase Firestore-এ স্কোর সেভ করার লজিক আপডেট করা হয়েছে ## ===
     function saveQuizResult(
         chapterName,
         setName,
@@ -474,7 +477,65 @@ document.addEventListener("DOMContentLoaded", () => {
     ) {
         const user = firebase.auth().currentUser;
         if (!user) return;
-        // Firebase Firestore-এ ডেটা সেভ করার কোড এখানে থাকবে
+
+        const userDocRef = db.collection("users").doc(user.uid);
+        const chapterKey = chapterName.replace(/\s/g, "_");
+        const setKey = setName.replace(/\s/g, "_");
+
+        db.runTransaction((transaction) => {
+            return transaction.get(userDocRef).then((doc) => {
+                if (!doc.exists) {
+                    console.error("User document does not exist!");
+                    return;
+                }
+                const data = doc.data();
+                const chapters = data.chapters || {};
+                const chapterData = chapters[chapterKey] || {
+                    completedQuizzesCount: 0,
+                    totalCorrect: 0,
+                    totalWrong: 0,
+                    totalScore: 0,
+                    quiz_sets: {},
+                };
+
+                const oldSetData = chapterData.quiz_sets[setKey];
+                const attemptedCount = userAnswers.filter(
+                    (a) => a.selectedOption !== null,
+                ).length;
+                const correctCount =
+                    totalQuestions - wrong - (totalQuestions - attemptedCount);
+
+                if (oldSetData) {
+                    const oldCorrect =
+                        oldSetData.totalQuestions -
+                        oldSetData.wrong -
+                        (oldSetData.totalQuestions -
+                            (oldSetData.correct + oldSetData.wrong));
+                    chapterData.totalCorrect -= oldCorrect;
+                    chapterData.totalWrong -= oldSetData.wrong;
+                    chapterData.totalScore -= oldSetData.score;
+                } else {
+                    chapterData.completedQuizzesCount += 1;
+                }
+
+                chapterData.totalCorrect += correctCount;
+                chapterData.totalWrong += wrong;
+                chapterData.totalScore += score;
+
+                chapterData.quiz_sets[setKey] = {
+                    score: score,
+                    wrong: wrong,
+                    totalQuestions: totalQuestions,
+                    attemptedAt:
+                        firebase.firestore.FieldValue.serverTimestamp(),
+                };
+
+                const updateData = { [`chapters.${chapterKey}`]: chapterData };
+                transaction.update(userDocRef, updateData);
+            });
+        })
+            .then(() => console.log("Result saved successfully!"))
+            .catch((error) => console.error("Error saving result: ", error));
     }
 
     function displayQuestionPaper() {
