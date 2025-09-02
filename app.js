@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let remainingTime;
     let isPaused = false;
     let EXAM_ID = "Default Exam";
-    let SET_NAME = "Mock Test 1"; // এটি ডায়নামিকভাবে সেট করা যেতে পারে
+    let SET_NAME = "Mock Test 1";
     let progressKey = "";
 
     // --- UI এলিমেন্ট ---
@@ -17,7 +17,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const userDisplayNameEl = document.getElementById("user-display-name");
     const logoEl = document.querySelector(".logo");
 
-    // === ## নতুন UI এলিমেন্টগুলো এখানে যোগ করা হয়েছে ## ===
     const questionPaperBtn = document.getElementById("question-paper-btn");
     const instructionsBtn = document.getElementById("instructions-btn");
     const qpModal = document.getElementById("question-paper-modal");
@@ -89,7 +88,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             } else {
                 alert("এই পরীক্ষা দিতে হলে আপনাকে লগইন করতে হবে!");
-                window.location.href = "../../login.html";
+                window.location.href =
+                    "https://keshab1997.github.io/Study-With-Keshab/login.html";
             }
         });
     } else {
@@ -132,7 +132,7 @@ document.addEventListener("DOMContentLoaded", () => {
             selectedOption: null,
             status: "not-visited",
         }));
-        remainingTime = (questions[0]?.totalTimeMinutes || 90) * 60; // প্রশ্ন ফাইল থেকে সময় নিন, না পেলে ৯০ মিনিট
+        remainingTime = (questions[0]?.totalTimeMinutes || 90) * 60;
         isPaused = false;
         localStorage.removeItem(progressKey);
     }
@@ -151,7 +151,6 @@ document.addEventListener("DOMContentLoaded", () => {
             .getElementById("submit-btn")
             .addEventListener("click", () => handleButtonClick("submit"));
 
-        // Modal বাটনগুলোর ইভেন্ট
         finalSubmitBtn.addEventListener("click", showFinalResult);
         closeSubmitModalBtn.addEventListener("click", () => {
             submitModal.style.display = "none";
@@ -173,7 +172,6 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
 
-        // মোবাইল প্যালেট টগল
         const togglePaletteBtn = document.getElementById("toggle-palette-btn"),
             backToQuestionBtn = document.getElementById("back-to-question-btn"),
             examBody = document.getElementById("exam-body");
@@ -186,7 +184,6 @@ document.addEventListener("DOMContentLoaded", () => {
             );
         }
 
-        // === ## নতুন বাটনগুলোর জন্য Event Listeners ## ===
         questionPaperBtn.addEventListener("click", () => {
             displayQuestionPaper();
             qpModal.style.display = "flex";
@@ -201,7 +198,6 @@ document.addEventListener("DOMContentLoaded", () => {
             instructionsModal.style.display = "none";
         });
 
-        // Modal এর বাইরে ক্লিক করলে বন্ধ করার জন্য
         window.addEventListener("click", (event) => {
             if (event.target == qpModal) qpModal.style.display = "none";
             if (event.target == instructionsModal)
@@ -228,13 +224,12 @@ document.addEventListener("DOMContentLoaded", () => {
                 break;
             case "clear":
                 currentAns.selectedOption = null;
-                currentAns.status = "not-answered"; // উত্তর ক্লিয়ার করলে "not-answered" হবে
-                renderQuestion(); // প্রশ্নটি রি-রেন্ডার করুন
+                currentAns.status = "not-answered";
+                renderQuestion();
                 updatePalette();
                 saveProgress();
                 break;
             case "submit":
-                // রিভিউ টেবিল তৈরি করুন
                 const totalQuestions = questions.length;
                 const answered = userAnswers.filter(
                     (ans) =>
@@ -249,7 +244,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 ).length;
                 const visited = answered + notAnswered + markedForReview;
                 const notVisited = totalQuestions - visited;
-
                 const summaryBody = document.getElementById(
                     "review-summary-body",
                 );
@@ -315,7 +309,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const q = questions[currentQuestionIndex];
         questionNumberEl.textContent = `Question No. ${currentQuestionIndex + 1}`;
-        questionTextEl.innerHTML = q.question; // HTML ট্যাগ সাপোর্টের জন্য innerHTML ব্যবহার করুন
+        // ## সমাধান: q.question পরিবর্তন করে q.questionText করা হয়েছে ##
+        questionTextEl.innerHTML = q.questionText;
 
         optionsContainerEl.innerHTML = "";
         q.options.forEach((option, index) => {
@@ -400,14 +395,13 @@ document.addEventListener("DOMContentLoaded", () => {
             renderQuestion();
             saveProgress();
         } else {
-            // শেষ প্রশ্নে পৌঁছালে অটোমেটিক সাবমিট পেজে নিয়ে যেতে পারে
             alert("এটিই শেষ প্রশ্ন। আপনি এখন পরীক্ষাটি জমা দিতে পারেন।");
         }
     }
 
     function showFinalResult() {
         clearInterval(timerInterval);
-        submitModal.style.display = "none"; // রিভিউ মোডাল বন্ধ করুন
+        submitModal.style.display = "none";
         localStorage.removeItem(progressKey);
 
         let correctCount = 0,
@@ -426,7 +420,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const attemptedCount = correctCount + wrongCount;
         const unansweredCount = totalQuestions - attemptedCount;
         const positiveMarks = correctCount * 1;
-        const negativeMarks = wrongCount * (1 / 3); // প্রতি ৩টি ভুলের জন্য ১ নম্বর কাটা
+        const negativeMarks = wrongCount * (1 / 3);
         const finalScore = positiveMarks - negativeMarks;
         const accuracy =
             attemptedCount > 0 ? (correctCount / attemptedCount) * 100 : 0;
@@ -463,7 +457,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 cardClass = "review-unanswered";
                 yourAnswerIcon = '<i class="far fa-circle"></i>';
             }
-            reviewHTML += `<div class="review-card ${cardClass}"><h3 class="review-question"><i class="fas fa-question-circle"></i> প্রশ্ন ${i + 1}: ${q.question}</h3><div class="review-answers-container"><p class="review-answer correct-ans"><strong><i class="fas fa-check-circle"></i> সঠিক উত্তর:</strong> <span>${q.options[q.answer]}</span></p><p class="review-answer your-ans"><strong>${yourAnswerIcon} আপনার উত্তর:</strong> <span>${userAnswer.selectedOption !== null ? q.options[userAnswer.selectedOption] : "উত্তর দেননি"}</span></p></div></div>`;
+            // ## সমাধান: q.question পরিবর্তন করে q.questionText করা হয়েছে ##
+            reviewHTML += `<div class="review-card ${cardClass}"><h3 class="review-question"><i class="fas fa-question-circle"></i> প্রশ্ন ${i + 1}: ${q.questionText}</h3><div class="review-answers-container"><p class="review-answer correct-ans"><strong><i class="fas fa-check-circle"></i> সঠিক উত্তর:</strong> <span>${q.options[q.answer]}</span></p><p class="review-answer your-ans"><strong>${yourAnswerIcon} আপনার উত্তর:</strong> <span>${userAnswer.selectedOption !== null ? q.options[userAnswer.selectedOption] : "উত্তর দেননি"}</span></p></div></div>`;
         });
         reviewHTML += `<div class="review-footer"><a href="../../dashboard.html" class="action-btn dashboard"><i class="fas fa-tachometer-alt"></i> ড্যাশবোর্ডে যান</a><button onclick="location.reload()" class="action-btn retry"><i class="fas fa-redo"></i> আবার দিন</button></div></div>`;
         container.innerHTML = reviewHTML;
@@ -479,18 +474,17 @@ document.addEventListener("DOMContentLoaded", () => {
         const user = firebase.auth().currentUser;
         if (!user) return;
         // Firebase Firestore-এ ডেটা সেভ করার কোড এখানে থাকবে
-        // ... (আপনার আগের Firestore কোডটি এখানে যোগ করতে পারেন)
     }
 
-    // === ## Question Paper Modal এর জন্য নতুন ফাংশন ## ===
     function displayQuestionPaper() {
-        qpViewContainer.innerHTML = ""; // আগের কন্টেন্ট মুছে দিন
+        qpViewContainer.innerHTML = "";
         questions.forEach((question, index) => {
             const questionNumber = index + 1;
             const userAnswer = userAnswers[index];
+            // ## সমাধান: question.question পরিবর্তন করে question.questionText করা হয়েছে ##
             let questionBlockHTML = `
                 <div class="qp-question-block">
-                    <p class="qp-question-text">Q ${questionNumber}: ${question.question}</p>`;
+                    <p class="qp-question-text">Q ${questionNumber}: ${question.questionText}</p>`;
 
             question.options.forEach((option, optionIndex) => {
                 let optionClass = "qp-option";
