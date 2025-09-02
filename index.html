@@ -50,44 +50,48 @@
         </div>
 
         <div id="exam-container" class="exam-container hidden">
+            <!-- === ## মোবাইল হেডারের HTML আপডেট করা হয়েছে ## === -->
             <header class="exam-header">
                 <div class="logo">RRB NTPC CBT-1</div>
-                <div class="header-center">
-                    <button
-                        id="pause-btn"
-                        class="header-icon-btn"
-                        title="Pause/Resume"
-                    >
-                        <i class="fas fa-pause"></i>
-                    </button>
-                    <button
-                        id="restart-btn"
-                        class="header-icon-btn"
-                        title="Restart Exam"
-                    >
-                        <i class="fas fa-redo"></i>
-                    </button>
-                    <div class="timer-container">
-                        <i class="far fa-clock"></i
-                        ><span class="desktop-only">Time Left:</span>
-                        <div id="timer">00:00:00</div>
+
+                <div class="timer-container">
+                    <i class="far fa-clock"></i>
+                    <span class="desktop-only">Time Left:</span>
+                    <div id="timer">00:00:00</div>
+                </div>
+
+                <div class="header-actions">
+                    <div class="desktop-only">
+                        <button
+                            id="pause-btn"
+                            class="header-icon-btn"
+                            title="Pause/Resume"
+                        >
+                            <i class="fas fa-pause"></i>
+                        </button>
+                        <button
+                            id="restart-btn"
+                            class="header-icon-btn"
+                            title="Restart Exam"
+                        >
+                            <i class="fas fa-redo"></i>
+                        </button>
                     </div>
+                    <div class="user-profile desktop-only">
+                        <i class="fas fa-user-circle"></i>
+                        <span id="user-display-name">Guest</span>
+                    </div>
+                    <!-- মোবাইল ভিউতে শুধু আইকন বাটন -->
+                    <button
+                        id="toggle-palette-btn"
+                        class="header-icon-btn mobile-only"
+                        title="প্রশ্ন তালিকা ও জমা দিন"
+                    >
+                        <i class="fas fa-th-large"></i>
+                    </button>
                 </div>
-                <div class="user-profile desktop-only">
-                    <i class="fas fa-user-circle"></i
-                    ><span id="user-display-name">Guest</span>
-                </div>
-                <button
-                    id="toggle-palette-btn"
-                    class="header-icon-btn mobile-only"
-                    title="Toggle Palette"
-                >
-                    <i class="fas fa-th-large"></i
-                    ><span class="mobile-btn-text">Palette</span>
-                </button>
             </header>
 
-            <!-- ## সমাধান: মূল কাঠামোটি এখানে রাখা হয়েছে ## -->
             <main id="exam-body" class="exam-body">
                 <div class="question-section">
                     <div class="question-header">
@@ -97,15 +101,22 @@
                         <p id="question-text"></p>
                     </div>
                     <div id="options-container" class="options-container"></div>
+                    <!-- === ## মোবাইল ভিউ এর জন্য ফুটার বাটন আপডেট করা হয়েছে ## === -->
                     <div class="question-footer">
                         <button id="mark-review-btn">
-                            <i class="fas fa-star"></i> Mark & Next
+                            <i class="fas fa-star"></i>
+                            <span class="desktop-text">Mark & Next</span>
+                            <span class="mobile-text">Mark</span>
                         </button>
                         <button id="clear-response-btn">
-                            <i class="fas fa-times"></i> Clear Response
+                            <i class="fas fa-times"></i>
+                            <span class="desktop-text">Clear Response</span>
+                            <span class="mobile-text">Clear</span>
                         </button>
                         <button id="save-next-btn" class="primary">
-                            Save & Next <i class="fas fa-chevron-right"></i>
+                            <span class="desktop-text">Save & Next</span>
+                            <span class="mobile-text">Save</span>
+                            <i class="fas fa-chevron-right"></i>
                         </button>
                     </div>
                 </div>
