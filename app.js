@@ -6,8 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let timerInterval;
     let remainingTime;
     let isPaused = false;
-    let EXAM_ID = "Default Exam";
-    let SET_NAME = "Mock Test 1";
+    let SET_NAME = ""; // পরীক্ষার আসল নাম এখানে সেট হবে
     let progressKey = "";
 
     // --- Firebase ইনিশিয়ালাইজেশন ---
@@ -55,7 +54,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     const urlParams = new URLSearchParams(window.location.search);
                     const chapterFromURL = urlParams.get("chapter");
 
-                    // === পরিবর্তন: পরীক্ষার নাম (SET_NAME) URL থেকে বা HTML থেকে নেওয়া হচ্ছে ===
+                    // === পরিবর্তন: পরীক্ষার নাম (SET_NAME) এবং progressKey সঠিকভাবে সেট করা হচ্ছে ===
                     SET_NAME = chapterFromURL || "CBT Exam";
                     logoEl.textContent = SET_NAME;
                     progressKey = `examProgress_${examName}_${(chapterFromURL || "").replace(/\s/g, "_")}`;
@@ -290,6 +289,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         const totalQuestions = questions.length;
+        // === পরিবর্তন: nonCorrectCount সঠিকভাবে গণনা করা হচ্ছে ===
         const nonCorrectCount = totalQuestions - correctCount; // (ভুল + উত্তর না দেওয়া)
         const attemptedCount = correctCount + wrongCount;
         const unansweredCount = totalQuestions - attemptedCount;
@@ -298,7 +298,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const finalScore = positiveMarks - negativeMarks;
         const accuracy = attemptedCount > 0 ? (correctCount / attemptedCount) * 100 : 0;
 
-        // === পরিবর্তন: nonCorrectCount পাস করা হচ্ছে ===
+        // === পরিবর্তন: saveQuizResult কে সঠিক প্যারামিটার দিয়ে কল করা হচ্ছে ===
         saveQuizResult(SET_NAME, correctCount, nonCorrectCount, totalQuestions);
 
         const container = document.getElementById("exam-container");
@@ -326,9 +326,14 @@ document.addEventListener("DOMContentLoaded", () => {
     function saveQuizResult(setName, correctCount, nonCorrectCount, totalQuestions) {
         const user = firebase.auth().currentUser;
         if (!user) { console.error("User not logged in, cannot save score."); return; }
+
         const urlParams = new URLSearchParams(window.location.search);
         const chapterName = urlParams.get("chapter");
-        if (!chapterName) { console.error("URL-এ অধ্যায়ের নাম (chapter) পাওয়া যায়নি!"); return; }
+        if (!chapterName) { 
+            console.error("URL-এ অধ্যায়ের নাম (chapter) পাওয়া যায়নি! স্কোর সেভ করা সম্ভব নয়।"); 
+            alert("ত্রুটি: URL-এ অধ্যায়ের নাম না থাকায় স্কোর সেভ করা যায়নি।");
+            return; 
+        }
 
         const db = firebase.firestore();
         const userDocRef = db.collection("users").doc(user.uid);
